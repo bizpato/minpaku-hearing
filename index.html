@@ -456,6 +456,120 @@
   .info-note strong { color: #1a3a66; }
   .info-note a { color: #1e4373; text-decoration: underline; }
   
+  /* ===== サブラベル ===== */
+  .field-label-sub {
+    display: block;
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+  
+  /* ===== アカウント情報（ログインID+パスワード）ペア ===== */
+  .account-pair {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .account-pair .account-field input {
+    width: 100%;
+  }
+  @media (min-width: 600px) {
+    .account-pair {
+      flex-direction: row;
+    }
+    .account-pair .account-field {
+      flex: 1;
+    }
+  }
+  
+  /* ===== 例文表示（折りたたみ + ボタン挿入） ===== */
+  .example-collapse {
+    margin-bottom: 12px;
+    background: #f7f9fc;
+    border: 1px solid #d8e3ee;
+    border-radius: 6px;
+    padding: 0;
+  }
+  .example-collapse summary {
+    padding: 10px 14px;
+    cursor: pointer;
+    font-size: 13px;
+    color: #2c5aa0;
+    font-weight: 600;
+    user-select: none;
+    list-style: none;
+  }
+  .example-collapse summary::-webkit-details-marker { display: none; }
+  .example-collapse summary::before {
+    content: '▶';
+    display: inline-block;
+    margin-right: 8px;
+    transition: transform 0.2s;
+    font-size: 10px;
+  }
+  .example-collapse[open] summary::before {
+    transform: rotate(90deg);
+  }
+  .example-content {
+    padding: 0 14px 14px;
+  }
+  .example-desc {
+    font-size: 12px;
+    color: #555;
+    margin: 0 0 12px;
+  }
+  .example-item {
+    background: #fff;
+    border-radius: 4px;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+    border-left: 3px solid #2c5aa0;
+  }
+  .example-item:last-child {
+    margin-bottom: 0;
+  }
+  .example-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+  .example-header strong {
+    color: #1e4373;
+    font-size: 13px;
+  }
+  .example-insert-btn {
+    padding: 4px 10px;
+    background: #fff;
+    border: 1px solid #2c5aa0;
+    color: #2c5aa0;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 11px;
+    font-family: inherit;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+  .example-insert-btn:hover {
+    background: #2c5aa0;
+    color: #fff;
+  }
+  .example-text {
+    font-family: 'Meiryo UI', 'Hiragino Sans', sans-serif;
+    font-size: 12px;
+    color: #444;
+    line-height: 1.7;
+    margin: 0;
+    white-space: pre-wrap;
+    background: #fafcff;
+    padding: 8px 10px;
+    border-radius: 3px;
+  }
+  
   /* ===== モバイル調整 ===== */
   @media (max-width: 600px) {
     .container { padding: 16px 12px 60px; }
@@ -566,14 +680,66 @@
       <div class="field" data-field="checkinTime">
         <label class="field-label">チェックイン開始時間<span class="required">必須</span></label>
         <p class="field-desc">通常のチェックイン受付開始時刻をご入力ください。</p>
-        <input type="time" name="checkinTime" id="checkinTime" required>
+        <select name="checkinTime" id="checkinTime" required>
+          <option value="">選択してください</option>
+          <option value="00:00">00:00</option>
+          <option value="01:00">01:00</option>
+          <option value="02:00">02:00</option>
+          <option value="03:00">03:00</option>
+          <option value="04:00">04:00</option>
+          <option value="05:00">05:00</option>
+          <option value="06:00">06:00</option>
+          <option value="07:00">07:00</option>
+          <option value="08:00">08:00</option>
+          <option value="09:00">09:00</option>
+          <option value="10:00">10:00</option>
+          <option value="11:00">11:00</option>
+          <option value="12:00">12:00</option>
+          <option value="13:00">13:00</option>
+          <option value="14:00">14:00</option>
+          <option value="15:00">15:00</option>
+          <option value="16:00">16:00</option>
+          <option value="17:00">17:00</option>
+          <option value="18:00">18:00</option>
+          <option value="19:00">19:00</option>
+          <option value="20:00">20:00</option>
+          <option value="21:00">21:00</option>
+          <option value="22:00">22:00</option>
+          <option value="23:00">23:00</option>
+        </select>
         <div class="field-error">チェックイン開始時間をご入力ください</div>
       </div>
       
       <div class="field" data-field="checkoutTime">
         <label class="field-label">チェックアウト時間<span class="required">必須</span></label>
         <p class="field-desc">チェックアウトの締切時刻をご入力ください。</p>
-        <input type="time" name="checkoutTime" id="checkoutTime" required>
+        <select name="checkoutTime" id="checkoutTime" required>
+          <option value="">選択してください</option>
+          <option value="00:00">00:00</option>
+          <option value="01:00">01:00</option>
+          <option value="02:00">02:00</option>
+          <option value="03:00">03:00</option>
+          <option value="04:00">04:00</option>
+          <option value="05:00">05:00</option>
+          <option value="06:00">06:00</option>
+          <option value="07:00">07:00</option>
+          <option value="08:00">08:00</option>
+          <option value="09:00">09:00</option>
+          <option value="10:00">10:00</option>
+          <option value="11:00">11:00</option>
+          <option value="12:00">12:00</option>
+          <option value="13:00">13:00</option>
+          <option value="14:00">14:00</option>
+          <option value="15:00">15:00</option>
+          <option value="16:00">16:00</option>
+          <option value="17:00">17:00</option>
+          <option value="18:00">18:00</option>
+          <option value="19:00">19:00</option>
+          <option value="20:00">20:00</option>
+          <option value="21:00">21:00</option>
+          <option value="22:00">22:00</option>
+          <option value="23:00">23:00</option>
+        </select>
         <div class="field-error">チェックアウト時間をご入力ください</div>
       </div>
       
@@ -587,7 +753,33 @@
         <div class="field-error">アーリーチェックインの対応をお選びください</div>
         <div class="conditional" id="earlyCheckinTimeWrap">
           <label class="field-label">アーリーチェックイン開始時刻<span class="required">必須</span></label>
-          <input type="time" name="earlyCheckinTime" id="earlyCheckinTime">
+          <select name="earlyCheckinTime" id="earlyCheckinTime">
+            <option value="">選択してください</option>
+            <option value="00:00">00:00</option>
+            <option value="01:00">01:00</option>
+            <option value="02:00">02:00</option>
+            <option value="03:00">03:00</option>
+            <option value="04:00">04:00</option>
+            <option value="05:00">05:00</option>
+            <option value="06:00">06:00</option>
+            <option value="07:00">07:00</option>
+            <option value="08:00">08:00</option>
+            <option value="09:00">09:00</option>
+            <option value="10:00">10:00</option>
+            <option value="11:00">11:00</option>
+            <option value="12:00">12:00</option>
+            <option value="13:00">13:00</option>
+            <option value="14:00">14:00</option>
+            <option value="15:00">15:00</option>
+            <option value="16:00">16:00</option>
+            <option value="17:00">17:00</option>
+            <option value="18:00">18:00</option>
+            <option value="19:00">19:00</option>
+            <option value="20:00">20:00</option>
+            <option value="21:00">21:00</option>
+            <option value="22:00">22:00</option>
+            <option value="23:00">23:00</option>
+          </select>
         </div>
       </div>
       
@@ -602,7 +794,33 @@
         <div class="conditional" id="lateCheckoutTimeWrap">
           <label class="field-label">レイトチェックアウト最終時刻<span class="required">必須</span></label>
           <p class="field-desc">レイトチェックアウトとして対応可能な最終時刻をご入力ください。</p>
-          <input type="time" name="lateCheckoutTime" id="lateCheckoutTime">
+          <select name="lateCheckoutTime" id="lateCheckoutTime">
+            <option value="">選択してください</option>
+            <option value="00:00">00:00</option>
+            <option value="01:00">01:00</option>
+            <option value="02:00">02:00</option>
+            <option value="03:00">03:00</option>
+            <option value="04:00">04:00</option>
+            <option value="05:00">05:00</option>
+            <option value="06:00">06:00</option>
+            <option value="07:00">07:00</option>
+            <option value="08:00">08:00</option>
+            <option value="09:00">09:00</option>
+            <option value="10:00">10:00</option>
+            <option value="11:00">11:00</option>
+            <option value="12:00">12:00</option>
+            <option value="13:00">13:00</option>
+            <option value="14:00">14:00</option>
+            <option value="15:00">15:00</option>
+            <option value="16:00">16:00</option>
+            <option value="17:00">17:00</option>
+            <option value="18:00">18:00</option>
+            <option value="19:00">19:00</option>
+            <option value="20:00">20:00</option>
+            <option value="21:00">21:00</option>
+            <option value="22:00">22:00</option>
+            <option value="23:00">23:00</option>
+          </select>
         </div>
       </div>
       
@@ -616,7 +834,33 @@
         <div class="field-error">荷物預かりの対応をお選びください</div>
         <div class="conditional" id="luggageStorageTimeWrap">
           <label class="field-label">荷物預かり開始時刻<span class="required">必須</span></label>
-          <input type="time" name="luggageStorageTime" id="luggageStorageTime">
+          <select name="luggageStorageTime" id="luggageStorageTime">
+            <option value="">選択してください</option>
+            <option value="00:00">00:00</option>
+            <option value="01:00">01:00</option>
+            <option value="02:00">02:00</option>
+            <option value="03:00">03:00</option>
+            <option value="04:00">04:00</option>
+            <option value="05:00">05:00</option>
+            <option value="06:00">06:00</option>
+            <option value="07:00">07:00</option>
+            <option value="08:00">08:00</option>
+            <option value="09:00">09:00</option>
+            <option value="10:00">10:00</option>
+            <option value="11:00">11:00</option>
+            <option value="12:00">12:00</option>
+            <option value="13:00">13:00</option>
+            <option value="14:00">14:00</option>
+            <option value="15:00">15:00</option>
+            <option value="16:00">16:00</option>
+            <option value="17:00">17:00</option>
+            <option value="18:00">18:00</option>
+            <option value="19:00">19:00</option>
+            <option value="20:00">20:00</option>
+            <option value="21:00">21:00</option>
+            <option value="22:00">22:00</option>
+            <option value="23:00">23:00</option>
+          </select>
         </div>
       </div>
       
@@ -636,8 +880,18 @@
         </div>
         <div class="conditional" id="beds24AccountWrap">
           <label class="field-label">Beds24アカウント情報<span class="required">必須</span></label>
-          <p class="field-desc">システム連携に必要なBeds24のログインID・パスワード・APIキー等をご記入ください。</p>
-          <textarea name="beds24Account" id="beds24Account" placeholder="例：&#10;ログインID: ○○○○&#10;パスワード: ○○○○&#10;APIキー: ○○○○"></textarea>
+          <p class="field-desc">システム連携に必要なBeds24のログインIDとパスワードをご記入ください。</p>
+          <div class="account-pair">
+            <div class="account-field">
+              <label class="field-label-sub">ログインID</label>
+              <input type="text" name="beds24LoginId" id="beds24LoginId">
+            </div>
+            <div class="account-field">
+              <label class="field-label-sub">パスワード</label>
+              <input type="text" name="beds24Password" id="beds24Password">
+            </div>
+          </div>
+          <div class="field-error">ログインIDとパスワードをご入力ください</div>
           <div class="info-note" id="beds24EmailNote">
             ℹ️ チェックインシステムとの連携設定のため、弊社がお客様のBeds24アカウントにログインする必要がございます。<br>
             お手数ですが、Beds24の<strong>ログイン認証用メールアドレスに <a href="mailto:customer@bizpato.com">customer@bizpato.com</a> を追加</strong>してください。<br>
@@ -662,14 +916,67 @@
         </div>
         <div class="conditional" id="remotelockAccountWrap">
           <label class="field-label">RemoteLOCKアカウント情報<span class="required">必須</span></label>
-          <p class="field-desc">システム連携に必要なRemoteLOCKのログインID・パスワード等をご記入ください。</p>
-          <textarea name="remotelockAccount" id="remotelockAccount" placeholder="例：&#10;ログインID: ○○○○&#10;パスワード: ○○○○"></textarea>
+          <p class="field-desc">システム連携に必要なRemoteLOCKのログインIDとパスワードをご記入ください。</p>
+          <div class="account-pair">
+            <div class="account-field">
+              <label class="field-label-sub">ログインID</label>
+              <input type="text" name="remotelockLoginId" id="remotelockLoginId">
+            </div>
+            <div class="account-field">
+              <label class="field-label-sub">パスワード</label>
+              <input type="text" name="remotelockPassword" id="remotelockPassword">
+            </div>
+          </div>
+          <div class="field-error">ログインIDとパスワードをご入力ください</div>
         </div>
       </div>
       
       <div class="field" data-field="keyAccess">
         <label class="field-label">鍵の解錠方法（標準）<span class="required">必須</span></label>
-        <p class="field-desc">ゲスト様が施設に入室する際の具体的な手順をご記入ください（例：玄関横のキーボックスから鍵を取り出して解錠、スマートロックに暗証番号を入力して解錠 など）。<br>全物件で同じ手順の場合はここに入力してください。物件ごとに異なる場合は、各物件の「共通設定と一部異なる」で個別に上書きできます。</p>
+        <p class="field-desc">ゲスト様が施設に入室する際の具体的な手順をご記入ください。<br>全物件で同じ手順の場合はここに入力してください。物件ごとに異なる場合は、各物件の「共通設定と一部異なる」で個別に上書きできます。</p>
+        
+        <details class="example-collapse">
+          <summary>📋 例文を見る・挿入する</summary>
+          <div class="example-content">
+            <p class="example-desc">下の例文を参考にして、ご利用の鍵に合わせて編集してご利用ください。「この例文を挿入」ボタンで入力欄に貼り付けできます。</p>
+            
+            <div class="example-item">
+              <div class="example-header">
+                <strong>例1：RemoteLOCK（テンキー式スマートロック）</strong>
+                <button type="button" class="example-insert-btn" onclick="insertKeyAccessExample('remotelock')">この例文を挿入</button>
+              </div>
+              <pre class="example-text">STEP1: 玄関ドアのスマートロック「RemoteLOCK」のテンキー部分をご確認ください
+STEP2: システムから事前にお伝えする暗証番号をテンキーに入力してください
+STEP3: 解錠音が鳴ったらドアを開けて入室してください
+STEP4: 施錠はオートロック機能により、ドアを閉めると自動的にロックされます</pre>
+            </div>
+            
+            <div class="example-item">
+              <div class="example-header">
+                <strong>例2：SESAME（ボタン解錠式スマートロック）</strong>
+                <button type="button" class="example-insert-btn" onclick="insertKeyAccessExample('sesame')">この例文を挿入</button>
+              </div>
+              <pre class="example-text">STEP1: 玄関ドアのスマートロック「SESAME」をご確認ください
+STEP2: システムから送信される予約URLにアクセスしてください
+STEP3: URL内の「解錠ボタン」をタップしてください
+STEP4: 「解錠しました」と表示されたら、ドアを開けて入室してください
+STEP5: 施錠は手動でドアを閉めた後、サムターンを回してください</pre>
+            </div>
+            
+            <div class="example-item">
+              <div class="example-header">
+                <strong>例3：キーボックス（物理鍵 + ダイヤル式暗証番号）</strong>
+                <button type="button" class="example-insert-btn" onclick="insertKeyAccessExample('keybox')">この例文を挿入</button>
+              </div>
+              <pre class="example-text">STEP1: 玄関横に設置されたキーボックス（4桁ダイヤル式）をご確認ください
+STEP2: システムからお伝えする暗証番号をダイヤルに合わせてください
+STEP3: ボックスを開けて中から鍵を取り出してください
+STEP4: 取り出した鍵で玄関ドアを解錠して入室してください
+STEP5: 退室時は施錠後、鍵をキーボックスに戻し、ダイヤルを混ぜてください</pre>
+            </div>
+          </div>
+        </details>
+        
         <textarea name="keyAccess" id="keyAccess" required></textarea>
         <div class="field-error">鍵の解錠方法をご入力ください</div>
       </div>
@@ -1007,12 +1314,64 @@
             
             <div class="field">
               <label class="field-label">チェックイン開始時間<span class="optional">任意</span></label>
-              <input type="time" name="property_${n}_checkinTime">
+              <select name="property_${n}_checkinTime">
+                <option value="">選択してください</option>
+                <option value="00:00">00:00</option>
+                <option value="01:00">01:00</option>
+                <option value="02:00">02:00</option>
+                <option value="03:00">03:00</option>
+                <option value="04:00">04:00</option>
+                <option value="05:00">05:00</option>
+                <option value="06:00">06:00</option>
+                <option value="07:00">07:00</option>
+                <option value="08:00">08:00</option>
+                <option value="09:00">09:00</option>
+                <option value="10:00">10:00</option>
+                <option value="11:00">11:00</option>
+                <option value="12:00">12:00</option>
+                <option value="13:00">13:00</option>
+                <option value="14:00">14:00</option>
+                <option value="15:00">15:00</option>
+                <option value="16:00">16:00</option>
+                <option value="17:00">17:00</option>
+                <option value="18:00">18:00</option>
+                <option value="19:00">19:00</option>
+                <option value="20:00">20:00</option>
+                <option value="21:00">21:00</option>
+                <option value="22:00">22:00</option>
+                <option value="23:00">23:00</option>
+              </select>
             </div>
             
             <div class="field">
               <label class="field-label">チェックアウト時間<span class="optional">任意</span></label>
-              <input type="time" name="property_${n}_checkoutTime">
+              <select name="property_${n}_checkoutTime">
+                <option value="">選択してください</option>
+                <option value="00:00">00:00</option>
+                <option value="01:00">01:00</option>
+                <option value="02:00">02:00</option>
+                <option value="03:00">03:00</option>
+                <option value="04:00">04:00</option>
+                <option value="05:00">05:00</option>
+                <option value="06:00">06:00</option>
+                <option value="07:00">07:00</option>
+                <option value="08:00">08:00</option>
+                <option value="09:00">09:00</option>
+                <option value="10:00">10:00</option>
+                <option value="11:00">11:00</option>
+                <option value="12:00">12:00</option>
+                <option value="13:00">13:00</option>
+                <option value="14:00">14:00</option>
+                <option value="15:00">15:00</option>
+                <option value="16:00">16:00</option>
+                <option value="17:00">17:00</option>
+                <option value="18:00">18:00</option>
+                <option value="19:00">19:00</option>
+                <option value="20:00">20:00</option>
+                <option value="21:00">21:00</option>
+                <option value="22:00">22:00</option>
+                <option value="23:00">23:00</option>
+              </select>
             </div>
             
             <div class="field">
@@ -1024,7 +1383,33 @@
               </div>
               <div class="conditional" data-show-on="property_${n}_earlyCheckin=yes">
                 <label class="field-label">アーリーチェックイン開始時刻</label>
-                <input type="time" name="property_${n}_earlyCheckinTime">
+                <select name="property_${n}_earlyCheckinTime">
+                  <option value="">選択してください</option>
+                  <option value="00:00">00:00</option>
+                  <option value="01:00">01:00</option>
+                  <option value="02:00">02:00</option>
+                  <option value="03:00">03:00</option>
+                  <option value="04:00">04:00</option>
+                  <option value="05:00">05:00</option>
+                  <option value="06:00">06:00</option>
+                  <option value="07:00">07:00</option>
+                  <option value="08:00">08:00</option>
+                  <option value="09:00">09:00</option>
+                  <option value="10:00">10:00</option>
+                  <option value="11:00">11:00</option>
+                  <option value="12:00">12:00</option>
+                  <option value="13:00">13:00</option>
+                  <option value="14:00">14:00</option>
+                  <option value="15:00">15:00</option>
+                  <option value="16:00">16:00</option>
+                  <option value="17:00">17:00</option>
+                  <option value="18:00">18:00</option>
+                  <option value="19:00">19:00</option>
+                  <option value="20:00">20:00</option>
+                  <option value="21:00">21:00</option>
+                  <option value="22:00">22:00</option>
+                  <option value="23:00">23:00</option>
+                </select>
               </div>
             </div>
             
@@ -1037,7 +1422,33 @@
               </div>
               <div class="conditional" data-show-on="property_${n}_lateCheckout=yes">
                 <label class="field-label">レイトチェックアウト最終時刻</label>
-                <input type="time" name="property_${n}_lateCheckoutTime">
+                <select name="property_${n}_lateCheckoutTime">
+                  <option value="">選択してください</option>
+                  <option value="00:00">00:00</option>
+                  <option value="01:00">01:00</option>
+                  <option value="02:00">02:00</option>
+                  <option value="03:00">03:00</option>
+                  <option value="04:00">04:00</option>
+                  <option value="05:00">05:00</option>
+                  <option value="06:00">06:00</option>
+                  <option value="07:00">07:00</option>
+                  <option value="08:00">08:00</option>
+                  <option value="09:00">09:00</option>
+                  <option value="10:00">10:00</option>
+                  <option value="11:00">11:00</option>
+                  <option value="12:00">12:00</option>
+                  <option value="13:00">13:00</option>
+                  <option value="14:00">14:00</option>
+                  <option value="15:00">15:00</option>
+                  <option value="16:00">16:00</option>
+                  <option value="17:00">17:00</option>
+                  <option value="18:00">18:00</option>
+                  <option value="19:00">19:00</option>
+                  <option value="20:00">20:00</option>
+                  <option value="21:00">21:00</option>
+                  <option value="22:00">22:00</option>
+                  <option value="23:00">23:00</option>
+                </select>
               </div>
             </div>
             
@@ -1050,7 +1461,33 @@
               </div>
               <div class="conditional" data-show-on="property_${n}_luggageStorage=yes">
                 <label class="field-label">荷物預かり開始時刻</label>
-                <input type="time" name="property_${n}_luggageStorageTime">
+                <select name="property_${n}_luggageStorageTime">
+                  <option value="">選択してください</option>
+                  <option value="00:00">00:00</option>
+                  <option value="01:00">01:00</option>
+                  <option value="02:00">02:00</option>
+                  <option value="03:00">03:00</option>
+                  <option value="04:00">04:00</option>
+                  <option value="05:00">05:00</option>
+                  <option value="06:00">06:00</option>
+                  <option value="07:00">07:00</option>
+                  <option value="08:00">08:00</option>
+                  <option value="09:00">09:00</option>
+                  <option value="10:00">10:00</option>
+                  <option value="11:00">11:00</option>
+                  <option value="12:00">12:00</option>
+                  <option value="13:00">13:00</option>
+                  <option value="14:00">14:00</option>
+                  <option value="15:00">15:00</option>
+                  <option value="16:00">16:00</option>
+                  <option value="17:00">17:00</option>
+                  <option value="18:00">18:00</option>
+                  <option value="19:00">19:00</option>
+                  <option value="20:00">20:00</option>
+                  <option value="21:00">21:00</option>
+                  <option value="22:00">22:00</option>
+                  <option value="23:00">23:00</option>
+                </select>
               </div>
             </div>
             
@@ -1199,8 +1636,10 @@
       // Beds24連携OP契約時は、アカウント情報入力欄を常に非表示＆値クリア
       beds24AccountWrap.classList.remove('show');
       beds24AccountWrap.style.display = 'none';
-      const beds24AccountInput = document.getElementById('beds24Account');
-      if (beds24AccountInput) beds24AccountInput.value = '';
+      const loginIdInput = document.getElementById('beds24LoginId');
+      const passwordInput = document.getElementById('beds24Password');
+      if (loginIdInput) loginIdInput.value = '';
+      if (passwordInput) passwordInput.value = '';
     } else {
       // Beds24連携OP未契約時は通常通り（contracted選択時のみ表示）
       beds24AccountWrap.style.display = '';
@@ -1394,6 +1833,37 @@
     });
   }
   
+  // ===========================
+  // 鍵の解錠方法 例文挿入
+  // ===========================
+  window.insertKeyAccessExample = function(type) {
+    const examples = {
+      remotelock: `STEP1: 玄関ドアのスマートロック「RemoteLOCK」のテンキー部分をご確認ください
+STEP2: システムから事前にお伝えする暗証番号をテンキーに入力してください
+STEP3: 解錠音が鳴ったらドアを開けて入室してください
+STEP4: 施錠はオートロック機能により、ドアを閉めると自動的にロックされます`,
+      sesame: `STEP1: 玄関ドアのスマートロック「SESAME」をご確認ください
+STEP2: システムから送信される予約URLにアクセスしてください
+STEP3: URL内の「解錠ボタン」をタップしてください
+STEP4: 「解錠しました」と表示されたら、ドアを開けて入室してください
+STEP5: 施錠は手動でドアを閉めた後、サムターンを回してください`,
+      keybox: `STEP1: 玄関横に設置されたキーボックス（4桁ダイヤル式）をご確認ください
+STEP2: システムからお伝えする暗証番号をダイヤルに合わせてください
+STEP3: ボックスを開けて中から鍵を取り出してください
+STEP4: 取り出した鍵で玄関ドアを解錠して入室してください
+STEP5: 退室時は施錠後、鍵をキーボックスに戻し、ダイヤルを混ぜてください`
+    };
+    const textarea = document.getElementById('keyAccess');
+    if (textarea && examples[type]) {
+      if (textarea.value.trim() !== '' && !confirm('現在の入力内容を上書きしてもよろしいですか？')) {
+        return;
+      }
+      textarea.value = examples[type];
+      textarea.closest('.field')?.classList.remove('has-error');
+      textarea.focus();
+    }
+  };
+  
   // 鍵の種類が変更されたとき
   document.addEventListener('change', e => {
     if (e.target.matches('[data-key-radio]')) {
@@ -1551,14 +2021,20 @@
     // Beds24アカウント情報：Beds24連携OPを契約している場合は不要（弊社作成）
     const hasBeds24Op = document.querySelector('input[name="contractedOptions"][value="beds24"]:checked');
     if (!hasBeds24Op && document.querySelector('input[name="beds24"]:checked')?.value === 'contracted') {
-      if (!document.getElementById('beds24Account').value.trim()) {
+      const loginId = document.getElementById('beds24LoginId').value.trim();
+      const password = document.getElementById('beds24Password').value.trim();
+      if (!loginId || !password) {
         document.querySelector('[data-field="beds24"]').classList.add('has-error');
+        document.getElementById('beds24AccountWrap').classList.add('has-error');
         valid = false;
       }
     }
     if (document.querySelector('input[name="remotelock"]:checked')?.value === 'contracted') {
-      if (!document.getElementById('remotelockAccount').value.trim()) {
+      const loginId = document.getElementById('remotelockLoginId').value.trim();
+      const password = document.getElementById('remotelockPassword').value.trim();
+      if (!loginId || !password) {
         document.querySelector('[data-field="remotelock"]').classList.add('has-error');
+        document.getElementById('remotelockAccountWrap').classList.add('has-error');
         valid = false;
       }
     }
@@ -1736,11 +2212,19 @@
       beds24: radio('beds24'),
       beds24Label: LABEL_MAP.beds24[radio('beds24')] || '',
       beds24PlannedDate: get('beds24PlannedDate'),
-      beds24Account: get('beds24Account'),
+      beds24LoginId: get('beds24LoginId'),
+      beds24Password: get('beds24Password'),
+      beds24Account: (get('beds24LoginId') || get('beds24Password'))
+        ? `ログインID: ${get('beds24LoginId')}\nパスワード: ${get('beds24Password')}`
+        : '',
       remotelock: radio('remotelock'),
       remotelockLabel: LABEL_MAP.remotelock[radio('remotelock')] || '',
       remotelockPlannedDate: get('remotelockPlannedDate'),
-      remotelockAccount: get('remotelockAccount'),
+      remotelockLoginId: get('remotelockLoginId'),
+      remotelockPassword: get('remotelockPassword'),
+      remotelockAccount: (get('remotelockLoginId') || get('remotelockPassword'))
+        ? `ログインID: ${get('remotelockLoginId')}\nパスワード: ${get('remotelockPassword')}`
+        : '',
       sesameAccount: get('sesameAccount'),
       keyAccess: get('keyAccess'),
       passcodeNotify: radio('passcodeNotify'),
