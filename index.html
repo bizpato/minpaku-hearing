@@ -1,1644 +1,2008 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>チェックインシステム設定ヒアリングフォーム | 民泊管理バンク</title>
-  <style>
-    /* ===== CSS Variables (BizPato Design Guide) ===== */
-    :root {
-      --color-main: #215387;
-      --color-bg: #d7f0ff;
-      --color-point1: #ea4d3c;
-      --color-point2: #fff050;
-      --color-white: #ffffff;
-      --color-text: #1a1a2e;
-      --color-text-light: #555;
-      --color-border: #b8d4e8;
-      --color-input-bg: #f8fcff;
-      --color-section-bg: #eef7ff;
-      --font-main: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Meiryo', sans-serif;
-      --radius: 8px;
-      --shadow: 0 2px 12px rgba(33,83,135,0.10);
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: var(--font-main);
-      background: var(--color-bg);
-      color: var(--color-text);
-      min-height: 100vh;
-      padding: 0 0 60px;
-    }
-
-    /* ===== Header ===== */
-    .site-header {
-      background: var(--color-main);
-      color: var(--color-white);
-      padding: 18px 24px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .site-header .logo-text {
-      font-size: 1.1rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-    }
-    .site-header .logo-sub {
-      font-size: 0.78rem;
-      opacity: 0.8;
-      margin-top: 2px;
-    }
-
-    /* ===== Hero ===== */
-    .hero {
-      background: linear-gradient(135deg, var(--color-main) 0%, #2d6fad 100%);
-      color: var(--color-white);
-      text-align: center;
-      padding: 40px 24px 32px;
-    }
-    .hero h1 {
-      font-size: 1.5rem;
-      font-weight: 700;
-      line-height: 1.5;
-      margin-bottom: 10px;
-    }
-    .hero p {
-      font-size: 0.9rem;
-      opacity: 0.9;
-      line-height: 1.7;
-    }
-    .hero .badge {
-      display: inline-block;
-      background: var(--color-point2);
-      color: var(--color-text);
-      font-size: 0.75rem;
-      font-weight: 700;
-      padding: 3px 12px;
-      border-radius: 20px;
-      margin-bottom: 12px;
-    }
-
-    /* ===== Container ===== */
-    .container {
-      max-width: 760px;
-      margin: 0 auto;
-      padding: 0 16px;
-    }
-
-    /* ===== Progress ===== */
-    .progress-wrap {
-      background: var(--color-white);
-      border-bottom: 1px solid var(--color-border);
-      padding: 12px 0;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 2px 8px rgba(33,83,135,0.08);
-    }
-    .progress-inner {
-      max-width: 760px;
-      margin: 0 auto;
-      padding: 0 16px;
-    }
-    .progress-steps {
-      display: flex;
-      align-items: center;
-      gap: 0;
-    }
-    .step-item {
-      display: flex;
-      align-items: center;
-      flex: 1;
-    }
-    .step-circle {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background: var(--color-border);
-      color: var(--color-text-light);
-      font-size: 0.75rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      transition: all 0.3s;
-    }
-    .step-circle.active {
-      background: var(--color-main);
-      color: var(--color-white);
-    }
-    .step-circle.done {
-      background: #4caf50;
-      color: var(--color-white);
-    }
-    .step-label {
-      font-size: 0.7rem;
-      color: var(--color-text-light);
-      margin-left: 6px;
-      white-space: nowrap;
-    }
-    .step-label.active { color: var(--color-main); font-weight: 700; }
-    .step-line {
-      flex: 1;
-      height: 2px;
-      background: var(--color-border);
-      margin: 0 6px;
-    }
-    .step-line.done { background: #4caf50; }
-
-    /* ===== Form Pages ===== */
-    .form-page { display: none; }
-    .form-page.active { display: block; }
-
-    /* ===== Section Card ===== */
-    .section-card {
-      background: var(--color-white);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      margin-top: 20px;
-      overflow: hidden;
-    }
-    .section-header {
-      background: var(--color-main);
-      color: var(--color-white);
-      padding: 14px 20px;
-      font-size: 0.95rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .section-header .icon {
-      font-size: 1.1rem;
-    }
-    .section-body {
-      padding: 20px;
-    }
-
-    /* ===== Form Fields ===== */
-    .field-group {
-      margin-bottom: 18px;
-    }
-    .field-group:last-child { margin-bottom: 0; }
-
-    label.field-label {
-      display: block;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--color-main);
-      margin-bottom: 6px;
-    }
-    label.field-label .req {
-      color: var(--color-point1);
-      font-size: 0.75rem;
-      margin-left: 4px;
-    }
-    label.field-label .opt {
-      color: var(--color-text-light);
-      font-size: 0.72rem;
-      font-weight: 400;
-      margin-left: 4px;
-    }
-
-    input[type="text"],
-    input[type="email"],
-    input[type="tel"],
-    input[type="number"],
-    input[type="date"],
-    input[type="time"],
-    select,
-    textarea {
-      width: 100%;
-      padding: 10px 12px;
-      border: 1.5px solid var(--color-border);
-      border-radius: var(--radius);
-      font-size: 0.9rem;
-      font-family: var(--font-main);
-      background: var(--color-input-bg);
-      color: var(--color-text);
-      transition: border-color 0.2s;
-      appearance: none;
-      -webkit-appearance: none;
-    }
-    input:focus, select:focus, textarea:focus {
-      outline: none;
-      border-color: var(--color-main);
-      background: var(--color-white);
-    }
-    input.error, select.error, textarea.error {
-      border-color: var(--color-point1);
-    }
-    textarea { resize: vertical; min-height: 80px; }
-
-    .select-wrap {
-      position: relative;
-    }
-    .select-wrap::after {
-      content: '▼';
-      position: absolute;
-      right: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 0.7rem;
-      color: var(--color-main);
-      pointer-events: none;
-    }
-
-    /* ===== Radio / Checkbox ===== */
-    .radio-group, .check-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 4px;
-    }
-    .radio-btn, .check-btn {
-      display: none;
-    }
-    .radio-label, .check-label {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 14px;
-      border: 1.5px solid var(--color-border);
-      border-radius: 20px;
-      font-size: 0.82rem;
-      cursor: pointer;
-      transition: all 0.2s;
-      background: var(--color-input-bg);
-      user-select: none;
-    }
-    .radio-btn:checked + .radio-label,
-    .check-btn:checked + .check-label {
-      background: var(--color-main);
-      color: var(--color-white);
-      border-color: var(--color-main);
-    }
-    .radio-label:hover, .check-label:hover {
-      border-color: var(--color-main);
-      background: var(--color-section-bg);
-    }
-
-    /* ===== Conditional Fields ===== */
-    .conditional { display: none; }
-    .conditional.show { display: block; }
-
-    /* ===== Two columns ===== */
-    .two-col {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-    @media (max-width: 480px) {
-      .two-col { grid-template-columns: 1fr; }
-    }
-
-    /* ===== Property Card ===== */
-    .property-card {
-      border: 1.5px solid var(--color-border);
-      border-radius: var(--radius);
-      margin-bottom: 16px;
-      overflow: hidden;
-    }
-    .property-card-header {
-      background: var(--color-section-bg);
-      padding: 12px 16px;
-      font-weight: 700;
-      font-size: 0.9rem;
-      color: var(--color-main);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .property-card-body {
-      padding: 16px;
-    }
-
-    /* ===== Override toggle ===== */
-    .override-toggle {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 14px;
-      cursor: pointer;
-    }
-    .toggle-switch {
-      position: relative;
-      width: 40px;
-      height: 22px;
-    }
-    .toggle-switch input { display: none; }
-    .toggle-track {
-      position: absolute;
-      inset: 0;
-      background: var(--color-border);
-      border-radius: 11px;
-      transition: background 0.2s;
-    }
-    .toggle-thumb {
-      position: absolute;
-      width: 18px;
-      height: 18px;
-      top: 2px;
-      left: 2px;
-      background: var(--color-white);
-      border-radius: 50%;
-      transition: left 0.2s;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
-    }
-    .toggle-switch input:checked ~ .toggle-track { background: var(--color-main); }
-    .toggle-switch input:checked ~ .toggle-thumb { left: 20px; }
-    .toggle-label-text { font-size: 0.82rem; color: var(--color-text-light); }
-
-    .override-fields { display: none; margin-top: 10px; padding: 14px; background: var(--color-section-bg); border-radius: var(--radius); }
-    .override-fields.show { display: block; }
-    .override-note { font-size: 0.78rem; color: var(--color-text-light); margin-bottom: 10px; }
-
-    /* ===== Buttons ===== */
-    .btn-row {
-      display: flex;
-      gap: 12px;
-      margin-top: 24px;
-      justify-content: flex-end;
-    }
-    .btn {
-      padding: 12px 28px;
-      border-radius: 6px;
-      font-size: 0.9rem;
-      font-weight: 700;
-      cursor: pointer;
-      border: none;
-      transition: all 0.2s;
-      font-family: var(--font-main);
-    }
-    .btn-primary {
-      background: var(--color-main);
-      color: var(--color-white);
-    }
-    .btn-primary:hover { background: #1a4270; }
-    .btn-secondary {
-      background: var(--color-white);
-      color: var(--color-main);
-      border: 1.5px solid var(--color-main);
-    }
-    .btn-secondary:hover { background: var(--color-section-bg); }
-    .btn-submit {
-      background: var(--color-point1);
-      color: var(--color-white);
-      font-size: 1rem;
-      padding: 14px 36px;
-    }
-    .btn-submit:hover { background: #c73d2e; }
-    .btn-submit:disabled { background: #ccc; cursor: not-allowed; }
-
-    /* ===== Error message ===== */
-    .error-msg {
-      color: var(--color-point1);
-      font-size: 0.78rem;
-      margin-top: 4px;
-      display: none;
-    }
-    .error-msg.show { display: block; }
-
-    /* ===== Info box ===== */
-    .info-box {
-      background: var(--color-section-bg);
-      border-left: 4px solid var(--color-main);
-      border-radius: 0 var(--radius) var(--radius) 0;
-      padding: 12px 16px;
-      font-size: 0.82rem;
-      color: var(--color-text-light);
-      margin-bottom: 16px;
-      line-height: 1.6;
-    }
-
-    /* ===== Confirmation Page ===== */
-    .confirm-section {
-      background: var(--color-white);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      margin-top: 20px;
-      overflow: hidden;
-    }
-    .confirm-section-header {
-      background: var(--color-section-bg);
-      padding: 10px 16px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: var(--color-main);
-      border-bottom: 1px solid var(--color-border);
-    }
-    .confirm-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.85rem;
-    }
-    .confirm-table tr {
-      border-bottom: 1px solid var(--color-border);
-    }
-    .confirm-table tr:last-child { border-bottom: none; }
-    .confirm-table th {
-      width: 38%;
-      padding: 10px 14px;
-      background: var(--color-input-bg);
-      color: var(--color-text-light);
-      font-weight: 600;
-      text-align: left;
-      vertical-align: top;
-    }
-    .confirm-table td {
-      padding: 10px 14px;
-      color: var(--color-text);
-      vertical-align: top;
-      word-break: break-all;
-    }
-
-    /* ===== Complete Page ===== */
-    .complete-card {
-      background: var(--color-white);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      margin-top: 32px;
-      padding: 40px 24px;
-      text-align: center;
-    }
-    .complete-icon {
-      font-size: 3rem;
-      margin-bottom: 16px;
-    }
-    .complete-card h2 {
-      font-size: 1.3rem;
-      color: var(--color-main);
-      margin-bottom: 12px;
-    }
-    .complete-card p {
-      font-size: 0.9rem;
-      color: var(--color-text-light);
-      line-height: 1.7;
-    }
-    .complete-id {
-      display: inline-block;
-      background: var(--color-section-bg);
-      border: 1.5px solid var(--color-main);
-      border-radius: var(--radius);
-      padding: 10px 24px;
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--color-main);
-      margin: 16px 0;
-      letter-spacing: 0.08em;
-    }
-
-    /* ===== Loading overlay ===== */
-    .loading-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(33,83,135,0.18);
-      z-index: 999;
-      align-items: center;
-      justify-content: center;
-    }
-    .loading-overlay.show { display: flex; }
-    .loading-spinner {
-      background: var(--color-white);
-      border-radius: var(--radius);
-      padding: 32px 40px;
-      text-align: center;
-      box-shadow: var(--shadow);
-    }
-    .spinner {
-      width: 40px;
-      height: 40px;
-      border: 4px solid var(--color-border);
-      border-top-color: var(--color-main);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      margin: 0 auto 12px;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ===== Responsive ===== */
-    @media (max-width: 600px) {
-      .hero h1 { font-size: 1.2rem; }
-      .btn { padding: 11px 20px; font-size: 0.85rem; }
-      .btn-submit { padding: 13px 28px; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>チェックインシステム設定情報 ヒアリングフォーム | 民泊管理バンク</title>
+<style>
+  /* ===== リセット & ベース ===== */
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+    color: #2a2a2a;
+    background: #f5f9fc;
+    line-height: 1.7;
+    -webkit-text-size-adjust: 100%;
+  }
+  
+  /* ===== レイアウト ===== */
+  .container {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 24px 16px 80px;
+  }
+  
+  /* ===== ヘッダー ===== */
+  header {
+    text-align: center;
+    padding: 24px 0 32px;
+    border-bottom: 1px solid #e0e8f0;
+    margin-bottom: 32px;
+  }
+  header h1 {
+    font-size: 22px;
+    margin: 0 0 16px;
+    color: #1e4373;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+  header .lead {
+    font-size: 14px;
+    color: #555;
+    margin: 0;
+    text-align: left;
+  }
+  header .lead p { margin: 0 0 12px; }
+  header .lead ul {
+    margin: 8px 0 12px;
+    padding-left: 20px;
+  }
+  header .lead li { margin-bottom: 4px; }
+  
+  /* ===== セクション ===== */
+  .form-section {
+    background: #fff;
+    border-radius: 12px;
+    padding: 28px 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 4px rgba(30, 67, 115, 0.06);
+  }
+  .form-section h2 {
+    font-size: 18px;
+    color: #1e4373;
+    margin: 0 0 8px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #2c5aa0;
+    display: inline-block;
+  }
+  .form-section .section-desc {
+    font-size: 13px;
+    color: #666;
+    margin: 0 0 24px;
+  }
+  .form-section h3 {
+    font-size: 16px;
+    color: #1e4373;
+    margin: 24px 0 12px;
+    padding-left: 8px;
+    border-left: 4px solid #2c5aa0;
+  }
+  
+  /* ===== 入力フィールド ===== */
+  .field {
+    margin-bottom: 20px;
+  }
+  .field-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #2a2a2a;
+    margin-bottom: 6px;
+  }
+  .field-label .required {
+    color: #d23838;
+    font-size: 12px;
+    margin-left: 6px;
+    font-weight: 500;
+  }
+  .field-label .optional {
+    color: #888;
+    font-size: 12px;
+    margin-left: 6px;
+    font-weight: 500;
+  }
+  .field-desc {
+    font-size: 12px;
+    color: #666;
+    margin: 0 0 8px;
+  }
+  .field input[type="text"],
+  .field input[type="email"],
+  .field input[type="tel"],
+  .field input[type="number"],
+  .field input[type="time"],
+  .field input[type="password"],
+  .field textarea,
+  .field select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #c5d3e0;
+    border-radius: 6px;
+    font-size: 15px;
+    font-family: inherit;
+    color: #2a2a2a;
+    background: #fff;
+    transition: border-color 0.2s;
+  }
+  .field input:focus,
+  .field textarea:focus,
+  .field select:focus {
+    outline: none;
+    border-color: #2c5aa0;
+    box-shadow: 0 0 0 2px rgba(44, 90, 160, 0.15);
+  }
+  .field textarea {
+    min-height: 80px;
+    resize: vertical;
+  }
+  .field-error {
+    color: #d23838;
+    font-size: 12px;
+    margin-top: 4px;
+    display: none;
+  }
+  .field.has-error input,
+  .field.has-error textarea,
+  .field.has-error select {
+    border-color: #d23838;
+  }
+  .field.has-error .field-error { display: block; }
+  
+  /* ===== ラジオ / チェックボックス ===== */
+  .radio-group, .checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .radio-group label, .checkbox-group label {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px 12px;
+    border: 1px solid #c5d3e0;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    background: #fff;
+    transition: all 0.2s;
+  }
+  .radio-group label:hover, .checkbox-group label:hover {
+    background: #f5f9fc;
+    border-color: #2c5aa0;
+  }
+  .radio-group input, .checkbox-group input {
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+  .radio-group label.selected, .checkbox-group label.selected {
+    background: #eaf2fc;
+    border-color: #2c5aa0;
+  }
+  
+  /* ===== 条件付き表示エリア ===== */
+  .conditional {
+    display: none;
+    margin-top: 12px;
+    padding: 16px;
+    background: #f5f9fc;
+    border-radius: 8px;
+    border-left: 3px solid #2c5aa0;
+  }
+  .conditional.show { display: block; }
+  
+  /* ===== 物件セクション ===== */
+  .property-block {
+    background: #fafcff;
+    border: 1px solid #d8e3ee;
+    border-radius: 10px;
+    padding: 20px 18px;
+    margin-bottom: 18px;
+    display: none;
+  }
+  .property-block.show { display: block; }
+  .property-block-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px dashed #c5d3e0;
+  }
+  .property-no {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #2c5aa0;
+    color: #fff;
+    font-weight: 700;
+    font-size: 14px;
+  }
+  .property-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1e4373;
+    margin: 0;
+  }
+  
+  /* ===== トグルセクション（共通設定と一部異なる） ===== */
+  .override-toggle {
+    margin-top: 16px;
+    padding: 12px;
+    background: #fff;
+    border: 1px dashed #c5d3e0;
+    border-radius: 6px;
+  }
+  .override-toggle label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    color: #555;
+  }
+  .override-content {
+    display: none;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #e0e8f0;
+  }
+  .override-content.show { display: block; }
+  .override-content .field-desc {
+    color: #2c5aa0;
+    font-weight: 500;
+  }
+  
+  /* ===== 送信ボタン ===== */
+  .submit-area {
+    text-align: center;
+    margin-top: 32px;
+  }
+  .submit-btn {
+    background: #2c5aa0;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 16px 48px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-family: inherit;
+  }
+  .submit-btn:hover:not(:disabled) {
+    background: #1e4373;
+  }
+  .submit-btn:disabled {
+    background: #c5d3e0;
+    cursor: not-allowed;
+  }
+  .submit-error {
+    color: #d23838;
+    font-size: 13px;
+    margin-top: 12px;
+    display: none;
+  }
+  .submit-error.show { display: block; }
+  
+  /* ===== 送信完了画面 ===== */
+  .post-send {
+    display: none;
+    background: #fff;
+    border-radius: 12px;
+    padding: 48px 24px;
+    text-align: center;
+    box-shadow: 0 1px 4px rgba(30, 67, 115, 0.06);
+  }
+  .post-send.show { display: block; }
+  .post-send-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+  }
+  .post-send h2 {
+    font-size: 22px;
+    color: #1e4373;
+    margin: 0 0 16px;
+  }
+  .post-send p {
+    color: #555;
+    margin: 0 0 12px;
+    text-align: left;
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  /* ===== ホストタスクリスト ===== */
+  .host-tasks {
+    margin: 32px auto 24px;
+    padding: 24px 20px;
+    max-width: 600px;
+    background: #fafcff;
+    border: 1px solid #d8e3ee;
+    border-radius: 10px;
+    text-align: left;
+  }
+  .host-tasks h3 {
+    font-size: 16px;
+    color: #1e4373;
+    margin: 0 0 8px;
+    text-align: center;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #2c5aa0;
+  }
+  .tasks-summary {
+    background: #fff7e6;
+    border: 1px solid #f0c987;
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    font-size: 14px;
+    color: #6b5424;
+    text-align: center;
+    font-weight: 600;
+  }
+  .host-tasks .tasks-desc {
+    font-size: 13px;
+    color: #555;
+    margin: 12px 0 20px;
+    text-align: center;
+    max-width: 100%;
+  }
+  .host-task {
+    margin-bottom: 14px;
+    padding: 14px 16px;
+    background: #fff;
+    border-radius: 6px;
+    border-left: 3px solid #2c5aa0;
+  }
+  .host-task:last-child {
+    margin-bottom: 0;
+  }
+  .host-task-title {
+    font-weight: 700;
+    color: #1e4373;
+    margin: 0 0 6px !important;
+    font-size: 14px;
+    text-align: left !important;
+    max-width: 100% !important;
+  }
+  .host-task-body {
+    font-size: 13px;
+    color: #444;
+    margin: 0 !important;
+    line-height: 1.6;
+    text-align: left !important;
+    max-width: 100% !important;
+  }
+  .host-task-body a {
+    color: #2c5aa0;
+  }
+  .task-actions {
+    text-align: center;
+    margin-top: 20px;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .task-action-btn {
+    padding: 10px 20px;
+    background: #fff;
+    border: 1px solid #2c5aa0;
+    color: #2c5aa0;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: inherit;
+    transition: all 0.2s;
+  }
+  .task-action-btn:hover {
+    background: #2c5aa0;
+    color: #fff;
+  }
+  .task-action-btn.copied {
+    background: #4caf50;
+    color: #fff;
+    border-color: #4caf50;
+  }
+  
+  /* 印刷時のスタイル */
+  @media print {
+    body * { visibility: hidden; }
+    .post-send, .post-send * { visibility: visible; }
+    .post-send { position: absolute; top: 0; left: 0; width: 100%; box-shadow: none; }
+    .task-actions { display: none !important; }
+  }
+  
+  /* ===== セキュリティ警告（パスワード欄） ===== */
+  .security-note {
+    background: #fef9e7;
+    border-left: 3px solid #e8a317;
+    padding: 12px 16px;
+    border-radius: 4px;
+    font-size: 13px;
+    color: #6b5424;
+    margin: 12px 0 20px;
+  }
+  
+  /* ===== ランダム暗証番号警告 ===== */
+  .passcode-warning {
+    margin-top: 12px;
+    padding: 12px 16px;
+    background: #fef3f2;
+    border-left: 3px solid #d23838;
+    border-radius: 4px;
+    font-size: 13px;
+    color: #8a3030;
+    line-height: 1.6;
+  }
+  .passcode-warning strong { color: #6e2222; }
+  
+  /* ===== インフォメーションメッセージ ===== */
+  .info-note {
+    margin-top: 12px;
+    padding: 12px 16px;
+    background: #eff8ff;
+    border-left: 3px solid #2c5aa0;
+    border-radius: 4px;
+    font-size: 13px;
+    color: #1e4373;
+    line-height: 1.6;
+  }
+  .info-note strong { color: #1a3a66; }
+  .info-note a { color: #1e4373; text-decoration: underline; }
+  
+  /* ===== モバイル調整 ===== */
+  @media (max-width: 600px) {
+    .container { padding: 16px 12px 60px; }
+    header h1 { font-size: 19px; }
+    .form-section { padding: 20px 16px; }
+    .form-section h2 { font-size: 16px; }
+    .submit-btn { padding: 14px 32px; font-size: 15px; }
+  }
+</style>
 </head>
 <body>
-
-<!-- Loading overlay -->
-<div class="loading-overlay" id="loadingOverlay">
-  <div class="loading-spinner">
-    <div class="spinner"></div>
-    <div style="font-size:0.9rem;color:var(--color-text-light);">送信中...</div>
-  </div>
-</div>
-
-<!-- Header -->
-<header class="site-header">
-  <div>
-    <div class="logo-text">民泊管理バンク</div>
-    <div class="logo-sub">チェックインシステム設定ヒアリングフォーム</div>
-  </div>
-</header>
-
-<!-- Hero -->
-<div class="hero">
-  <div class="badge">基本プラン契約者様専用</div>
-  <h1>チェックインシステム設定<br>ヒアリングフォーム</h1>
-  <p>システム構築に必要な情報をご入力ください。<br>入力内容は弊社担当者が確認し、設定を進めます。</p>
-</div>
-
-<!-- Progress -->
-<div class="progress-wrap">
-  <div class="progress-inner">
-    <div class="progress-steps">
-      <div class="step-item">
-        <div class="step-circle active" id="sc1">1</div>
-        <div class="step-label active" id="sl1">契約者情報</div>
-      </div>
-      <div class="step-line" id="line12"></div>
-      <div class="step-item">
-        <div class="step-circle" id="sc2">2</div>
-        <div class="step-label" id="sl2">共通設定</div>
-      </div>
-      <div class="step-line" id="line23"></div>
-      <div class="step-item">
-        <div class="step-circle" id="sc3">3</div>
-        <div class="step-label" id="sl3">物件情報</div>
-      </div>
-      <div class="step-line" id="line34"></div>
-      <div class="step-item">
-        <div class="step-circle" id="sc4">4</div>
-        <div class="step-label" id="sl4">サブアカウント</div>
-      </div>
-      <div class="step-line" id="line45"></div>
-      <div class="step-item">
-        <div class="step-circle" id="sc5">5</div>
-        <div class="step-label" id="sl5">確認・送信</div>
-      </div>
-    </div>
-  </div>
-</div>
-
 <div class="container">
-
-  <!-- ========== PAGE 1: 契約者情報 ========== -->
-  <div class="form-page active" id="page1">
-    <div class="section-card">
-      <div class="section-header"><span class="icon">📋</span>契約者情報</div>
-      <div class="section-body">
-        <div class="info-box">
-          ご契約いただいたプランと、担当者の情報をご入力ください。
+  
+  <header>
+    <h1>チェックインシステム設定情報<br>ヒアリングフォーム</h1>
+    <div class="lead">
+      <p>このたびは民泊管理バンクの基本プランをご契約いただき、誠にありがとうございます。</p>
+      <p>本フォームでは、ホスト様の物件にチェックインシステムを構築するために必要な情報をお伺いいたします。</p>
+      <p><strong>ご記入にあたってのお願い：</strong></p>
+      <ul>
+        <li>所要時間は1物件あたり約10〜15分を見込んでおります。</li>
+        <li>全物件で同じ運用設定の場合は「全物件共通の運用設定」のみご入力ください。物件ごとに異なる項目があれば、各物件の「共通設定と一部異なる」チェックで個別に上書きできます。</li>
+        <li>入力途中で不明な点がございましたら、担当者までお気軽にお問い合わせください。</li>
+      </ul>
+      <p>ご記入いただいた情報は、チェックインシステムの構築および運用管理にのみ使用いたします。</p>
+    </div>
+  </header>
+  
+  <form id="hearingForm" novalidate>
+    
+    <!-- =========================
+         セクション1: ご契約者様情報
+         ========================= -->
+    <section class="form-section">
+      <h2>① ご契約者様情報</h2>
+      <p class="section-desc">ご契約者様および本件のご担当者様の情報をご記入ください。</p>
+      
+      <div class="field" data-field="contractedOptions">
+        <label class="field-label">ご契約中のオプションプラン<span class="required">必須</span></label>
+        <p class="field-desc">基本プランに加えてご契約いただいているオプションをすべてお選びください。</p>
+        <div class="checkbox-group" id="contractedOptionsGroup">
+          <label><input type="checkbox" name="contractedOptions" value="identity" data-op-checkbox> 本人確認OP</label>
+          <label><input type="checkbox" name="contractedOptions" value="beds24" data-op-checkbox> Beds24連携OP</label>
+          <label><input type="checkbox" name="contractedOptions" value="none" data-op-checkbox data-op-none> 基本プランのみ（オプション契約なし）</label>
         </div>
-
-        <!-- 契約オプション -->
-        <div class="field-group">
-          <label class="field-label">契約オプション <span class="req">必須</span></label>
-          <div class="check-group" id="contractedOptionsGroup">
-            <input type="checkbox" class="check-btn" id="opt_none" name="contractedOptions" value="none">
-            <label class="check-label" for="opt_none">基本プランのみ</label>
-            <input type="checkbox" class="check-btn" id="opt_identity" name="contractedOptions" value="identity">
-            <label class="check-label" for="opt_identity">本人確認OP</label>
-            <input type="checkbox" class="check-btn" id="opt_beds24" name="contractedOptions" value="beds24">
-            <label class="check-label" for="opt_beds24">Beds24連携OP</label>
-          </div>
-          <div class="error-msg" id="err_options">契約オプションを選択してください</div>
-        </div>
-
-        <!-- 契約者名 -->
-        <div class="field-group">
-          <label class="field-label" for="contractorName">契約者名（会社名・屋号） <span class="req">必須</span></label>
-          <input type="text" id="contractorName" placeholder="例：株式会社サンプル" />
-          <div class="error-msg" id="err_contractorName">契約者名を入力してください</div>
-        </div>
-
-        <!-- 担当者名 -->
-        <div class="field-group">
-          <label class="field-label" for="contactName">担当者名 <span class="req">必須</span></label>
-          <input type="text" id="contactName" placeholder="例：山田 太郎" />
-          <div class="error-msg" id="err_contactName">担当者名を入力してください</div>
-        </div>
-
-        <!-- 担当者メール -->
-        <div class="field-group">
-          <label class="field-label" for="contactEmail">担当者メールアドレス <span class="req">必須</span></label>
-          <input type="email" id="contactEmail" placeholder="例：taro@example.com" />
-          <div class="error-msg" id="err_contactEmail">正しいメールアドレスを入力してください</div>
-        </div>
-
-        <!-- 物件数 -->
-        <div class="field-group">
-          <label class="field-label" for="propertyCount">管理物件数 <span class="req">必須</span></label>
-          <input type="number" id="propertyCount" min="1" max="50" placeholder="例：2" />
-          <div class="error-msg" id="err_propertyCount">物件数を入力してください（1〜50）</div>
-        </div>
-
+        <div class="field-error">ご契約中のオプションをお選びください</div>
       </div>
-    </div>
-    <div class="btn-row">
-      <button class="btn btn-primary" onclick="goNext(1)">次へ →</button>
-    </div>
-  </div>
-
-  <!-- ========== PAGE 2: 共通設定 ========== -->
-  <div class="form-page" id="page2">
-    <div class="section-card">
-      <div class="section-header"><span class="icon">🏢</span>建物・共通設定</div>
-      <div class="section-body">
-        <div class="info-box">
-          複数物件がある場合、共通の設定をここで入力します。物件ごとに異なる場合は、次の「物件情報」ページで上書きできます。
-        </div>
-
-        <!-- 建物住所 -->
-        <div class="field-group">
-          <label class="field-label" for="buildingAddress">建物住所 <span class="req">必須</span></label>
-          <input type="text" id="buildingAddress" placeholder="例：東京都新宿区西新宿1-2-3 サンプルビル" />
-          <div class="error-msg" id="err_buildingAddress">建物住所を入力してください</div>
-        </div>
-
-        <!-- タブレット設置場所 -->
-        <div class="field-group">
-          <label class="field-label">タブレット設置場所（共通） <span class="req">必須</span></label>
-          <div class="radio-group">
-            <input type="radio" class="radio-btn" id="tablet_indoor" name="tabletLocation" value="indoor">
-            <label class="radio-label" for="tablet_indoor">屋内設置</label>
-            <input type="radio" class="radio-btn" id="tablet_outdoor" name="tabletLocation" value="outdoor">
-            <label class="radio-label" for="tablet_outdoor">屋外設置</label>
-          </div>
-          <div class="error-msg" id="err_tabletLocation">タブレット設置場所を選択してください</div>
-        </div>
-
-        <!-- チェックイン/アウト時間 -->
-        <div class="two-col">
-          <div class="field-group">
-            <label class="field-label" for="checkinTime">チェックイン時間 <span class="req">必須</span></label>
-            <input type="time" id="checkinTime" value="15:00" />
-            <div class="error-msg" id="err_checkinTime">チェックイン時間を入力してください</div>
-          </div>
-          <div class="field-group">
-            <label class="field-label" for="checkoutTime">チェックアウト時間 <span class="req">必須</span></label>
-            <input type="time" id="checkoutTime" value="10:00" />
-            <div class="error-msg" id="err_checkoutTime">チェックアウト時間を入力してください</div>
-          </div>
-        </div>
-
-        <!-- アーリーチェックイン -->
-        <div class="field-group">
-          <label class="field-label">アーリーチェックイン <span class="req">必須</span></label>
-          <div class="radio-group">
-            <input type="radio" class="radio-btn" id="early_yes" name="earlyCheckin" value="yes">
-            <label class="radio-label" for="early_yes">対応する</label>
-            <input type="radio" class="radio-btn" id="early_no" name="earlyCheckin" value="no">
-            <label class="radio-label" for="early_no">対応しない</label>
-          </div>
-          <div class="error-msg" id="err_earlyCheckin">選択してください</div>
-        </div>
-        <div class="conditional" id="cond_earlyCheckinTime">
-          <div class="field-group">
-            <label class="field-label" for="earlyCheckinTime">アーリーチェックイン開始時刻 <span class="req">必須</span></label>
-            <input type="time" id="earlyCheckinTime" />
-            <div class="error-msg" id="err_earlyCheckinTime">時刻を入力してください</div>
-          </div>
-        </div>
-
-        <!-- レイトチェックアウト -->
-        <div class="field-group">
-          <label class="field-label">レイトチェックアウト <span class="req">必須</span></label>
-          <div class="radio-group">
-            <input type="radio" class="radio-btn" id="late_yes" name="lateCheckout" value="yes">
-            <label class="radio-label" for="late_yes">対応する</label>
-            <input type="radio" class="radio-btn" id="late_no" name="lateCheckout" value="no">
-            <label class="radio-label" for="late_no">対応しない</label>
-          </div>
-          <div class="error-msg" id="err_lateCheckout">選択してください</div>
-        </div>
-        <div class="conditional" id="cond_lateCheckoutTime">
-          <div class="field-group">
-            <label class="field-label" for="lateCheckoutTime">レイトチェックアウト最終時刻 <span class="req">必須</span></label>
-            <input type="time" id="lateCheckoutTime" />
-            <div class="error-msg" id="err_lateCheckoutTime">時刻を入力してください</div>
-          </div>
-        </div>
-
-        <!-- 荷物預かり -->
-        <div class="field-group">
-          <label class="field-label">荷物預かり <span class="req">必須</span></label>
-          <div class="radio-group">
-            <input type="radio" class="radio-btn" id="luggage_yes" name="luggageStorage" value="yes">
-            <label class="radio-label" for="luggage_yes">対応する</label>
-            <input type="radio" class="radio-btn" id="luggage_no" name="luggageStorage" value="no">
-            <label class="radio-label" for="luggage_no">対応しない</label>
-          </div>
-          <div class="error-msg" id="err_luggageStorage">選択してください</div>
-        </div>
-        <div class="conditional" id="cond_luggageStorageTime">
-          <div class="field-group">
-            <label class="field-label" for="luggageStorageTime">荷物預かり開始時刻 <span class="req">必須</span></label>
-            <input type="time" id="luggageStorageTime" />
-            <div class="error-msg" id="err_luggageStorageTime">時刻を入力してください</div>
-          </div>
-        </div>
-
+      
+      <div class="field" data-field="contractorName">
+        <label class="field-label">契約者名<span class="required">必須</span></label>
+        <p class="field-desc">弊社（民泊管理バンク）との契約書に記載されている契約者名をご記入ください。</p>
+        <input type="text" name="contractorName" id="contractorName" required>
+        <div class="field-error">契約者名をご入力ください</div>
       </div>
-    </div>
-
-    <!-- 連携サービス -->
-    <div class="section-card">
-      <div class="section-header"><span class="icon">🔗</span>連携サービス</div>
-      <div class="section-body">
-
-        <!-- Beds24 -->
-        <div class="field-group">
-          <label class="field-label">Beds24連携 <span class="req">必須</span></label>
-          <div class="radio-group">
-            <input type="radio" class="radio-btn" id="beds24_contracted" name="beds24" value="contracted">
-            <label class="radio-label" for="beds24_contracted">連携する（契約済み）</label>
-            <input type="radio" class="radio-btn" id="beds24_planned" name="beds24" value="planned">
-            <label class="radio-label" for="beds24_planned">連携する（契約予定）</label>
-            <input type="radio" class="radio-btn" id="beds24_no" name="beds24" value="no">
-            <label class="radio-label" for="beds24_no">連携しない</label>
-          </div>
-          <div class="error-msg" id="err_beds24">選択してください</div>
-        </div>
-        <div class="conditional" id="cond_beds24_contracted">
-          <div class="field-group">
-            <label class="field-label" for="beds24Account">Beds24アカウント情報 <span class="req">必須</span></label>
-            <textarea id="beds24Account" placeholder="ログインID: xxxxx&#10;パスワード: xxxxx"></textarea>
-            <div class="error-msg" id="err_beds24Account">アカウント情報を入力してください</div>
-          </div>
-        </div>
-        <div class="conditional" id="cond_beds24_planned">
-          <div class="field-group">
-            <label class="field-label" for="beds24PlannedDate">Beds24契約予定日 <span class="opt">任意</span></label>
-            <input type="date" id="beds24PlannedDate" />
-          </div>
-        </div>
-
-        <!-- RemoteLOCK -->
-        <div class="field-group">
-          <label class="field-label">RemoteLOCK連携 <span class="req">必須</span></label>
-          <div class="radio-group">
-            <input type="radio" class="radio-btn" id="rl_contracted" name="remotelock" value="contracted">
-            <label class="radio-label" for="rl_contracted">連携する（契約済み）</label>
-            <input type="radio" class="radio-btn" id="rl_planned" name="remotelock" value="planned">
-            <label class="radio-label" for="rl_planned">連携する（契約予定）</label>
-            <input type="radio" class="radio-btn" id="rl_no" name="remotelock" value="no">
-            <label class="radio-label" for="rl_no">連携しない</label>
-          </div>
-          <div class="error-msg" id="err_remotelock">選択してください</div>
-        </div>
-        <div class="conditional" id="cond_rl_contracted">
-          <div class="field-group">
-            <label class="field-label" for="remotelockAccount">RemoteLOCKアカウント情報 <span class="req">必須</span></label>
-            <textarea id="remotelockAccount" placeholder="ログインID: xxxxx&#10;パスワード: xxxxx"></textarea>
-            <div class="error-msg" id="err_remotelockAccount">アカウント情報を入力してください</div>
-          </div>
-        </div>
-        <div class="conditional" id="cond_rl_planned">
-          <div class="field-group">
-            <label class="field-label" for="remotelockPlannedDate">RemoteLOCK契約予定日 <span class="opt">任意</span></label>
-            <input type="date" id="remotelockPlannedDate" />
-          </div>
-        </div>
-
-        <!-- SESAME -->
-        <div class="field-group">
-          <label class="field-label" for="sesameAccount">SESAMEアカウント情報 <span class="opt">任意</span></label>
-          <textarea id="sesameAccount" placeholder="SESAMEを利用する場合はアカウント情報を入力"></textarea>
-        </div>
-
+      
+      <div class="field" data-field="contactName">
+        <label class="field-label">ご担当者様のお名前<span class="required">必須</span></label>
+        <p class="field-desc">本件の設定対応窓口となる方のお名前をご記入ください。</p>
+        <input type="text" name="contactName" id="contactName" required>
+        <div class="field-error">ご担当者様のお名前をご入力ください</div>
       </div>
-    </div>
-
-    <!-- 鍵・通知設定 -->
-    <div class="section-card">
-      <div class="section-header"><span class="icon">🔑</span>鍵・通知設定</div>
-      <div class="section-body">
-
-        <!-- 鍵の解錠方法 -->
-        <div class="field-group">
-          <label class="field-label" for="keyAccess">鍵の解錠方法（標準） <span class="req">必須</span></label>
-          <input type="text" id="keyAccess" placeholder="例：スマートロックに暗証番号を入力して解錠" />
-          <div class="error-msg" id="err_keyAccess">解錠方法を入力してください</div>
-        </div>
-
-        <!-- 暗証番号通知方法 -->
-        <div class="field-group">
-          <label class="field-label">暗証番号通知方法 <span class="req">必須</span></label>
-          <div class="radio-group">
-            <input type="radio" class="radio-btn" id="passcode_system" name="passcodeNotify" value="system">
-            <label class="radio-label" for="passcode_system">チェックインシステムで通知</label>
-            <input type="radio" class="radio-btn" id="passcode_host" name="passcodeNotify" value="host">
-            <label class="radio-label" for="passcode_host">ホストが個別に伝える</label>
-          </div>
-          <div class="error-msg" id="err_passcodeNotify">選択してください</div>
-        </div>
-
-        <!-- 自動メッセージ送信タイミング -->
-        <div class="field-group">
-          <label class="field-label">自動メッセージ送信タイミング <span class="req">必須</span></label>
-          <div class="check-group">
-            <input type="checkbox" class="check-btn" id="msg_onReservation" name="messageTiming" value="onReservation">
-            <label class="check-label" for="msg_onReservation">予約作成時</label>
-            <input type="checkbox" class="check-btn" id="msg_1dayBefore" name="messageTiming" value="1dayBefore">
-            <label class="check-label" for="msg_1dayBefore">チェックイン1日前</label>
-            <input type="checkbox" class="check-btn" id="msg_checkinDay" name="messageTiming" value="checkinDay">
-            <label class="check-label" for="msg_checkinDay">チェックイン当日</label>
-          </div>
-          <div class="error-msg" id="err_messageTiming">送信タイミングを選択してください</div>
-        </div>
-
+      
+      <div class="field" data-field="contactEmail">
+        <label class="field-label">ご担当者様のメールアドレス<span class="required">必須</span></label>
+        <p class="field-desc">設定内容の確認や追加のご連絡に使用いたします。普段ご確認いただけるアドレスをご記入ください。</p>
+        <input type="email" name="contactEmail" id="contactEmail" required>
+        <div class="field-error">有効なメールアドレスをご入力ください</div>
       </div>
-    </div>
-
-    <div class="btn-row">
-      <button class="btn btn-secondary" onclick="goBack(2)">← 戻る</button>
-      <button class="btn btn-primary" onclick="goNext(2)">次へ →</button>
-    </div>
-  </div>
-
-  <!-- ========== PAGE 3: 物件情報 ========== -->
-  <div class="form-page" id="page3">
-    <div class="section-card">
-      <div class="section-header"><span class="icon">🏠</span>物件情報</div>
-      <div class="section-body">
-        <div class="info-box" id="propertyCountInfo">
-          物件数分の情報を入力してください。共通設定と異なる場合は「個別設定を上書きする」をオンにしてください。
+      
+      <div class="field" data-field="propertyCount">
+        <label class="field-label">今回設定する物件数<span class="required">必須</span></label>
+        <p class="field-desc">今回基本プランをご契約いただいている物件数をお選びください。</p>
+        <select name="propertyCount" id="propertyCount" required>
+          <option value="">選択してください</option>
+          <option value="1">1件</option>
+          <option value="2">2件</option>
+          <option value="3">3件</option>
+          <option value="4">4件</option>
+          <option value="5">5件</option>
+        </select>
+        <div class="field-error">物件数をお選びください</div>
+      </div>
+    </section>
+    
+    <!-- =========================
+         セクション2: 全物件共通の運用設定
+         ========================= -->
+    <section class="form-section">
+      <h2>② 全物件共通の運用設定</h2>
+      <p class="section-desc">このセクションで入力した内容が、すべての物件のデフォルト値になります。物件ごとに異なる設定がある場合は、③物件情報の各物件で個別に上書きできます。</p>
+      
+      <div class="field" data-field="tabletLocation" id="tabletLocationField" style="display:none;">
+        <label class="field-label">タブレット設置場所（標準）<span class="required">必須</span></label>
+        <p class="field-desc">本人確認OPでご利用いただくタブレットの設置場所をお選びください。<br>全物件で同じ場合はここでお選びください。物件ごとに異なる場合は、各物件の「共通設定と一部異なる」で個別に上書きできます。</p>
+        <div class="radio-group" id="tabletLocationGroup">
+          <label><input type="radio" name="tabletLocation" value="indoor"> 屋内設置</label>
+          <label><input type="radio" name="tabletLocation" value="outdoor"> 屋外設置</label>
         </div>
-        <div id="propertiesContainer">
-          <!-- 物件カードはJSで動的生成 -->
+        <div class="field-error">タブレット設置場所をお選びください</div>
+      </div>
+      
+      <div class="field" data-field="buildingAddress">
+        <label class="field-label">建物住所<span class="optional">任意</span></label>
+        <p class="field-desc">ゲスト様にお伝えする住所をご記入ください。複数物件が同じ建物内にある場合のみご入力ください。物件ごとに住所が異なる場合は空欄のままにしてください。</p>
+        <input type="text" name="buildingAddress" id="buildingAddress" placeholder="例：東京都〇〇区〇〇1-2-3 △△マンション">
+      </div>
+      
+      <div class="field" data-field="checkinTime">
+        <label class="field-label">チェックイン開始時間<span class="required">必須</span></label>
+        <p class="field-desc">通常のチェックイン受付開始時刻をご入力ください。</p>
+        <input type="time" name="checkinTime" id="checkinTime" required>
+        <div class="field-error">チェックイン開始時間をご入力ください</div>
+      </div>
+      
+      <div class="field" data-field="checkoutTime">
+        <label class="field-label">チェックアウト時間<span class="required">必須</span></label>
+        <p class="field-desc">チェックアウトの締切時刻をご入力ください。</p>
+        <input type="time" name="checkoutTime" id="checkoutTime" required>
+        <div class="field-error">チェックアウト時間をご入力ください</div>
+      </div>
+      
+      <div class="field" data-field="earlyCheckin">
+        <label class="field-label">アーリーチェックインの対応<span class="required">必須</span></label>
+        <p class="field-desc">通常のチェックイン時刻より早い受付に対応されますか？</p>
+        <div class="radio-group" id="earlyCheckinGroup">
+          <label><input type="radio" name="earlyCheckin" value="no" required> 対応しない</label>
+          <label><input type="radio" name="earlyCheckin" value="yes"> 対応する</label>
+        </div>
+        <div class="field-error">アーリーチェックインの対応をお選びください</div>
+        <div class="conditional" id="earlyCheckinTimeWrap">
+          <label class="field-label">アーリーチェックイン開始時刻<span class="required">必須</span></label>
+          <input type="time" name="earlyCheckinTime" id="earlyCheckinTime">
         </div>
       </div>
+      
+      <div class="field" data-field="lateCheckout">
+        <label class="field-label">レイトチェックアウトの対応<span class="required">必須</span></label>
+        <p class="field-desc">通常のチェックアウト時刻より遅い時間までの滞在に対応されますか？</p>
+        <div class="radio-group" id="lateCheckoutGroup">
+          <label><input type="radio" name="lateCheckout" value="no" required> 対応しない</label>
+          <label><input type="radio" name="lateCheckout" value="yes"> 対応する</label>
+        </div>
+        <div class="field-error">レイトチェックアウトの対応をお選びください</div>
+        <div class="conditional" id="lateCheckoutTimeWrap">
+          <label class="field-label">レイトチェックアウト最終時刻<span class="required">必須</span></label>
+          <p class="field-desc">レイトチェックアウトとして対応可能な最終時刻をご入力ください。</p>
+          <input type="time" name="lateCheckoutTime" id="lateCheckoutTime">
+        </div>
+      </div>
+      
+      <div class="field" data-field="luggageStorage">
+        <label class="field-label">玄関内での荷物預かり対応<span class="required">必須</span></label>
+        <p class="field-desc">チェックイン前のお荷物を玄関内でお預かりされますか？</p>
+        <div class="radio-group" id="luggageStorageGroup">
+          <label><input type="radio" name="luggageStorage" value="no" required> 対応しない</label>
+          <label><input type="radio" name="luggageStorage" value="yes"> 対応する</label>
+        </div>
+        <div class="field-error">荷物預かりの対応をお選びください</div>
+        <div class="conditional" id="luggageStorageTimeWrap">
+          <label class="field-label">荷物預かり開始時刻<span class="required">必須</span></label>
+          <input type="time" name="luggageStorageTime" id="luggageStorageTime">
+        </div>
+      </div>
+      
+      <div class="field" data-field="beds24">
+        <label class="field-label">Beds24との連携<span class="required">必須</span></label>
+        <p class="field-desc">予約管理システム「Beds24」との連携状況をお選びください。</p>
+        <div class="radio-group" id="beds24Group">
+          <label data-beds24-option="no"><input type="radio" name="beds24" value="no" required> 連携しない</label>
+          <label><input type="radio" name="beds24" value="planned"> 連携する（未契約・これから契約予定）</label>
+          <label><input type="radio" name="beds24" value="contracted"> 連携する（契約済み）</label>
+        </div>
+        <div class="field-error">Beds24連携の状況をお選びください</div>
+        <div class="conditional" id="beds24PlannedDateWrap">
+          <label class="field-label">Beds24契約予定日<span class="optional">任意</span></label>
+          <p class="field-desc">いつ頃Beds24をご契約予定かをご記入ください。</p>
+          <input type="date" name="beds24PlannedDate" id="beds24PlannedDate">
+        </div>
+        <div class="conditional" id="beds24AccountWrap">
+          <label class="field-label">Beds24アカウント情報<span class="required">必須</span></label>
+          <p class="field-desc">システム連携に必要なBeds24のログインID・パスワード・APIキー等をご記入ください。</p>
+          <textarea name="beds24Account" id="beds24Account" placeholder="例：&#10;ログインID: ○○○○&#10;パスワード: ○○○○&#10;APIキー: ○○○○"></textarea>
+          <div class="info-note" id="beds24EmailNote">
+            ℹ️ チェックインシステムとの連携設定のため、弊社がお客様のBeds24アカウントにログインする必要がございます。<br>
+            お手数ですが、Beds24の<strong>ログイン認証用メールアドレスに <a href="mailto:customer@bizpato.com">customer@bizpato.com</a> を追加</strong>してください。<br>
+            追加方法：<a href="https://co-reception.com/support-ticket/" target="_blank" rel="noopener">Beds24サポート</a>から「ログイン認証用メールアドレスに customer@bizpato.com を追加してください」とお伝えいただくと対応してもらえます。
+          </div>
+        </div>
+      </div>
+      
+      <div class="field" data-field="remotelock">
+        <label class="field-label">RemoteLOCKとの連携<span class="required">必須</span></label>
+        <p class="field-desc">スマートロックシステム「RemoteLOCK」との連携状況をお選びください。</p>
+        <div class="radio-group" id="remotelockGroup">
+          <label data-remotelock-option="no"><input type="radio" name="remotelock" value="no" required> 連携しない</label>
+          <label><input type="radio" name="remotelock" value="planned"> 連携する（未契約・これから契約予定）</label>
+          <label><input type="radio" name="remotelock" value="contracted"> 連携する（契約済み）</label>
+        </div>
+        <div class="field-error">RemoteLOCK連携の状況をお選びください</div>
+        <div class="conditional" id="remotelockPlannedDateWrap">
+          <label class="field-label">RemoteLOCK契約予定日<span class="optional">任意</span></label>
+          <p class="field-desc">いつ頃RemoteLOCKをご契約予定かをご記入ください。</p>
+          <input type="date" name="remotelockPlannedDate" id="remotelockPlannedDate">
+        </div>
+        <div class="conditional" id="remotelockAccountWrap">
+          <label class="field-label">RemoteLOCKアカウント情報<span class="required">必須</span></label>
+          <p class="field-desc">システム連携に必要なRemoteLOCKのログインID・パスワード等をご記入ください。</p>
+          <textarea name="remotelockAccount" id="remotelockAccount" placeholder="例：&#10;ログインID: ○○○○&#10;パスワード: ○○○○"></textarea>
+        </div>
+      </div>
+      
+      <div class="field" data-field="keyAccess">
+        <label class="field-label">鍵の解錠方法（標準）<span class="required">必須</span></label>
+        <p class="field-desc">ゲスト様が施設に入室する際の具体的な手順をご記入ください（例：玄関横のキーボックスから鍵を取り出して解錠、スマートロックに暗証番号を入力して解錠 など）。<br>全物件で同じ手順の場合はここに入力してください。物件ごとに異なる場合は、各物件の「共通設定と一部異なる」で個別に上書きできます。</p>
+        <textarea name="keyAccess" id="keyAccess" required></textarea>
+        <div class="field-error">鍵の解錠方法をご入力ください</div>
+      </div>
+      
+      <div class="field" data-field="sesameAccount" id="sesameAccountField" style="display:none;">
+        <label class="field-label">SESAMEアカウント情報<span class="required">必須</span></label>
+        <p class="field-desc">SESAME 5 / SESAME 5 Pro をご利用の物件があるため、CANDY HOUSE社の管理画面（<a href="https://biz.candyhouse.co/" target="_blank" rel="noopener">https://biz.candyhouse.co/</a>）にログインできるアカウント情報をご記入ください。弊社にてシステム連携用の情報（APIキー・デバイスUUID等）を取得いたします。</p>
+        <textarea name="sesameAccount" id="sesameAccount" placeholder="例：&#10;ログインID（メールアドレス）: ○○○○&#10;パスワード: ○○○○"></textarea>
+        <div class="field-error">SESAMEアカウント情報をご入力ください</div>
+      </div>
+      
+      <div class="field" data-field="passcodeNotify" id="passcodeNotifyField" style="display:none;">
+        <label class="field-label">鍵の暗証番号の通知方法<span class="required">必須</span></label>
+        <p class="field-desc">RemoteLOCK / SESAME 5 / SESAME 5 Pro 以外の鍵をご利用の物件がある場合、ゲスト様への暗証番号のお伝え方法をお選びください。</p>
+        <div class="radio-group" id="passcodeNotifyGroup">
+          <label><input type="radio" name="passcodeNotify" value="system"> チェックインシステムで本人確認完了後にゲストへ通知する</label>
+          <label><input type="radio" name="passcodeNotify" value="host"> ホストが個別にゲストへお伝えする</label>
+        </div>
+        <div class="field-error">通知方法をお選びください</div>
+      </div>
+      
+      <div class="field" data-field="messageTiming">
+        <label class="field-label">自動メッセージ送信タイミング<span class="required">必須</span></label>
+        <p class="field-desc">ゲスト様への自動メッセージを送信するタイミングをすべてお選びください（複数選択可）。</p>
+        <div class="checkbox-group" id="messageTimingGroup">
+          <label><input type="checkbox" name="messageTiming" value="onReservation"> 予約作成時</label>
+          <label><input type="checkbox" name="messageTiming" value="2daysBefore"> チェックイン2日前</label>
+          <label><input type="checkbox" name="messageTiming" value="1dayBefore"> チェックイン1日前</label>
+          <label><input type="checkbox" name="messageTiming" value="checkinDay"> チェックイン当日</label>
+          <label><input type="checkbox" name="messageTiming" value="checkoutDay"> チェックアウト当日</label>
+        </div>
+        <div class="field-error">送信タイミングを1つ以上お選びください</div>
+      </div>
+    </section>
+    
+    <!-- =========================
+         セクション3: 物件情報
+         ========================= -->
+    <section class="form-section" id="propertySection" style="display:none;">
+      <h2>③ 物件情報</h2>
+      <p class="section-desc">物件ごとに必ず入力する基本情報をご記入ください。共通設定と異なる項目がある物件のみ、各物件のチェックボックスで個別設定を展開して上書きできます。</p>
+      
+      <div id="propertyContainer">
+        <!-- 物件1〜5（JavaScriptで動的表示） -->
+      </div>
+    </section>
+    
+    <!-- =========================
+         セクション4: サブアカウント発行情報
+         ========================= -->
+    <section class="form-section">
+      <h2>④ サブアカウント発行情報</h2>
+      <p class="section-desc">チェックインシステムは弊社アカウントにて作成し、ホスト様用のサブアカウントを発行することで管理権限を付与いたします。下記にご希望のサブアカウント情報をご記入ください。</p>
+      
+      <div class="security-note">
+        ⚠️ パスワードはフォーム送信時に暗号化されたうえで弊社担当者のみが閲覧します。設定完了後、初回ログイン時にホスト様ご自身でのパスワード変更を推奨いたします。
+      </div>
+      
+      <div class="field" data-field="subEmail">
+        <label class="field-label">サブアカウント用メールアドレス<span class="required">必須</span></label>
+        <p class="field-desc">サブアカウントへのログインに使用するメールアドレスをご記入ください。今後システムからの通知もこちらに届きます。</p>
+        <input type="email" name="subEmail" id="subEmail" required>
+        <div class="field-error">有効なメールアドレスをご入力ください</div>
+      </div>
+      
+      <div class="field" data-field="subPassword">
+        <label class="field-label">サブアカウント用パスワード<span class="required">必須</span></label>
+        <p class="field-desc">サブアカウントのログイン時に使用するパスワードをご記入ください（半角英数字8文字以上を推奨いたします）。</p>
+        <input type="password" name="subPassword" id="subPassword" required minlength="8">
+        <div class="field-error">8文字以上のパスワードをご入力ください</div>
+      </div>
+      
+      <div class="field" data-field="subName">
+        <label class="field-label">サブアカウント表示名<span class="required">必須</span></label>
+        <p class="field-desc">システム上に表示されるお名前をご記入ください。</p>
+        <input type="text" name="subName" id="subName" required>
+        <div class="field-error">表示名をご入力ください</div>
+      </div>
+      
+      <div class="field" data-field="subPhone">
+        <label class="field-label">サブアカウント用電話番号<span class="required">必須</span></label>
+        <p class="field-desc">サブアカウントに登録する電話番号を半角数字（ハイフンなし）でご記入ください。</p>
+        <input type="tel" name="subPhone" id="subPhone" required pattern="[0-9]+">
+        <div class="field-error">半角数字（ハイフンなし）でご入力ください</div>
+      </div>
+    </section>
+    
+    <!-- 送信ボタン -->
+    <div class="submit-area">
+      <button type="submit" class="submit-btn" id="submitBtn">入力内容を送信する</button>
+      <div class="submit-error" id="submitError">未入力の項目があります。上記をご確認ください。</div>
     </div>
-    <div class="btn-row">
-      <button class="btn btn-secondary" onclick="goBack(3)">← 戻る</button>
-      <button class="btn btn-primary" onclick="goNext(3)">次へ →</button>
-    </div>
-  </div>
-
-  <!-- ========== PAGE 4: サブアカウント ========== -->
-  <div class="form-page" id="page4">
-    <div class="section-card">
-      <div class="section-header"><span class="icon">👤</span>サブアカウント情報</div>
-      <div class="section-body">
-        <div class="info-box">
-          弊社システムへのログイン用サブアカウントを設定します。
-        </div>
-
-        <div class="field-group">
-          <label class="field-label" for="subEmail">メールアドレス <span class="req">必須</span></label>
-          <input type="email" id="subEmail" placeholder="例：sub@example.com" />
-          <div class="error-msg" id="err_subEmail">正しいメールアドレスを入力してください</div>
-        </div>
-
-        <div class="field-group">
-          <label class="field-label" for="subPassword">パスワード <span class="req">必須</span></label>
-          <input type="text" id="subPassword" placeholder="例：Sub12345!" />
-          <div class="error-msg" id="err_subPassword">パスワードを入力してください</div>
-        </div>
-
-        <div class="field-group">
-          <label class="field-label" for="subName">表示名 <span class="req">必須</span></label>
-          <input type="text" id="subName" placeholder="例：山田 太郎" />
-          <div class="error-msg" id="err_subName">表示名を入力してください</div>
-        </div>
-
-        <div class="field-group">
-          <label class="field-label" for="subPhone">電話番号 <span class="opt">任意</span></label>
-          <input type="tel" id="subPhone" placeholder="例：09012345678" />
-        </div>
-
+    
+  </form>
+  
+  <!-- 送信完了画面 -->
+  <div class="post-send" id="postSend">
+    <div class="post-send-icon">✓</div>
+    <h2>送信が完了しました</h2>
+    <p>ご入力いただきありがとうございました。内容は弊社担当者へ共有されました。</p>
+    <p>頂いた情報をもとに、チェックインシステムの構築作業を進めさせていただきます。担当者よりあらためてご連絡させていただきますので、今しばらくお待ちください。</p>
+    
+    <!-- ホストタスクセクション（動的表示） -->
+    <div class="host-tasks" id="hostTasksSection" style="display:none;">
+      <div class="tasks-summary" id="tasksSummary"></div>
+      <h3>ホスト様にご対応をお願いしたい事項</h3>
+      <p class="tasks-desc">ご入力いただいた内容に基づき、ホスト様にご対応をお願いしたい事項を以下にまとめております。お手数ですが、ご対応のほどよろしくお願いいたします。</p>
+      <div id="hostTasksList"></div>
+      <div class="task-actions">
+        <button type="button" class="task-action-btn" id="copyTasksBtn">📋 リストをコピー</button>
+        <button type="button" class="task-action-btn" onclick="window.print()">🖨️ 印刷する</button>
       </div>
     </div>
-    <div class="btn-row">
-      <button class="btn btn-secondary" onclick="goBack(4)">← 戻る</button>
-      <button class="btn btn-primary" onclick="goNext(4)">確認画面へ →</button>
-    </div>
+    
+    <p>ご不明な点がございましたら、<a href="mailto:customer@bizpato.com">customer@bizpato.com</a> までお気軽にお問い合わせください。</p>
   </div>
-
-  <!-- ========== PAGE 5: 確認・送信 ========== -->
-  <div class="form-page" id="page5">
-    <div style="margin-top:20px;font-size:0.9rem;color:var(--color-text-light);">
-      入力内容をご確認の上、送信してください。
-    </div>
-
-    <div class="confirm-section" id="confirmContractor">
-      <div class="confirm-section-header">📋 契約者情報</div>
-      <table class="confirm-table" id="confirmContractorTable"></table>
-    </div>
-
-    <div class="confirm-section" id="confirmCommon">
-      <div class="confirm-section-header">🏢 共通設定</div>
-      <table class="confirm-table" id="confirmCommonTable"></table>
-    </div>
-
-    <div id="confirmPropertiesWrap"></div>
-
-    <div class="confirm-section" id="confirmSub">
-      <div class="confirm-section-header">👤 サブアカウント</div>
-      <table class="confirm-table" id="confirmSubTable"></table>
-    </div>
-
-    <div class="btn-row">
-      <button class="btn btn-secondary" onclick="goBack(5)">← 戻る</button>
-      <button class="btn btn-submit" id="submitBtn" onclick="submitForm()">送信する</button>
-    </div>
-  </div>
-
-  <!-- ========== PAGE 6: 完了 ========== -->
-  <div class="form-page" id="page6">
-    <div class="complete-card">
-      <div class="complete-icon">✅</div>
-      <h2>送信が完了しました</h2>
-      <p>ヒアリングフォームのご回答ありがとうございます。<br>弊社担当者が内容を確認し、チェックインシステムの設定を進めます。</p>
-      <div class="complete-id" id="completeId">受付ID: —</div>
-      <p>ご不明な点は <strong>customer@bizpato.com</strong> までお問い合わせください。</p>
-    </div>
-  </div>
-
-</div><!-- /container -->
+  
+</div>
 
 <script>
-// ===== Webhook URL =====
-const N8N_WEBHOOK_URL = 'https://bizpato.app.n8n.cloud/webhook/minpaku-hearing';
-
-// ===== State =====
-let currentPage = 1;
-const TOTAL_PAGES = 5; // 送信前のページ数
-
-// ===== Label maps =====
-const OPTION_LABELS = { none: '基本プランのみ（オプション契約なし）', identity: '本人確認OP', beds24: 'Beds24連携OP' };
-const BUSINESS_LABELS = { minpakuLaw: '住宅宿泊事業（民泊新法）', ryokan: '旅館業', toku: '特区民泊', undecided: '未定' };
-const KEY_LABELS = {
-  remotelock: 'RemoteLOCK', sesame5: 'SESAME 5', sesame5pro: 'SESAME 5 Pro',
-  keybox: 'キーボックス', other_smartlock_fixed: 'その他のスマートロック・固定暗証番号',
-  other_smartlock_random: 'その他のスマートロック・ランダム暗証番号', other: 'その他'
-};
-const TABLET_LABELS = { indoor: '屋内設置', outdoor: '屋外設置' };
-const HEALTH_LABELS = { done: '実施済み', planned: '予定あり', undecided: '未定' };
-const REG_LABELS = { issued: '発行済み', planned: '発行予定', undecided: '未定' };
-const PASSCODE_LABELS = { system: 'チェックインシステムで通知', host: 'ホストが個別に伝える' };
-const MSG_LABELS = { onReservation: '予約作成時', '1dayBefore': 'チェックイン1日前', checkinDay: 'チェックイン当日' };
-const BEDS24_LABELS = { contracted: '連携する（契約済み）', planned: '連携する（契約予定）', no: '連携しない' };
-const RL_LABELS = { contracted: '連携する（契約済み）', planned: '連携する（契約予定）', no: '連携しない' };
-
-// ===== Progress update =====
-function updateProgress(page) {
-  for (let i = 1; i <= 5; i++) {
-    const sc = document.getElementById('sc' + i);
-    const sl = document.getElementById('sl' + i);
-    if (i < page) {
-      sc.className = 'step-circle done';
-      sc.textContent = '✓';
-      sl.className = 'step-label';
-    } else if (i === page) {
-      sc.className = 'step-circle active';
-      sc.textContent = i;
-      sl.className = 'step-label active';
-    } else {
-      sc.className = 'step-circle';
-      sc.textContent = i;
-      sl.className = 'step-label';
-    }
-  }
-  for (let i = 1; i <= 4; i++) {
-    const line = document.getElementById('line' + i + (i + 1));
-    if (line) line.className = i < page ? 'step-line done' : 'step-line';
-  }
-}
-
-// ===== Navigation =====
-function showPage(n) {
-  document.querySelectorAll('.form-page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page' + n).classList.add('active');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-  currentPage = n;
-  if (n <= 5) updateProgress(n);
-}
-
-function goBack(from) {
-  showPage(from - 1);
-}
-
-function goNext(from) {
-  if (!validatePage(from)) return;
-  if (from === 1) buildPropertyCards();
-  if (from === 4) buildConfirmPage();
-  showPage(from + 1);
-}
-
-// ===== Conditional fields =====
-function setupConditionals() {
-  // アーリーチェックイン
-  document.querySelectorAll('input[name="earlyCheckin"]').forEach(r => {
-    r.addEventListener('change', () => {
-      document.getElementById('cond_earlyCheckinTime').classList.toggle('show', r.value === 'yes' && r.checked);
-    });
-  });
-  // レイトチェックアウト
-  document.querySelectorAll('input[name="lateCheckout"]').forEach(r => {
-    r.addEventListener('change', () => {
-      document.getElementById('cond_lateCheckoutTime').classList.toggle('show', r.value === 'yes' && r.checked);
-    });
-  });
-  // 荷物預かり
-  document.querySelectorAll('input[name="luggageStorage"]').forEach(r => {
-    r.addEventListener('change', () => {
-      document.getElementById('cond_luggageStorageTime').classList.toggle('show', r.value === 'yes' && r.checked);
-    });
-  });
-  // Beds24
-  document.querySelectorAll('input[name="beds24"]').forEach(r => {
-    r.addEventListener('change', () => {
-      document.getElementById('cond_beds24_contracted').classList.toggle('show', r.value === 'contracted' && r.checked);
-      document.getElementById('cond_beds24_planned').classList.toggle('show', r.value === 'planned' && r.checked);
-    });
-  });
-  // RemoteLOCK
-  document.querySelectorAll('input[name="remotelock"]').forEach(r => {
-    r.addEventListener('change', () => {
-      document.getElementById('cond_rl_contracted').classList.toggle('show', r.value === 'contracted' && r.checked);
-      document.getElementById('cond_rl_planned').classList.toggle('show', r.value === 'planned' && r.checked);
-    });
-  });
-  // 基本プランのみ チェックボックス排他
-  document.getElementById('opt_none').addEventListener('change', function() {
-    if (this.checked) {
-      document.getElementById('opt_identity').checked = false;
-      document.getElementById('opt_beds24').checked = false;
-    }
-  });
-  ['opt_identity', 'opt_beds24'].forEach(id => {
-    document.getElementById(id).addEventListener('change', function() {
-      if (this.checked) document.getElementById('opt_none').checked = false;
-    });
-  });
-}
-
-// ===== Property Cards =====
-function buildPropertyCards() {
-  const count = parseInt(document.getElementById('propertyCount').value) || 1;
-  const container = document.getElementById('propertiesContainer');
-  const existing = container.querySelectorAll('.property-card').length;
-  if (existing === count) return; // 変更なし
-
-  container.innerHTML = '';
-  for (let i = 1; i <= count; i++) {
-    container.appendChild(createPropertyCard(i));
-  }
-}
-
-function createPropertyCard(idx) {
-  const div = document.createElement('div');
-  div.className = 'property-card';
-  div.id = 'propCard' + idx;
-  div.innerHTML = `
-    <div class="property-card-header">
-      <span>物件 ${idx}</span>
-    </div>
-    <div class="property-card-body">
-      <div class="field-group">
-        <label class="field-label">施設名 <span class="req">必須</span></label>
-        <input type="text" id="prop_name_${idx}" placeholder="例：サンプルハウス 101号室" />
-        <div class="error-msg" id="err_prop_name_${idx}">施設名を入力してください</div>
-      </div>
-      <div class="two-col">
-        <div class="field-group">
-          <label class="field-label">部屋番号 <span class="opt">任意</span></label>
-          <input type="text" id="prop_room_${idx}" placeholder="例：101" />
-        </div>
-        <div class="field-group">
-          <label class="field-label">住所（共通と異なる場合） <span class="opt">任意</span></label>
-          <input type="text" id="prop_address_${idx}" placeholder="省略可" />
-        </div>
-      </div>
-      <div class="field-group">
-        <label class="field-label">業態 <span class="req">必須</span></label>
-        <div class="radio-group">
-          <input type="radio" class="radio-btn" id="prop_bt_minpakuLaw_${idx}" name="prop_businessType_${idx}" value="minpakuLaw">
-          <label class="radio-label" for="prop_bt_minpakuLaw_${idx}">住宅宿泊事業（民泊新法）</label>
-          <input type="radio" class="radio-btn" id="prop_bt_ryokan_${idx}" name="prop_businessType_${idx}" value="ryokan">
-          <label class="radio-label" for="prop_bt_ryokan_${idx}">旅館業</label>
-          <input type="radio" class="radio-btn" id="prop_bt_toku_${idx}" name="prop_businessType_${idx}" value="toku">
-          <label class="radio-label" for="prop_bt_toku_${idx}">特区民泊</label>
-          <input type="radio" class="radio-btn" id="prop_bt_undecided_${idx}" name="prop_businessType_${idx}" value="undecided">
-          <label class="radio-label" for="prop_bt_undecided_${idx}">未定</label>
-        </div>
-        <div class="error-msg" id="err_prop_businessType_${idx}">業態を選択してください</div>
-      </div>
-      <div class="field-group">
-        <label class="field-label">鍵の種類 <span class="req">必須</span></label>
-        <div class="select-wrap">
-          <select id="prop_keyType_${idx}" onchange="onKeyTypeChange(${idx})">
-            <option value="">選択してください</option>
-            <option value="remotelock">RemoteLOCK</option>
-            <option value="sesame5">SESAME 5</option>
-            <option value="sesame5pro">SESAME 5 Pro</option>
-            <option value="keybox">キーボックス</option>
-            <option value="other_smartlock_fixed">その他のスマートロック・固定暗証番号</option>
-            <option value="other_smartlock_random">その他のスマートロック・ランダム暗証番号</option>
-            <option value="other">その他</option>
-          </select>
-        </div>
-        <div class="error-msg" id="err_prop_keyType_${idx}">鍵の種類を選択してください</div>
-      </div>
-      <div class="conditional" id="cond_prop_keyDetail_${idx}">
-        <div class="field-group">
-          <label class="field-label">鍵の詳細 <span class="opt">任意</span></label>
-          <input type="text" id="prop_keyTypeDetail_${idx}" placeholder="鍵の詳細情報" />
-        </div>
-      </div>
-      <div class="conditional" id="cond_prop_passcode_${idx}">
-        <div class="field-group">
-          <label class="field-label">鍵の暗証番号 <span class="opt">任意</span></label>
-          <input type="text" id="prop_passcode_${idx}" placeholder="固定暗証番号がある場合は入力" />
-        </div>
-      </div>
-      <div class="field-group">
-        <label class="field-label">保健所立ち会い状況 <span class="req">必須</span></label>
-        <div class="radio-group">
-          <input type="radio" class="radio-btn" id="prop_hi_done_${idx}" name="prop_healthInspection_${idx}" value="done">
-          <label class="radio-label" for="prop_hi_done_${idx}">実施済み</label>
-          <input type="radio" class="radio-btn" id="prop_hi_planned_${idx}" name="prop_healthInspection_${idx}" value="planned">
-          <label class="radio-label" for="prop_hi_planned_${idx}">予定あり</label>
-          <input type="radio" class="radio-btn" id="prop_hi_undecided_${idx}" name="prop_healthInspection_${idx}" value="undecided">
-          <label class="radio-label" for="prop_hi_undecided_${idx}">未定</label>
-        </div>
-        <div class="error-msg" id="err_prop_healthInspection_${idx}">選択してください</div>
-      </div>
-      <div class="conditional" id="cond_prop_hiDate_${idx}">
-        <div class="field-group">
-          <label class="field-label">保健所立ち会い日付 <span class="opt">任意</span></label>
-          <input type="date" id="prop_healthInspectionDate_${idx}" />
-        </div>
-      </div>
-      <div class="field-group">
-        <label class="field-label">届出番号状況 <span class="req">必須</span></label>
-        <div class="radio-group">
-          <input type="radio" class="radio-btn" id="prop_reg_issued_${idx}" name="prop_registration_${idx}" value="issued">
-          <label class="radio-label" for="prop_reg_issued_${idx}">発行済み</label>
-          <input type="radio" class="radio-btn" id="prop_reg_planned_${idx}" name="prop_registration_${idx}" value="planned">
-          <label class="radio-label" for="prop_reg_planned_${idx}">発行予定</label>
-          <input type="radio" class="radio-btn" id="prop_reg_undecided_${idx}" name="prop_registration_${idx}" value="undecided">
-          <label class="radio-label" for="prop_reg_undecided_${idx}">未定</label>
-        </div>
-        <div class="error-msg" id="err_prop_registration_${idx}">選択してください</div>
-      </div>
-      <div class="conditional" id="cond_prop_regNum_${idx}">
-        <div class="field-group">
-          <label class="field-label">届出番号 <span class="opt">任意</span></label>
-          <input type="text" id="prop_registrationNumber_${idx}" placeholder="例：M210000001" />
-        </div>
-      </div>
-      <div class="conditional" id="cond_prop_regDate_${idx}">
-        <div class="field-group">
-          <label class="field-label">発行予定日 <span class="opt">任意</span></label>
-          <input type="date" id="prop_registrationDate_${idx}" />
-        </div>
-      </div>
-
-      <!-- Override toggle -->
-      <label class="override-toggle" for="prop_override_${idx}">
-        <div class="toggle-switch">
-          <input type="checkbox" id="prop_override_${idx}" onchange="toggleOverride(${idx})">
-          <div class="toggle-track"></div>
-          <div class="toggle-thumb"></div>
-        </div>
-        <span class="toggle-label-text">この物件の設定を共通設定から上書きする</span>
-      </label>
-      <div class="override-fields" id="overrideFields_${idx}">
-        <div class="override-note">空欄の項目は共通設定が適用されます</div>
-        <div class="two-col">
-          <div class="field-group">
-            <label class="field-label">チェックイン時間 <span class="opt">任意</span></label>
-            <input type="time" id="prop_ov_checkinTime_${idx}" />
-          </div>
-          <div class="field-group">
-            <label class="field-label">チェックアウト時間 <span class="opt">任意</span></label>
-            <input type="time" id="prop_ov_checkoutTime_${idx}" />
-          </div>
-        </div>
-        <div class="field-group">
-          <label class="field-label">アーリーチェックイン <span class="opt">任意</span></label>
-          <div class="radio-group">
-            <input type="radio" class="radio-btn" id="prop_ov_early_yes_${idx}" name="prop_ov_earlyCheckin_${idx}" value="yes">
-            <label class="radio-label" for="prop_ov_early_yes_${idx}">対応する</label>
-            <input type="radio" class="radio-btn" id="prop_ov_early_no_${idx}" name="prop_ov_earlyCheckin_${idx}" value="no">
-            <label class="radio-label" for="prop_ov_early_no_${idx}">対応しない</label>
-          </div>
-        </div>
-        <div class="field-group">
-          <label class="field-label">アーリー開始時刻 <span class="opt">任意</span></label>
-          <input type="time" id="prop_ov_earlyCheckinTime_${idx}" />
-        </div>
-        <div class="field-group">
-          <label class="field-label">レイトチェックアウト <span class="opt">任意</span></label>
-          <div class="radio-group">
-            <input type="radio" class="radio-btn" id="prop_ov_late_yes_${idx}" name="prop_ov_lateCheckout_${idx}" value="yes">
-            <label class="radio-label" for="prop_ov_late_yes_${idx}">対応する</label>
-            <input type="radio" class="radio-btn" id="prop_ov_late_no_${idx}" name="prop_ov_lateCheckout_${idx}" value="no">
-            <label class="radio-label" for="prop_ov_late_no_${idx}">対応しない</label>
-          </div>
-        </div>
-        <div class="field-group">
-          <label class="field-label">レイト最終時刻 <span class="opt">任意</span></label>
-          <input type="time" id="prop_ov_lateCheckoutTime_${idx}" />
-        </div>
-        <div class="field-group">
-          <label class="field-label">荷物預かり <span class="opt">任意</span></label>
-          <div class="radio-group">
-            <input type="radio" class="radio-btn" id="prop_ov_lug_yes_${idx}" name="prop_ov_luggageStorage_${idx}" value="yes">
-            <label class="radio-label" for="prop_ov_lug_yes_${idx}">対応する</label>
-            <input type="radio" class="radio-btn" id="prop_ov_lug_no_${idx}" name="prop_ov_luggageStorage_${idx}" value="no">
-            <label class="radio-label" for="prop_ov_lug_no_${idx}">対応しない</label>
-          </div>
-        </div>
-        <div class="field-group">
-          <label class="field-label">荷物預かり開始時刻 <span class="opt">任意</span></label>
-          <input type="time" id="prop_ov_luggageStorageTime_${idx}" />
-        </div>
-        <div class="field-group">
-          <label class="field-label">タブレット設置場所 <span class="opt">任意</span></label>
-          <div class="radio-group">
-            <input type="radio" class="radio-btn" id="prop_ov_tab_indoor_${idx}" name="prop_ov_tabletLocation_${idx}" value="indoor">
-            <label class="radio-label" for="prop_ov_tab_indoor_${idx}">屋内設置</label>
-            <input type="radio" class="radio-btn" id="prop_ov_tab_outdoor_${idx}" name="prop_ov_tabletLocation_${idx}" value="outdoor">
-            <label class="radio-label" for="prop_ov_tab_outdoor_${idx}">屋外設置</label>
-          </div>
-        </div>
-        <div class="field-group">
-          <label class="field-label">鍵の解錠方法 <span class="opt">任意</span></label>
-          <input type="text" id="prop_ov_keyAccess_${idx}" placeholder="共通設定と異なる場合のみ" />
-        </div>
-        <div class="field-group">
-          <label class="field-label">自動メッセージ送信タイミング <span class="opt">任意</span></label>
-          <div class="check-group">
-            <input type="checkbox" class="check-btn" id="prop_ov_msg_res_${idx}" name="prop_ov_messageTiming_${idx}" value="onReservation">
-            <label class="check-label" for="prop_ov_msg_res_${idx}">予約作成時</label>
-            <input type="checkbox" class="check-btn" id="prop_ov_msg_1d_${idx}" name="prop_ov_messageTiming_${idx}" value="1dayBefore">
-            <label class="check-label" for="prop_ov_msg_1d_${idx}">チェックイン1日前</label>
-            <input type="checkbox" class="check-btn" id="prop_ov_msg_cd_${idx}" name="prop_ov_messageTiming_${idx}" value="checkinDay">
-            <label class="check-label" for="prop_ov_msg_cd_${idx}">チェックイン当日</label>
-          </div>
-        </div>
-      </div>
-    </div>
-  `;
-
-  // 保健所立ち会い conditional
-  div.querySelectorAll(`input[name="prop_healthInspection_${idx}"]`).forEach(r => {
-    r.addEventListener('change', () => {
-      div.querySelector(`#cond_prop_hiDate_${idx}`).classList.toggle('show', r.value === 'done' && r.checked);
-    });
-  });
-  // 届出番号 conditional
-  div.querySelectorAll(`input[name="prop_registration_${idx}"]`).forEach(r => {
-    r.addEventListener('change', () => {
-      div.querySelector(`#cond_prop_regNum_${idx}`).classList.toggle('show', r.value === 'issued' && r.checked);
-      div.querySelector(`#cond_prop_regDate_${idx}`).classList.toggle('show', r.value === 'planned' && r.checked);
-    });
-  });
-
-  return div;
-}
-
-function onKeyTypeChange(idx) {
-  const val = document.getElementById('prop_keyType_' + idx).value;
-  const showDetail = ['other_smartlock_fixed', 'other_smartlock_random', 'other', 'keybox'].includes(val);
-  const showPasscode = ['keybox', 'other_smartlock_fixed'].includes(val);
-  document.getElementById('cond_prop_keyDetail_' + idx).classList.toggle('show', showDetail);
-  document.getElementById('cond_prop_passcode_' + idx).classList.toggle('show', showPasscode);
-}
-
-function toggleOverride(idx) {
-  const checked = document.getElementById('prop_override_' + idx).checked;
-  document.getElementById('overrideFields_' + idx).classList.toggle('show', checked);
-}
-
-// ===== Validation =====
-function showErr(id, show) {
-  const el = document.getElementById('err_' + id);
-  if (el) el.classList.toggle('show', show);
-  const input = document.getElementById(id);
-  if (input) input.classList.toggle('error', show);
-}
-
-function getRadioValue(name) {
-  const el = document.querySelector(`input[name="${name}"]:checked`);
-  return el ? el.value : '';
-}
-
-function getCheckedValues(name) {
-  return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(e => e.value);
-}
-
-function validatePage(page) {
-  let valid = true;
-
-  if (page === 1) {
-    const opts = getCheckedValues('contractedOptions');
-    if (opts.length === 0) { showErr('options', true); valid = false; } else { showErr('options', false); }
-    const fields = ['contractorName', 'contactName', 'contactEmail', 'propertyCount'];
-    fields.forEach(f => {
-      const v = document.getElementById(f).value.trim();
-      const ok = f === 'contactEmail' ? /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) : v !== '';
-      showErr(f, !ok);
-      if (!ok) valid = false;
-    });
-    if (document.getElementById('propertyCount').value < 1) { showErr('propertyCount', true); valid = false; }
-  }
-
-  if (page === 2) {
-    const req = ['buildingAddress', 'checkinTime', 'checkoutTime', 'keyAccess'];
-    req.forEach(f => {
-      const ok = document.getElementById(f).value.trim() !== '';
-      showErr(f, !ok);
-      if (!ok) valid = false;
-    });
-    const radios = ['tabletLocation', 'earlyCheckin', 'lateCheckout', 'luggageStorage', 'beds24', 'remotelock', 'passcodeNotify'];
-    radios.forEach(r => {
-      const ok = getRadioValue(r) !== '';
-      showErr(r, !ok);
-      if (!ok) valid = false;
-    });
-    if (getRadioValue('earlyCheckin') === 'yes' && !document.getElementById('earlyCheckinTime').value) {
-      showErr('earlyCheckinTime', true); valid = false;
-    } else { showErr('earlyCheckinTime', false); }
-    if (getRadioValue('lateCheckout') === 'yes' && !document.getElementById('lateCheckoutTime').value) {
-      showErr('lateCheckoutTime', true); valid = false;
-    } else { showErr('lateCheckoutTime', false); }
-    if (getRadioValue('luggageStorage') === 'yes' && !document.getElementById('luggageStorageTime').value) {
-      showErr('luggageStorageTime', true); valid = false;
-    } else { showErr('luggageStorageTime', false); }
-    if (getRadioValue('beds24') === 'contracted' && !document.getElementById('beds24Account').value.trim()) {
-      showErr('beds24Account', true); valid = false;
-    } else { showErr('beds24Account', false); }
-    if (getRadioValue('remotelock') === 'contracted' && !document.getElementById('remotelockAccount').value.trim()) {
-      showErr('remotelockAccount', true); valid = false;
-    } else { showErr('remotelockAccount', false); }
-    if (getCheckedValues('messageTiming').length === 0) { showErr('messageTiming', true); valid = false; } else { showErr('messageTiming', false); }
-  }
-
-  if (page === 3) {
-    const count = parseInt(document.getElementById('propertyCount').value) || 1;
-    for (let i = 1; i <= count; i++) {
-      const nameOk = document.getElementById('prop_name_' + i).value.trim() !== '';
-      showErr('prop_name_' + i, !nameOk);
-      if (!nameOk) valid = false;
-      const btOk = getRadioValue('prop_businessType_' + i) !== '';
-      showErr('prop_businessType_' + i, !btOk);
-      if (!btOk) valid = false;
-      const ktOk = document.getElementById('prop_keyType_' + i).value !== '';
-      showErr('prop_keyType_' + i, !ktOk);
-      if (!ktOk) valid = false;
-      const hiOk = getRadioValue('prop_healthInspection_' + i) !== '';
-      showErr('prop_healthInspection_' + i, !hiOk);
-      if (!hiOk) valid = false;
-      const regOk = getRadioValue('prop_registration_' + i) !== '';
-      showErr('prop_registration_' + i, !regOk);
-      if (!regOk) valid = false;
-    }
-  }
-
-  if (page === 4) {
-    const subEmail = document.getElementById('subEmail').value.trim();
-    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(subEmail);
-    showErr('subEmail', !emailOk);
-    if (!emailOk) valid = false;
-    const subPw = document.getElementById('subPassword').value.trim() !== '';
-    showErr('subPassword', !subPw);
-    if (!subPw) valid = false;
-    const subName = document.getElementById('subName').value.trim() !== '';
-    showErr('subName', !subName);
-    if (!subName) valid = false;
-  }
-
-  return valid;
-}
-
-// ===== Build Confirm Page =====
-function buildConfirmPage() {
-  // Contractor
-  const opts = getCheckedValues('contractedOptions');
-  const optsLabel = opts.map(o => OPTION_LABELS[o] || o).join('、');
-  renderConfirmTable('confirmContractorTable', [
-    ['契約オプション', optsLabel],
-    ['契約者名', document.getElementById('contractorName').value],
-    ['担当者名', document.getElementById('contactName').value],
-    ['担当者メール', document.getElementById('contactEmail').value],
-    ['物件数', document.getElementById('propertyCount').value + '件'],
-  ]);
-
-  // Common
-  const beds24 = getRadioValue('beds24');
-  const rl = getRadioValue('remotelock');
-  const msgTiming = getCheckedValues('messageTiming').map(v => MSG_LABELS[v] || v).join('、');
-  const commonRows = [
-    ['建物住所', document.getElementById('buildingAddress').value],
-    ['タブレット設置場所', TABLET_LABELS[getRadioValue('tabletLocation')] || ''],
-    ['チェックイン時間', document.getElementById('checkinTime').value],
-    ['チェックアウト時間', document.getElementById('checkoutTime').value],
-    ['アーリーチェックイン', getRadioValue('earlyCheckin') === 'yes' ? '対応する（' + document.getElementById('earlyCheckinTime').value + '〜）' : '対応しない'],
-    ['レイトチェックアウト', getRadioValue('lateCheckout') === 'yes' ? '対応する（〜' + document.getElementById('lateCheckoutTime').value + '）' : '対応しない'],
-    ['荷物預かり', getRadioValue('luggageStorage') === 'yes' ? '対応する（' + document.getElementById('luggageStorageTime').value + '〜）' : '対応しない'],
-    ['Beds24連携', BEDS24_LABELS[beds24] || ''],
-    ['RemoteLOCK連携', RL_LABELS[rl] || ''],
-    ['鍵の解錠方法', document.getElementById('keyAccess').value],
-    ['暗証番号通知方法', PASSCODE_LABELS[getRadioValue('passcodeNotify')] || ''],
-    ['自動メッセージタイミング', msgTiming],
-  ];
-  renderConfirmTable('confirmCommonTable', commonRows);
-
-  // Properties
-  const count = parseInt(document.getElementById('propertyCount').value) || 1;
-  const wrap = document.getElementById('confirmPropertiesWrap');
-  wrap.innerHTML = '';
-  for (let i = 1; i <= count; i++) {
-    const sec = document.createElement('div');
-    sec.className = 'confirm-section';
-    sec.innerHTML = `<div class="confirm-section-header">🏠 物件 ${i}</div><table class="confirm-table" id="confirmPropTable${i}"></table>`;
-    wrap.appendChild(sec);
-    const rows = [
-      ['施設名', document.getElementById('prop_name_' + i).value],
-      ['部屋番号', document.getElementById('prop_room_' + i).value],
-      ['業態', BUSINESS_LABELS[getRadioValue('prop_businessType_' + i)] || ''],
-      ['鍵の種類', KEY_LABELS[document.getElementById('prop_keyType_' + i).value] || ''],
-      ['保健所立ち会い', HEALTH_LABELS[getRadioValue('prop_healthInspection_' + i)] || ''],
-      ['届出番号状況', REG_LABELS[getRadioValue('prop_registration_' + i)] || ''],
-    ];
-    if (document.getElementById('prop_override_' + i).checked) {
-      rows.push(['個別設定', '上書きあり']);
-    }
-    renderConfirmTable('confirmPropTable' + i, rows);
-  }
-
-  // Sub account
-  renderConfirmTable('confirmSubTable', [
-    ['メールアドレス', document.getElementById('subEmail').value],
-    ['パスワード', '●'.repeat(document.getElementById('subPassword').value.length)],
-    ['表示名', document.getElementById('subName').value],
-    ['電話番号', document.getElementById('subPhone').value],
-  ]);
-}
-
-function renderConfirmTable(tableId, rows) {
-  const tbl = document.getElementById(tableId);
-  tbl.innerHTML = rows.map(([k, v]) => `<tr><th>${k}</th><td>${v || '—'}</td></tr>`).join('');
-}
-
-// ===== Build Payload =====
-function buildPayload() {
-  const count = parseInt(document.getElementById('propertyCount').value) || 1;
-  const opts = getCheckedValues('contractedOptions');
-  const msgTiming = getCheckedValues('messageTiming');
-  const beds24 = getRadioValue('beds24');
-  const rl = getRadioValue('remotelock');
-  const earlyCheckin = getRadioValue('earlyCheckin');
-  const lateCheckout = getRadioValue('lateCheckout');
-  const luggageStorage = getRadioValue('luggageStorage');
-  const tabletLocation = getRadioValue('tabletLocation');
-  const passcodeNotify = getRadioValue('passcodeNotify');
-
-  const properties = [];
-  for (let i = 1; i <= count; i++) {
-    const hasOverride = document.getElementById('prop_override_' + i).checked;
-    const ovMsgTiming = getCheckedValues('prop_ov_messageTiming_' + i);
-    const ovTablet = getRadioValue('prop_ov_tabletLocation_' + i);
-    const ovEarly = getRadioValue('prop_ov_earlyCheckin_' + i);
-    const ovLate = getRadioValue('prop_ov_lateCheckout_' + i);
-    const ovLug = getRadioValue('prop_ov_luggageStorage_' + i);
-
-    properties.push({
-      index: i,
-      name: document.getElementById('prop_name_' + i).value.trim(),
-      room: document.getElementById('prop_room_' + i).value.trim(),
-      address: document.getElementById('prop_address_' + i).value.trim(),
-      businessType: getRadioValue('prop_businessType_' + i),
-      businessTypeLabel: BUSINESS_LABELS[getRadioValue('prop_businessType_' + i)] || '',
-      keyType: document.getElementById('prop_keyType_' + i).value,
-      keyTypeLabel: KEY_LABELS[document.getElementById('prop_keyType_' + i).value] || '',
-      keyTypeDetail: (document.getElementById('prop_keyTypeDetail_' + i) || {value: ''}).value.trim(),
-      passcode: (document.getElementById('prop_passcode_' + i) || {value: ''}).value.trim(),
-      tabletLocation: ovTablet,
-      tabletLocationLabel: TABLET_LABELS[ovTablet] || '',
-      healthInspection: getRadioValue('prop_healthInspection_' + i),
-      healthInspectionLabel: HEALTH_LABELS[getRadioValue('prop_healthInspection_' + i)] || '',
-      healthInspectionDate: (document.getElementById('prop_healthInspectionDate_' + i) || {value: ''}).value,
-      registration: getRadioValue('prop_registration_' + i),
-      registrationLabel: REG_LABELS[getRadioValue('prop_registration_' + i)] || '',
-      registrationNumber: (document.getElementById('prop_registrationNumber_' + i) || {value: ''}).value.trim(),
-      registrationDate: (document.getElementById('prop_registrationDate_' + i) || {value: ''}).value,
-      hasOverride: hasOverride,
-      override: hasOverride ? {
-        checkinTime: (document.getElementById('prop_ov_checkinTime_' + i) || {value: ''}).value,
-        checkoutTime: (document.getElementById('prop_ov_checkoutTime_' + i) || {value: ''}).value,
-        earlyCheckinLabel: ovEarly ? (ovEarly === 'yes' ? '対応する' : '対応しない') : '',
-        earlyCheckinTime: (document.getElementById('prop_ov_earlyCheckinTime_' + i) || {value: ''}).value,
-        lateCheckoutLabel: ovLate ? (ovLate === 'yes' ? '対応する' : '対応しない') : '',
-        lateCheckoutTime: (document.getElementById('prop_ov_lateCheckoutTime_' + i) || {value: ''}).value,
-        luggageStorageLabel: ovLug ? (ovLug === 'yes' ? '対応する' : '対応しない') : '',
-        luggageStorageTime: (document.getElementById('prop_ov_luggageStorageTime_' + i) || {value: ''}).value,
-        keyAccess: (document.getElementById('prop_ov_keyAccess_' + i) || {value: ''}).value.trim(),
-        messageTimingLabel: ovMsgTiming.map(v => MSG_LABELS[v] || v).join('、'),
-      } : null
-    });
-  }
-
-  return {
-    timestamp: new Date().toISOString(),
-    source: 'hearing',
-    contractor: {
-      contractedOptions: opts,
-      contractedOptionsLabel: opts.map(o => OPTION_LABELS[o] || o).join('、'),
-      contractorName: document.getElementById('contractorName').value.trim(),
-      contactName: document.getElementById('contactName').value.trim(),
-      contactEmail: document.getElementById('contactEmail').value.trim(),
-      propertyCount: count,
+  // ===========================
+  // 設定
+  // ===========================
+  const N8N_WEBHOOK_URL = 'https://bizpato.app.n8n.cloud/webhook/minpaku-hearing';
+  const MAX_PROPERTIES = 5;
+  
+  // ラベル変換マップ
+  const LABEL_MAP = {
+    earlyCheckin: { no: '対応しない', yes: '対応する' },
+    lateCheckout: { no: '対応しない', yes: '対応する' },
+    luggageStorage: { no: '対応しない', yes: '対応する' },
+    beds24: { no: '連携しない', planned: '連携する（未契約）', contracted: '連携する（契約済み）' },
+    remotelock: { no: '連携しない', planned: '連携する（未契約）', contracted: '連携する（契約済み）' },
+    keyType: {
+      remotelock: 'RemoteLOCK',
+      sesame5: 'SESAME 5',
+      sesame5pro: 'SESAME 5 Pro',
+      keybox: 'キーボックス',
+      other_smartlock_fixed: 'その他のスマートロック・固定暗証番号',
+      other_smartlock_random: 'その他のスマートロック・ランダム暗証番号',
+      other: 'その他'
     },
-    commonSettings: {
-      buildingAddress: document.getElementById('buildingAddress').value.trim(),
-      tabletLocation: tabletLocation,
-      tabletLocationLabel: TABLET_LABELS[tabletLocation] || '',
-      checkinTime: document.getElementById('checkinTime').value,
-      checkoutTime: document.getElementById('checkoutTime').value,
-      earlyCheckin: earlyCheckin,
-      earlyCheckinLabel: earlyCheckin === 'yes' ? '対応する' : '対応しない',
-      earlyCheckinTime: earlyCheckin === 'yes' ? document.getElementById('earlyCheckinTime').value : '',
-      lateCheckout: lateCheckout,
-      lateCheckoutLabel: lateCheckout === 'yes' ? '対応する' : '対応しない',
-      lateCheckoutTime: lateCheckout === 'yes' ? document.getElementById('lateCheckoutTime').value : '',
-      luggageStorage: luggageStorage,
-      luggageStorageLabel: luggageStorage === 'yes' ? '対応する' : '対応しない',
-      luggageStorageTime: luggageStorage === 'yes' ? document.getElementById('luggageStorageTime').value : '',
-      beds24: beds24,
-      beds24Label: BEDS24_LABELS[beds24] || '',
-      beds24PlannedDate: beds24 === 'planned' ? document.getElementById('beds24PlannedDate').value : '',
-      beds24Account: beds24 === 'contracted' ? document.getElementById('beds24Account').value.trim() : '',
-      remotelock: rl,
-      remotelockLabel: RL_LABELS[rl] || '',
-      remotelockPlannedDate: rl === 'planned' ? document.getElementById('remotelockPlannedDate').value : '',
-      remotelockAccount: rl === 'contracted' ? document.getElementById('remotelockAccount').value.trim() : '',
-      sesameAccount: document.getElementById('sesameAccount').value.trim(),
-      keyAccess: document.getElementById('keyAccess').value.trim(),
-      passcodeNotify: passcodeNotify,
-      passcodeNotifyLabel: PASSCODE_LABELS[passcodeNotify] || '',
-      messageTiming: msgTiming,
-      messageTimingLabel: msgTiming.map(v => MSG_LABELS[v] || v).join('、'),
+    passcodeNotify: {
+      system: 'チェックインシステムで通知',
+      host: 'ホストが個別に伝える'
     },
-    properties: properties,
-    subAccount: {
-      email: document.getElementById('subEmail').value.trim(),
-      password: document.getElementById('subPassword').value.trim(),
-      name: document.getElementById('subName').value.trim(),
-      phone: document.getElementById('subPhone').value.trim(),
+    tabletLocation: {
+      indoor: '屋内設置',
+      outdoor: '屋外設置'
+    },
+    contractedOptions: {
+      identity: '本人確認OP',
+      beds24: 'Beds24連携OP',
+      none: '基本プランのみ（オプション契約なし）'
+    },
+    healthInspection: {
+      done: '実施済み',
+      planned: '予定あり',
+      undecided: '未定'
+    },
+    registration: {
+      issued: '発行済み',
+      planned: '発行予定',
+      undecided: '未定'
+    },
+    businessType: {
+      minpakuLaw: '住宅宿泊事業（民泊新法）',
+      ryokan: '旅館業',
+      toku: '特区民泊',
+      undecided: '未定'
+    },
+    messageTiming: {
+      onReservation: '予約作成時',
+      '2daysBefore': 'チェックイン2日前',
+      '1dayBefore': 'チェックイン1日前',
+      checkinDay: 'チェックイン当日',
+      checkoutDay: 'チェックアウト当日'
     }
   };
-}
-
-// ===== Submit =====
-async function submitForm() {
-  const btn = document.getElementById('submitBtn');
-  btn.disabled = true;
-  document.getElementById('loadingOverlay').classList.add('show');
-
-  const payload = buildPayload();
-
-  try {
-    const res = await fetch(N8N_WEBHOOK_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-
-    document.getElementById('loadingOverlay').classList.remove('show');
-
-    if (res.ok) {
-      // 受付IDはn8nから返ってくる場合もあるが、フォーム側ではtimestampベースで仮表示
-      const dateStr = new Date().toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '');
-      document.getElementById('completeId').textContent = '受付ID: H' + dateStr + '-（確認中）';
-      showPage(6);
-    } else {
-      alert('送信に失敗しました。しばらく経ってから再度お試しください。\n（エラーコード: ' + res.status + '）');
-      btn.disabled = false;
-    }
-  } catch (e) {
-    document.getElementById('loadingOverlay').classList.remove('show');
-    alert('通信エラーが発生しました。インターネット接続をご確認の上、再度お試しください。');
-    btn.disabled = false;
+  
+  // ===========================
+  // 物件セクションのHTMLテンプレート
+  // ===========================
+  function buildPropertyBlock(index) {
+    const n = index + 1;
+    return `
+      <div class="property-block" data-property-index="${index}" id="property-${n}">
+        <div class="property-block-header">
+          <span class="property-no">${n}</span>
+          <h3 class="property-title" style="margin:0;border:none;padding:0;">物件${n}</h3>
+        </div>
+        
+        <div class="field">
+          <label class="field-label">施設名（物件屋号）<span class="required">必須</span></label>
+          <p class="field-desc">予約サイトに掲載されている施設名をご記入ください。</p>
+          <input type="text" name="property_${n}_name" data-prop-required>
+          <div class="field-error">施設名をご入力ください</div>
+        </div>
+        
+        <!-- 部屋番号モード（共通設定に建物住所あり） -->
+        <div class="field property-roomonly" style="display:none;">
+          <label class="field-label">部屋番号 / フロア<span class="required">必須</span></label>
+          <p class="field-desc">共通設定で入力された建物の中での部屋番号またはフロアをご記入ください。</p>
+          <input type="text" name="property_${n}_room" placeholder="例：101号室">
+          <div class="field-error">部屋番号をご入力ください</div>
+        </div>
+        
+        <!-- 住所モード（共通設定に建物住所なし） -->
+        <div class="field property-fulladdress">
+          <label class="field-label">施設の所在地<span class="required">必須</span></label>
+          <p class="field-desc">物件の住所を、都道府県から番地・建物名・部屋番号まで省略せずご記入ください。</p>
+          <input type="text" name="property_${n}_address" data-prop-required>
+          <div class="field-error">住所をご入力ください</div>
+        </div>
+        
+        <!-- 業態（物件ごと必須） -->
+        <div class="field">
+          <label class="field-label">業態<span class="required">必須</span></label>
+          <p class="field-desc">この物件の運営形態をお選びください。</p>
+          <div class="radio-group">
+            <label><input type="radio" name="property_${n}_businessType" value="minpakuLaw" data-business-radio data-property-index="${index}"> 住宅宿泊事業（民泊新法）</label>
+            <label><input type="radio" name="property_${n}_businessType" value="ryokan" data-business-radio data-property-index="${index}"> 旅館業</label>
+            <label><input type="radio" name="property_${n}_businessType" value="toku" data-business-radio data-property-index="${index}"> 特区民泊（国家戦略特区）</label>
+            <label><input type="radio" name="property_${n}_businessType" value="undecided" data-business-radio data-property-index="${index}"> 未定</label>
+          </div>
+          <div class="field-error">業態をお選びください</div>
+          <div class="info-note" id="tokuInfoNote-${n}" style="display:none;">
+            ℹ️ 特区民泊の物件は、<strong>定期借家契約書の作成</strong>が必要です。<br>
+            契約書を作成のうえ、<a href="mailto:customer@bizpato.com">customer@bizpato.com</a> まで PDF 等でお送りください。
+          </div>
+        </div>
+        
+        <!-- 鍵の種類（物件ごと必須） -->
+        <div class="field">
+          <label class="field-label">鍵の種類<span class="required">必須</span></label>
+          <p class="field-desc">この物件でご利用中の鍵の種類をお選びください。</p>
+          <div class="radio-group">
+            <label><input type="radio" name="property_${n}_keyType" value="remotelock" data-key-radio data-property-index="${index}"> RemoteLOCK</label>
+            <label><input type="radio" name="property_${n}_keyType" value="sesame5" data-key-radio data-property-index="${index}"> SESAME 5</label>
+            <label><input type="radio" name="property_${n}_keyType" value="sesame5pro" data-key-radio data-property-index="${index}"> SESAME 5 Pro</label>
+            <label><input type="radio" name="property_${n}_keyType" value="keybox" data-key-radio data-property-index="${index}"> キーボックス（物理鍵 + ダイヤル式の暗証番号）</label>
+            <label><input type="radio" name="property_${n}_keyType" value="other_smartlock_fixed" data-key-radio data-property-index="${index}"> その他のスマートロック・固定暗証番号</label>
+            <label><input type="radio" name="property_${n}_keyType" value="other_smartlock_random" data-key-radio data-property-index="${index}"> その他のスマートロック・ランダム暗証番号 ※非推奨</label>
+            <label><input type="radio" name="property_${n}_keyType" value="other" data-key-radio data-property-index="${index}"> その他</label>
+          </div>
+          <div class="field-error">鍵の種類をお選びください</div>
+          
+          <!-- 鍵の詳細（その他のスマートロック・その他選択時） -->
+          <div class="conditional" id="keyTypeDetailWrap-${n}">
+            <label class="field-label">鍵の詳細（製品名・モデル等）<span class="required">必須</span></label>
+            <input type="text" name="property_${n}_keyTypeDetail">
+            <div class="field-error">鍵の詳細をご入力ください</div>
+          </div>
+          
+          <!-- ランダム暗証番号選択時の警告 -->
+          <div class="passcode-warning" id="randomWarning-${n}" style="display:none;">
+            ⚠️ <strong>ランダム暗証番号の鍵は非推奨です。</strong><br>
+            チェックインシステムでの自動通知ができないだけでなく、<strong>名簿取得前にゲストが入室できてしまうリスク</strong>があります。<br>
+            可能であれば、SmartInn連携可能な鍵（RemoteLOCK / SESAME）または固定暗証番号の鍵（キーボックス等）への変更を強くおすすめします。
+          </div>
+          
+          <!-- 屋外設置×リスク鍵の警告 -->
+          <div class="passcode-warning" id="outdoorRiskWarning-${n}" style="display:none;">
+            ⚠️ <strong>ご注意：タブレット屋外設置 × この鍵タイプ</strong><br>
+            ビデオ通話による本人確認<strong>前</strong>にゲストが入室する可能性があります。<br>
+            確実な本人確認には固定暗証番号の鍵（キーボックス等）への変更をご検討ください。
+          </div>
+        </div>
+        
+        <!-- 鍵の暗証番号（条件付き：RemoteLOCK/SESAME 5系以外 かつ 通知方法=system） -->
+        <div class="field" id="passcodeWrap-${n}" style="display:none;">
+          <label class="field-label">鍵の暗証番号<span class="required">必須</span></label>
+          <p class="field-desc">この物件の鍵の暗証番号をご記入ください。チェックインシステムでゲスト様に通知する際に使用いたします。</p>
+          <input type="text" name="property_${n}_passcode">
+          <div class="field-error">暗証番号をご入力ください</div>
+        </div>
+        
+        <!-- 保健所立ち会い -->
+        <div class="field">
+          <label class="field-label">保健所立ち会いの状況<span class="required">必須</span></label>
+          <p class="field-desc">この物件の保健所立ち会いの実施状況をお選びください。</p>
+          <div class="radio-group">
+            <label><input type="radio" name="property_${n}_healthInspection" value="done" data-health-radio data-property-index="${index}"> 実施済み</label>
+            <label><input type="radio" name="property_${n}_healthInspection" value="planned" data-health-radio data-property-index="${index}"> 予定あり</label>
+            <label><input type="radio" name="property_${n}_healthInspection" value="undecided" data-health-radio data-property-index="${index}"> 未定</label>
+          </div>
+          <div class="field-error">保健所立ち会いの状況をお選びください</div>
+          <div class="conditional" id="healthInspectionDateWrap-${n}">
+            <label class="field-label" id="healthInspectionDateLabel-${n}">実施日</label>
+            <input type="date" name="property_${n}_healthInspectionDate">
+            <div class="field-error">日付をご入力ください</div>
+          </div>
+        </div>
+        
+        <!-- 届出番号 -->
+        <div class="field">
+          <label class="field-label">届出番号の状況<span class="required">必須</span></label>
+          <p class="field-desc">この物件の届出番号（住宅宿泊事業法等）の発行状況をお選びください。</p>
+          <div class="radio-group">
+            <label><input type="radio" name="property_${n}_registration" value="issued" data-registration-radio data-property-index="${index}"> 発行済み</label>
+            <label><input type="radio" name="property_${n}_registration" value="planned" data-registration-radio data-property-index="${index}"> 発行予定</label>
+            <label><input type="radio" name="property_${n}_registration" value="undecided" data-registration-radio data-property-index="${index}"> 未定</label>
+          </div>
+          <div class="field-error">届出番号の状況をお選びください</div>
+          <div class="conditional" id="registrationNumberWrap-${n}">
+            <label class="field-label">届出番号</label>
+            <input type="text" name="property_${n}_registrationNumber" placeholder="例：M210000001">
+            <div class="field-error">届出番号をご入力ください</div>
+          </div>
+          <div class="conditional" id="registrationDateWrap-${n}">
+            <label class="field-label">発行予定日</label>
+            <input type="date" name="property_${n}_registrationDate">
+            <div class="field-error">発行予定日をご入力ください</div>
+          </div>
+        </div>
+        
+        <!-- 共通設定と一部異なる -->
+        <div class="override-toggle">
+          <label>
+            <input type="checkbox" name="property_${n}_override" data-override-toggle data-property-index="${index}">
+            <span>この物件は<strong>共通設定と一部異なる項目がある</strong>（チェックすると個別設定欄が表示されます）</span>
+          </label>
+          
+          <div class="override-content" id="override-content-${n}">
+            <p class="field-desc">▼ 共通設定と異なる項目のみ、こちらに入力してください。空欄の項目は共通設定の値が適用されます。</p>
+            
+            <div class="field property-tablet-override" style="display:none;">
+              <label class="field-label">タブレット設置場所<span class="optional">任意</span></label>
+              <div class="radio-group">
+                <label><input type="radio" name="property_${n}_tabletLocation" value=""> 共通設定と同じ</label>
+                <label><input type="radio" name="property_${n}_tabletLocation" value="indoor" data-tablet-radio data-property-index="${index}"> 屋内設置</label>
+                <label><input type="radio" name="property_${n}_tabletLocation" value="outdoor" data-tablet-radio data-property-index="${index}"> 屋外設置</label>
+              </div>
+            </div>
+            
+            <div class="field">
+              <label class="field-label">チェックイン開始時間<span class="optional">任意</span></label>
+              <input type="time" name="property_${n}_checkinTime">
+            </div>
+            
+            <div class="field">
+              <label class="field-label">チェックアウト時間<span class="optional">任意</span></label>
+              <input type="time" name="property_${n}_checkoutTime">
+            </div>
+            
+            <div class="field">
+              <label class="field-label">アーリーチェックイン<span class="optional">任意</span></label>
+              <div class="radio-group">
+                <label><input type="radio" name="property_${n}_earlyCheckin" value=""> 共通設定と同じ</label>
+                <label><input type="radio" name="property_${n}_earlyCheckin" value="no"> 対応しない</label>
+                <label><input type="radio" name="property_${n}_earlyCheckin" value="yes"> 対応する</label>
+              </div>
+              <div class="conditional" data-show-on="property_${n}_earlyCheckin=yes">
+                <label class="field-label">アーリーチェックイン開始時刻</label>
+                <input type="time" name="property_${n}_earlyCheckinTime">
+              </div>
+            </div>
+            
+            <div class="field">
+              <label class="field-label">レイトチェックアウト<span class="optional">任意</span></label>
+              <div class="radio-group">
+                <label><input type="radio" name="property_${n}_lateCheckout" value=""> 共通設定と同じ</label>
+                <label><input type="radio" name="property_${n}_lateCheckout" value="no"> 対応しない</label>
+                <label><input type="radio" name="property_${n}_lateCheckout" value="yes"> 対応する</label>
+              </div>
+              <div class="conditional" data-show-on="property_${n}_lateCheckout=yes">
+                <label class="field-label">レイトチェックアウト最終時刻</label>
+                <input type="time" name="property_${n}_lateCheckoutTime">
+              </div>
+            </div>
+            
+            <div class="field">
+              <label class="field-label">荷物預かり<span class="optional">任意</span></label>
+              <div class="radio-group">
+                <label><input type="radio" name="property_${n}_luggageStorage" value=""> 共通設定と同じ</label>
+                <label><input type="radio" name="property_${n}_luggageStorage" value="no"> 対応しない</label>
+                <label><input type="radio" name="property_${n}_luggageStorage" value="yes"> 対応する</label>
+              </div>
+              <div class="conditional" data-show-on="property_${n}_luggageStorage=yes">
+                <label class="field-label">荷物預かり開始時刻</label>
+                <input type="time" name="property_${n}_luggageStorageTime">
+              </div>
+            </div>
+            
+            <div class="field">
+              <label class="field-label">鍵の解錠方法<span class="optional">任意</span></label>
+              <textarea name="property_${n}_keyAccess" placeholder="共通設定と異なる場合のみ入力"></textarea>
+            </div>
+            
+            <div class="field">
+              <label class="field-label">自動メッセージ送信タイミング<span class="optional">任意</span></label>
+              <p class="field-desc">共通設定と異なる場合のみチェックしてください。1つもチェックがなければ共通設定が適用されます。</p>
+              <div class="checkbox-group">
+                <label><input type="checkbox" name="property_${n}_messageTiming" value="onReservation"> 予約作成時</label>
+                <label><input type="checkbox" name="property_${n}_messageTiming" value="2daysBefore"> チェックイン2日前</label>
+                <label><input type="checkbox" name="property_${n}_messageTiming" value="1dayBefore"> チェックイン1日前</label>
+                <label><input type="checkbox" name="property_${n}_messageTiming" value="checkinDay"> チェックイン当日</label>
+                <label><input type="checkbox" name="property_${n}_messageTiming" value="checkoutDay"> チェックアウト当日</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
   }
-}
-
-// ===== Init =====
-document.addEventListener('DOMContentLoaded', () => {
-  setupConditionals();
-  updateProgress(1);
-});
+  
+  // 物件セクションを初期生成
+  const propertyContainer = document.getElementById('propertyContainer');
+  for (let i = 0; i < MAX_PROPERTIES; i++) {
+    propertyContainer.insertAdjacentHTML('beforeend', buildPropertyBlock(i));
+  }
+  
+  // ===========================
+  // 物件数選択 → 物件セクション表示制御
+  // ===========================
+  document.getElementById('propertyCount').addEventListener('change', e => {
+    const count = parseInt(e.target.value, 10) || 0;
+    const section = document.getElementById('propertySection');
+    section.style.display = count > 0 ? '' : 'none';
+    document.querySelectorAll('.property-block').forEach((block, i) => {
+      block.classList.toggle('show', i < count);
+    });
+    // 鍵関連の動的フィールドも再評価
+    setTimeout(updateKeyDependentFields, 50);
+  });
+  
+  // ===========================
+  // 建物住所の有無で各物件の住所欄を切替
+  // ===========================
+  function updateAddressMode() {
+    const hasBuilding = document.getElementById('buildingAddress').value.trim() !== '';
+    document.querySelectorAll('.property-block').forEach(block => {
+      const roomOnly = block.querySelector('.property-roomonly');
+      const fullAddr = block.querySelector('.property-fulladdress');
+      if (hasBuilding) {
+        roomOnly.style.display = '';
+        fullAddr.style.display = 'none';
+        // 必須属性を切り替え
+        roomOnly.querySelector('input').setAttribute('data-prop-required', '');
+        fullAddr.querySelector('input').removeAttribute('data-prop-required');
+        // 切替で不要になった「住所」の値をクリア
+        fullAddr.querySelector('input').value = '';
+      } else {
+        roomOnly.style.display = 'none';
+        fullAddr.style.display = '';
+        roomOnly.querySelector('input').removeAttribute('data-prop-required');
+        fullAddr.querySelector('input').setAttribute('data-prop-required', '');
+        // 切替で不要になった「部屋番号」の値をクリア
+        roomOnly.querySelector('input').value = '';
+      }
+    });
+  }
+  document.getElementById('buildingAddress').addEventListener('input', updateAddressMode);
+  
+  // ===========================
+  // 条件付き表示（共通設定: アーリーチェックイン、荷物預かり、Beds24、RemoteLOCK）
+  // ===========================
+  function setupConditional(radioName, wrapperId, showValue) {
+    document.querySelectorAll(`input[name="${radioName}"]`).forEach(radio => {
+      radio.addEventListener('change', () => {
+        const wrap = document.getElementById(wrapperId);
+        if (radio.checked && radio.value === showValue) {
+          wrap.classList.add('show');
+        } else {
+          // 同名グループの選択値で判定
+          const checked = document.querySelector(`input[name="${radioName}"]:checked`);
+          if (checked && checked.value === showValue) {
+            wrap.classList.add('show');
+          } else {
+            wrap.classList.remove('show');
+          }
+        }
+      });
+    });
+  }
+  setupConditional('earlyCheckin', 'earlyCheckinTimeWrap', 'yes');
+  setupConditional('lateCheckout', 'lateCheckoutTimeWrap', 'yes');
+  setupConditional('luggageStorage', 'luggageStorageTimeWrap', 'yes');
+  setupConditional('beds24', 'beds24AccountWrap', 'contracted');
+  setupConditional('beds24', 'beds24PlannedDateWrap', 'planned');
+  setupConditional('remotelock', 'remotelockAccountWrap', 'contracted');
+  setupConditional('remotelock', 'remotelockPlannedDateWrap', 'planned');
+  
+  // ===========================
+  // OP契約状況による動的制御
+  // ===========================
+  function updateOpDependentFields() {
+    const opCheckboxes = document.querySelectorAll('[data-op-checkbox]');
+    const noneCheckbox = document.querySelector('[data-op-none]');
+    const hasIdentity = document.querySelector('input[name="contractedOptions"][value="identity"]:checked');
+    const hasBeds24Op = document.querySelector('input[name="contractedOptions"][value="beds24"]:checked');
+    const hasNone = noneCheckbox?.checked;
+    
+    // タブレット設置場所フィールドの表示制御（本人確認OP契約時のみ）
+    const tabletLocationField = document.getElementById('tabletLocationField');
+    if (tabletLocationField) {
+      tabletLocationField.style.display = hasIdentity ? '' : 'none';
+    }
+    // 物件ごとの上書きエリア内のタブレット設置場所も同様
+    document.querySelectorAll('.property-tablet-override').forEach(el => {
+      el.style.display = hasIdentity ? '' : 'none';
+    });
+    
+    // 「Beds24連携しない」選択肢の表示制御
+    // 本人確認OP or Beds24連携OP のいずれかが契約されている → 「連携しない」を非表示
+    const beds24NoOption = document.querySelector('[data-beds24-option="no"]');
+    const hideBeds24No = hasIdentity || hasBeds24Op;
+    if (beds24NoOption) {
+      beds24NoOption.style.display = hideBeds24No ? 'none' : '';
+      // 「連携しない」が選ばれていたら自動的に解除
+      if (hideBeds24No) {
+        const noRadio = beds24NoOption.querySelector('input[type="radio"]');
+        if (noRadio?.checked) {
+          noRadio.checked = false;
+          beds24NoOption.classList.remove('selected');
+          // 関連する条件付き表示もリセット
+          document.getElementById('beds24AccountWrap').classList.remove('show');
+        }
+      }
+    }
+    
+    // Beds24アカウント情報の表示制御
+    // Beds24連携OPを契約している場合は、アカウント情報の入力欄を非表示（弊社で作成）
+    const beds24AccountWrap = document.getElementById('beds24AccountWrap');
+    const beds24Contracted = document.querySelector('input[name="beds24"][value="contracted"]:checked');
+    if (hasBeds24Op) {
+      // Beds24連携OP契約時は、アカウント情報入力欄を常に非表示＆値クリア
+      beds24AccountWrap.classList.remove('show');
+      beds24AccountWrap.style.display = 'none';
+      const beds24AccountInput = document.getElementById('beds24Account');
+      if (beds24AccountInput) beds24AccountInput.value = '';
+    } else {
+      // Beds24連携OP未契約時は通常通り（contracted選択時のみ表示）
+      beds24AccountWrap.style.display = '';
+      beds24AccountWrap.classList.toggle('show', !!beds24Contracted);
+    }
+    
+    // 屋外×リスク鍵警告の再評価（タブレット設置場所欄の表示変更に伴い）
+    if (typeof updateKeyDependentFields === 'function') {
+      updateKeyDependentFields();
+    }
+  }
+  
+  // OP選択時の排他制御＆動的制御
+  document.querySelectorAll('[data-op-checkbox]').forEach(cb => {
+    cb.addEventListener('change', e => {
+      const noneCheckbox = document.querySelector('[data-op-none]');
+      const otherCheckboxes = Array.from(document.querySelectorAll('[data-op-checkbox]:not([data-op-none])'));
+      
+      if (e.target.dataset.opNone !== undefined) {
+        // 「該当なし」をチェックしたら、他のチェックを外す
+        if (e.target.checked) {
+          otherCheckboxes.forEach(other => {
+            other.checked = false;
+            other.closest('label')?.classList.remove('selected');
+          });
+        }
+      } else {
+        // 他のOPをチェックしたら、「該当なし」のチェックを外す
+        if (e.target.checked && noneCheckbox?.checked) {
+          noneCheckbox.checked = false;
+          noneCheckbox.closest('label')?.classList.remove('selected');
+        }
+      }
+      
+      updateOpDependentFields();
+    });
+  });
+  
+  // Beds24連携の選択変更時にもアカウント情報の表示を再評価
+  document.querySelectorAll('input[name="beds24"]').forEach(radio => {
+    radio.addEventListener('change', updateOpDependentFields);
+  });
+  
+  // ===========================
+  // 保健所立ち会い・届出番号の動的制御
+  // ===========================
+  document.addEventListener('change', e => {
+    // 業態：特区民泊選択時に案内メッセージを表示
+    if (e.target.matches('[data-business-radio]')) {
+      const idx = e.target.dataset.propertyIndex;
+      const n = parseInt(idx, 10) + 1;
+      const value = e.target.value;
+      const tokuNote = document.getElementById(`tokuInfoNote-${n}`);
+      tokuNote.style.display = value === 'toku' ? '' : 'none';
+    }
+    // 保健所立ち会い：実施済み or 予定あり → 日付欄を表示
+    if (e.target.matches('[data-health-radio]')) {
+      const idx = e.target.dataset.propertyIndex;
+      const n = parseInt(idx, 10) + 1;
+      const value = e.target.value;
+      const dateWrap = document.getElementById(`healthInspectionDateWrap-${n}`);
+      const dateLabel = document.getElementById(`healthInspectionDateLabel-${n}`);
+      if (value === 'done' || value === 'planned') {
+        dateWrap.classList.add('show');
+        dateLabel.textContent = value === 'done' ? '実施日' : '予定日';
+      } else {
+        dateWrap.classList.remove('show');
+      }
+    }
+    // 届出番号：発行済み → 番号欄、発行予定 → 日付欄
+    if (e.target.matches('[data-registration-radio]')) {
+      const idx = e.target.dataset.propertyIndex;
+      const n = parseInt(idx, 10) + 1;
+      const value = e.target.value;
+      const numberWrap = document.getElementById(`registrationNumberWrap-${n}`);
+      const dateWrap = document.getElementById(`registrationDateWrap-${n}`);
+      numberWrap.classList.toggle('show', value === 'issued');
+      dateWrap.classList.toggle('show', value === 'planned');
+    }
+  });
+  
+  // ===========================
+  // 鍵の種類に応じた表示制御
+  // ===========================
+  function updateKeyDependentFields() {
+    // 「固定暗証番号方式の鍵」を使う物件が1つでもあるか（=通知方法の選択が必要か）
+    let hasFixedPasscodeProperty = false;
+    // 「SESAME 5系」の鍵を使う物件が1つでもあるか（=SESAMEアカウント情報が必要か）
+    let hasSesameProperty = false;
+    
+    // 共通設定のタブレット設置場所
+    const commonTabletLocation = document.querySelector('input[name="tabletLocation"]:checked')?.value || '';
+    
+    document.querySelectorAll('.property-block').forEach((block, idx) => {
+      const n = idx + 1;
+      const isShown = block.classList.contains('show');
+      if (!isShown) return;
+      
+      const checkedKey = block.querySelector(`input[name="property_${n}_keyType"]:checked`);
+      const keyValue = checkedKey?.value || '';
+      
+      // 鍵の詳細欄：「その他のスマートロック・固定/ランダム」「その他」選択時に表示
+      const detailWrap = document.getElementById(`keyTypeDetailWrap-${n}`);
+      if (detailWrap) {
+        const showDetail = keyValue === 'other_smartlock_fixed' || 
+                           keyValue === 'other_smartlock_random' || 
+                           keyValue === 'other';
+        detailWrap.classList.toggle('show', showDetail);
+      }
+      
+      // ランダム暗証番号選択時の警告メッセージ
+      const randomWarning = document.getElementById(`randomWarning-${n}`);
+      if (randomWarning) {
+        randomWarning.style.display = keyValue === 'other_smartlock_random' ? '' : 'none';
+      }
+      
+      // 物件ごとのタブレット設置場所（上書き）を取得し、最終値を判定
+      const propTabletLocation = block.querySelector(`input[name="property_${n}_tabletLocation"]:checked`)?.value || '';
+      const finalTabletLocation = propTabletLocation || commonTabletLocation;
+      
+      // 屋外設置×リスク鍵の警告
+      const riskKeys = ['remotelock', 'sesame5', 'sesame5pro', 'other_smartlock_random'];
+      const outdoorRiskWarning = document.getElementById(`outdoorRiskWarning-${n}`);
+      if (outdoorRiskWarning) {
+        const showRisk = finalTabletLocation === 'outdoor' && riskKeys.includes(keyValue);
+        outdoorRiskWarning.style.display = showRisk ? '' : 'none';
+      }
+      
+      // 「固定暗証番号方式の鍵」かどうかを判定
+      // - キーボックス、その他のスマートロック・固定、その他 → 固定方式
+      // - RemoteLOCK/SESAME系、ランダム → 該当なし
+      const isFixedPasscode =
+        keyValue === 'keybox' ||
+        keyValue === 'other' ||
+        keyValue === 'other_smartlock_fixed';
+      
+      if (isFixedPasscode) {
+        hasFixedPasscodeProperty = true;
+      }
+      
+      // SESAME 5系の判定
+      if (keyValue === 'sesame5' || keyValue === 'sesame5pro') {
+        hasSesameProperty = true;
+      }
+    });
+    
+    // SESAMEアカウント情報フィールドの表示制御
+    const sesameAccountField = document.getElementById('sesameAccountField');
+    sesameAccountField.style.display = hasSesameProperty ? '' : 'none';
+    
+    // いずれかの物件で「RemoteLOCK」を選んだ場合、共通設定のRemoteLOCK「連携しない」を非表示
+    let hasRemotelockProperty = false;
+    document.querySelectorAll('.property-block.show').forEach((block, idx) => {
+      const n = idx + 1;
+      const checkedKey = block.querySelector(`input[name="property_${n}_keyType"]:checked`);
+      if (checkedKey?.value === 'remotelock') {
+        hasRemotelockProperty = true;
+      }
+    });
+    const remotelockNoOption = document.querySelector('[data-remotelock-option="no"]');
+    if (remotelockNoOption) {
+      remotelockNoOption.style.display = hasRemotelockProperty ? 'none' : '';
+      if (hasRemotelockProperty) {
+        const noRadio = remotelockNoOption.querySelector('input[type="radio"]');
+        if (noRadio?.checked) {
+          noRadio.checked = false;
+          remotelockNoOption.classList.remove('selected');
+        }
+      }
+    }
+    
+    // 共通設定の「暗証番号の通知方法」フィールドの表示制御
+    const passcodeNotifyField = document.getElementById('passcodeNotifyField');
+    passcodeNotifyField.style.display = hasFixedPasscodeProperty ? '' : 'none';
+    
+    // 通知方法が「システムで通知」かつ固定暗証番号方式の物件で、暗証番号欄を表示
+    const notifyMethod = document.querySelector('input[name="passcodeNotify"]:checked')?.value || '';
+    document.querySelectorAll('.property-block').forEach((block, idx) => {
+      const n = idx + 1;
+      const checkedKey = block.querySelector(`input[name="property_${n}_keyType"]:checked`);
+      const keyValue = checkedKey?.value || '';
+      
+      const isFixedPasscode =
+        keyValue === 'keybox' ||
+        keyValue === 'other' ||
+        keyValue === 'other_smartlock_fixed';
+      
+      const passcodeWrap = document.getElementById(`passcodeWrap-${n}`);
+      const showPasscode = isFixedPasscode && notifyMethod === 'system';
+      passcodeWrap.style.display = showPasscode ? '' : 'none';
+    });
+  }
+  
+  // 鍵の種類が変更されたとき
+  document.addEventListener('change', e => {
+    if (e.target.matches('[data-key-radio]')) {
+      // 鍵の種類変更時：関連フィールドの値をクリア
+      const idx = e.target.dataset.propertyIndex;
+      const n = parseInt(idx, 10) + 1;
+      const block = document.getElementById(`property-${n}`);
+      const keyValue = e.target.value;
+      // 「その他のスマートロック」「その他」以外を選んだ → 詳細をクリア
+      if (keyValue !== 'other_smartlock_fixed' && keyValue !== 'other_smartlock_random' && keyValue !== 'other') {
+        const detailInput = block.querySelector(`input[name="property_${n}_keyTypeDetail"]`);
+        if (detailInput) detailInput.value = '';
+      }
+      // 暗証番号もクリア（鍵の種類が変わったため）
+      const passcodeInput = block.querySelector(`input[name="property_${n}_passcode"]`);
+      if (passcodeInput) passcodeInput.value = '';
+      
+      updateKeyDependentFields();
+    }
+    if (e.target.matches('input[name="tabletLocation"]') || e.target.matches('[data-tablet-radio]')) {
+      // タブレット設置場所変更時に屋外×リスク鍵の警告を再評価
+      updateKeyDependentFields();
+    }
+    if (e.target.matches('input[name="passcodeNotify"]')) {
+      // 通知方法を「ホスト個別」に変更時：全物件の暗証番号をクリア
+      if (e.target.value === 'host') {
+        document.querySelectorAll('[name^="property_"][name$="_passcode"]').forEach(input => {
+          input.value = '';
+        });
+      }
+      updateKeyDependentFields();
+    }
+  });
+  
+  // ===========================
+  // 「共通設定と一部異なる」チェックで個別設定を展開
+  // ===========================
+  document.querySelectorAll('[data-override-toggle]').forEach(cb => {
+    cb.addEventListener('change', () => {
+      const idx = cb.dataset.propertyIndex;
+      const content = document.getElementById(`override-content-${parseInt(idx, 10) + 1}`);
+      content.classList.toggle('show', cb.checked);
+    });
+  });
+  
+  // ===========================
+  // 物件内の条件付き表示（アーリー・荷物預かり）
+  // ===========================
+  document.addEventListener('change', e => {
+    if (e.target.matches('input[type="radio"][data-show-on]')) return;
+    // data-show-on属性のある要素を持つラジオを探して制御
+    document.querySelectorAll('.conditional[data-show-on]').forEach(wrap => {
+      const [name, value] = wrap.dataset.showOn.split('=');
+      const checked = document.querySelector(`input[name="${name}"]:checked`);
+      wrap.classList.toggle('show', checked && checked.value === value);
+    });
+  });
+  
+  // ===========================
+  // ラジオ/チェックボックスの選択ハイライト
+  // ===========================
+  document.addEventListener('change', e => {
+    if (e.target.type === 'radio') {
+      const name = e.target.name;
+      document.querySelectorAll(`input[name="${name}"]`).forEach(r => {
+        r.closest('label')?.classList.toggle('selected', r.checked);
+      });
+    } else if (e.target.type === 'checkbox' && !e.target.dataset.overrideToggle) {
+      e.target.closest('label')?.classList.toggle('selected', e.target.checked);
+    }
+  });
+  
+  // ===========================
+  // バリデーション
+  // ===========================
+  function validateForm() {
+    let valid = true;
+    const errors = [];
+    
+    // すべてのエラー表示をクリア
+    document.querySelectorAll('.field.has-error').forEach(f => f.classList.remove('has-error'));
+    
+    // OP契約状況の必須チェック（最低1つ選択）
+    if (!document.querySelector('input[name="contractedOptions"]:checked')) {
+      document.querySelector('[data-field="contractedOptions"]').classList.add('has-error');
+      valid = false;
+    }
+    
+    // 本人確認OP契約時：タブレット設置場所（共通設定）が必須
+    const hasIdentityOp = document.querySelector('input[name="contractedOptions"][value="identity"]:checked');
+    if (hasIdentityOp) {
+      if (!document.querySelector('input[name="tabletLocation"]:checked')) {
+        document.querySelector('[data-field="tabletLocation"]').classList.add('has-error');
+        valid = false;
+      }
+    }
+    
+    // 共通必須項目
+    const requiredFields = [
+      { id: 'contractorName', label: '契約者名' },
+      { id: 'contactName', label: 'ご担当者様のお名前' },
+      { id: 'contactEmail', label: 'ご担当者様のメールアドレス', type: 'email' },
+      { id: 'propertyCount', label: '物件数' },
+      { id: 'checkinTime', label: 'チェックイン開始時間' },
+      { id: 'checkoutTime', label: 'チェックアウト時間' },
+      { id: 'keyAccess', label: '鍵の解錠方法' },
+      { id: 'subEmail', label: 'サブアカウントメールアドレス', type: 'email' },
+      { id: 'subPassword', label: 'サブアカウントパスワード', type: 'password' },
+      { id: 'subName', label: 'サブアカウント表示名' },
+      { id: 'subPhone', label: 'サブアカウント電話番号', type: 'phone' }
+    ];
+    
+    requiredFields.forEach(f => {
+      const el = document.getElementById(f.id);
+      const val = el.value.trim();
+      let ok = val !== '';
+      if (ok && f.type === 'email') ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+      if (ok && f.type === 'password') ok = val.length >= 8;
+      if (ok && f.type === 'phone') ok = /^[0-9]+$/.test(val);
+      if (!ok) {
+        el.closest('.field').classList.add('has-error');
+        valid = false;
+      }
+    });
+    
+    // ラジオボタン必須
+    ['earlyCheckin', 'lateCheckout', 'luggageStorage', 'beds24', 'remotelock'].forEach(name => {
+      if (!document.querySelector(`input[name="${name}"]:checked`)) {
+        document.querySelector(`[data-field="${name}"]`).classList.add('has-error');
+        valid = false;
+      }
+    });
+    
+    // アーリー/レイト/荷物預かりの時刻
+    if (document.querySelector('input[name="earlyCheckin"]:checked')?.value === 'yes') {
+      if (!document.getElementById('earlyCheckinTime').value) {
+        document.querySelector('[data-field="earlyCheckin"]').classList.add('has-error');
+        valid = false;
+      }
+    }
+    if (document.querySelector('input[name="lateCheckout"]:checked')?.value === 'yes') {
+      if (!document.getElementById('lateCheckoutTime').value) {
+        document.querySelector('[data-field="lateCheckout"]').classList.add('has-error');
+        valid = false;
+      }
+    }
+    if (document.querySelector('input[name="luggageStorage"]:checked')?.value === 'yes') {
+      if (!document.getElementById('luggageStorageTime').value) {
+        document.querySelector('[data-field="luggageStorage"]').classList.add('has-error');
+        valid = false;
+      }
+    }
+    
+    // Beds24/RemoteLOCKアカウント
+    // Beds24アカウント情報：Beds24連携OPを契約している場合は不要（弊社作成）
+    const hasBeds24Op = document.querySelector('input[name="contractedOptions"][value="beds24"]:checked');
+    if (!hasBeds24Op && document.querySelector('input[name="beds24"]:checked')?.value === 'contracted') {
+      if (!document.getElementById('beds24Account').value.trim()) {
+        document.querySelector('[data-field="beds24"]').classList.add('has-error');
+        valid = false;
+      }
+    }
+    if (document.querySelector('input[name="remotelock"]:checked')?.value === 'contracted') {
+      if (!document.getElementById('remotelockAccount').value.trim()) {
+        document.querySelector('[data-field="remotelock"]').classList.add('has-error');
+        valid = false;
+      }
+    }
+    
+    // メッセージタイミング（1つ以上）
+    if (!document.querySelector('input[name="messageTiming"]:checked')) {
+      document.querySelector('[data-field="messageTiming"]').classList.add('has-error');
+      valid = false;
+    }
+    
+    // 物件数分の物件情報
+    const propertyCount = parseInt(document.getElementById('propertyCount').value, 10) || 0;
+    const hasBuilding = document.getElementById('buildingAddress').value.trim() !== '';
+    let hasFixedPasscodeProperty = false;
+    let hasSesameProperty = false;
+    const notifyMethod = document.querySelector('input[name="passcodeNotify"]:checked')?.value || '';
+    
+    for (let i = 1; i <= propertyCount; i++) {
+      const block = document.getElementById(`property-${i}`);
+      // 施設名
+      const nameInput = block.querySelector(`input[name="property_${i}_name"]`);
+      if (!nameInput.value.trim()) {
+        nameInput.closest('.field').classList.add('has-error');
+        valid = false;
+      }
+      // 住所 or 部屋番号
+      if (hasBuilding) {
+        const roomInput = block.querySelector(`input[name="property_${i}_room"]`);
+        if (!roomInput.value.trim()) {
+          roomInput.closest('.field').classList.add('has-error');
+          valid = false;
+        }
+      } else {
+        const addrInput = block.querySelector(`input[name="property_${i}_address"]`);
+        if (!addrInput.value.trim()) {
+          addrInput.closest('.field').classList.add('has-error');
+          valid = false;
+        }
+      }
+      // 業態（必須）
+      const checkedBusiness = block.querySelector(`input[name="property_${i}_businessType"]:checked`);
+      if (!checkedBusiness) {
+        block.querySelector(`input[name="property_${i}_businessType"]`).closest('.field').classList.add('has-error');
+        valid = false;
+      }
+      // 鍵の種類（必須）
+      const checkedKey = block.querySelector(`input[name="property_${i}_keyType"]:checked`);
+      if (!checkedKey) {
+        block.querySelector(`input[name="property_${i}_keyType"]`).closest('.field').classList.add('has-error');
+        valid = false;
+      } else {
+        const keyValue = checkedKey.value;
+        // 「その他のスマートロック・固定/ランダム」「その他」選択時：詳細必須
+        if (keyValue === 'other_smartlock_fixed' || keyValue === 'other_smartlock_random' || keyValue === 'other') {
+          const detailInput = block.querySelector(`input[name="property_${i}_keyTypeDetail"]`);
+          if (!detailInput.value.trim()) {
+            detailInput.closest('.field').classList.add('has-error');
+            valid = false;
+          }
+        }
+        // 固定暗証番号方式の判定
+        const isFixedPasscode =
+          keyValue === 'keybox' ||
+          keyValue === 'other' ||
+          keyValue === 'other_smartlock_fixed';
+        
+        if (isFixedPasscode) {
+          hasFixedPasscodeProperty = true;
+          // 通知方法が「システムで通知」なら暗証番号必須
+          if (notifyMethod === 'system') {
+            const passcodeInput = block.querySelector(`input[name="property_${i}_passcode"]`);
+            if (!passcodeInput.value.trim()) {
+              passcodeInput.closest('.field').classList.add('has-error');
+              valid = false;
+            }
+          }
+        }
+        
+        // SESAME 5系の判定
+        if (keyValue === 'sesame5' || keyValue === 'sesame5pro') {
+          hasSesameProperty = true;
+        }
+      }
+      
+      // 保健所立ち会いの状況（必須）
+      const checkedHealth = block.querySelector(`input[name="property_${i}_healthInspection"]:checked`);
+      if (!checkedHealth) {
+        block.querySelector(`input[name="property_${i}_healthInspection"]`).closest('.field').classList.add('has-error');
+        valid = false;
+      } else {
+        // 実施済み or 予定あり → 日付必須
+        if (checkedHealth.value === 'done' || checkedHealth.value === 'planned') {
+          const dateInput = block.querySelector(`input[name="property_${i}_healthInspectionDate"]`);
+          if (!dateInput.value.trim()) {
+            dateInput.closest('.field').classList.add('has-error');
+            valid = false;
+          }
+        }
+      }
+      
+      // 届出番号の状況（必須）
+      const checkedRegistration = block.querySelector(`input[name="property_${i}_registration"]:checked`);
+      if (!checkedRegistration) {
+        block.querySelector(`input[name="property_${i}_registration"]`).closest('.field').classList.add('has-error');
+        valid = false;
+      } else {
+        // 発行済み → 届出番号必須
+        if (checkedRegistration.value === 'issued') {
+          const numberInput = block.querySelector(`input[name="property_${i}_registrationNumber"]`);
+          if (!numberInput.value.trim()) {
+            numberInput.closest('.field').classList.add('has-error');
+            valid = false;
+          }
+        }
+        // 発行予定 → 発行予定日必須
+        if (checkedRegistration.value === 'planned') {
+          const dateInput = block.querySelector(`input[name="property_${i}_registrationDate"]`);
+          if (!dateInput.value.trim()) {
+            dateInput.closest('.field').classList.add('has-error');
+            valid = false;
+          }
+        }
+      }
+    }
+    
+    // SESAME 5系の物件がある場合、SESAMEアカウント情報も必須
+    if (hasSesameProperty) {
+      const sesameAccountInput = document.getElementById('sesameAccount');
+      if (!sesameAccountInput.value.trim()) {
+        document.querySelector('[data-field="sesameAccount"]').classList.add('has-error');
+        valid = false;
+      }
+    }
+    
+    // 固定暗証番号方式の物件がある場合、通知方法も必須
+    if (hasFixedPasscodeProperty) {
+      if (!document.querySelector('input[name="passcodeNotify"]:checked')) {
+        document.querySelector('[data-field="passcodeNotify"]').classList.add('has-error');
+        valid = false;
+      }
+    }
+    
+    return valid;
+  }
+  
+  // ===========================
+  // ペイロード構築
+  // ===========================
+  function buildPayload() {
+    const get = id => document.getElementById(id).value.trim();
+    const radio = name => document.querySelector(`input[name="${name}"]:checked`)?.value || '';
+    const checks = name => Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(c => c.value);
+    
+    const messageTimings = checks('messageTiming');
+    const propertyCount = parseInt(get('propertyCount'), 10) || 0;
+    const hasBuilding = get('buildingAddress') !== '';
+    const contractedOptions = checks('contractedOptions');
+    
+    // 共通設定
+    const commonSettings = {
+      buildingAddress: get('buildingAddress'),
+      tabletLocation: radio('tabletLocation'),
+      tabletLocationLabel: LABEL_MAP.tabletLocation[radio('tabletLocation')] || '',
+      checkinTime: get('checkinTime'),
+      checkoutTime: get('checkoutTime'),
+      earlyCheckin: radio('earlyCheckin'),
+      earlyCheckinLabel: LABEL_MAP.earlyCheckin[radio('earlyCheckin')] || '',
+      earlyCheckinTime: get('earlyCheckinTime'),
+      lateCheckout: radio('lateCheckout'),
+      lateCheckoutLabel: LABEL_MAP.lateCheckout[radio('lateCheckout')] || '',
+      lateCheckoutTime: get('lateCheckoutTime'),
+      luggageStorage: radio('luggageStorage'),
+      luggageStorageLabel: LABEL_MAP.luggageStorage[radio('luggageStorage')] || '',
+      luggageStorageTime: get('luggageStorageTime'),
+      beds24: radio('beds24'),
+      beds24Label: LABEL_MAP.beds24[radio('beds24')] || '',
+      beds24PlannedDate: get('beds24PlannedDate'),
+      beds24Account: get('beds24Account'),
+      remotelock: radio('remotelock'),
+      remotelockLabel: LABEL_MAP.remotelock[radio('remotelock')] || '',
+      remotelockPlannedDate: get('remotelockPlannedDate'),
+      remotelockAccount: get('remotelockAccount'),
+      sesameAccount: get('sesameAccount'),
+      keyAccess: get('keyAccess'),
+      passcodeNotify: radio('passcodeNotify'),
+      passcodeNotifyLabel: LABEL_MAP.passcodeNotify[radio('passcodeNotify')] || '',
+      messageTiming: messageTimings,
+      messageTimingLabel: messageTimings.map(v => LABEL_MAP.messageTiming[v]).join('、')
+    };
+    
+    // 物件ごとの情報
+    const properties = [];
+    for (let i = 1; i <= propertyCount; i++) {
+      const block = document.getElementById(`property-${i}`);
+      const propGet = name => block.querySelector(`[name="${name}"]`)?.value.trim() || '';
+      const propRadio = name => block.querySelector(`input[name="${name}"]:checked`)?.value || '';
+      const propChecks = name => Array.from(block.querySelectorAll(`input[name="${name}"]:checked`)).map(c => c.value);
+      
+      const override = block.querySelector(`input[name="property_${i}_override"]`).checked;
+      
+      const overrideMessageTiming = propChecks(`property_${i}_messageTiming`);
+      
+      const keyTypeValue = propRadio(`property_${i}_keyType`);
+      const healthValue = propRadio(`property_${i}_healthInspection`);
+      const registrationValue = propRadio(`property_${i}_registration`);
+      const businessTypeValue = propRadio(`property_${i}_businessType`);
+      const propTabletLocation = propRadio(`property_${i}_tabletLocation`);
+      
+      properties.push({
+        index: i,
+        name: propGet(`property_${i}_name`),
+        room: hasBuilding ? propGet(`property_${i}_room`) : '',
+        address: !hasBuilding ? propGet(`property_${i}_address`) : '',
+        businessType: businessTypeValue,
+        businessTypeLabel: LABEL_MAP.businessType[businessTypeValue] || '',
+        keyType: keyTypeValue,
+        keyTypeLabel: LABEL_MAP.keyType[keyTypeValue] || '',
+        keyTypeDetail: propGet(`property_${i}_keyTypeDetail`),
+        passcode: propGet(`property_${i}_passcode`),
+        tabletLocation: propTabletLocation,
+        tabletLocationLabel: LABEL_MAP.tabletLocation[propTabletLocation] || '',
+        healthInspection: healthValue,
+        healthInspectionLabel: LABEL_MAP.healthInspection[healthValue] || '',
+        healthInspectionDate: propGet(`property_${i}_healthInspectionDate`),
+        registration: registrationValue,
+        registrationLabel: LABEL_MAP.registration[registrationValue] || '',
+        registrationNumber: propGet(`property_${i}_registrationNumber`),
+        registrationDate: propGet(`property_${i}_registrationDate`),
+        hasOverride: override,
+        override: override ? {
+          checkinTime: propGet(`property_${i}_checkinTime`),
+          checkoutTime: propGet(`property_${i}_checkoutTime`),
+          earlyCheckin: propRadio(`property_${i}_earlyCheckin`),
+          earlyCheckinLabel: LABEL_MAP.earlyCheckin[propRadio(`property_${i}_earlyCheckin`)] || '',
+          earlyCheckinTime: propGet(`property_${i}_earlyCheckinTime`),
+          lateCheckout: propRadio(`property_${i}_lateCheckout`),
+          lateCheckoutLabel: LABEL_MAP.lateCheckout[propRadio(`property_${i}_lateCheckout`)] || '',
+          lateCheckoutTime: propGet(`property_${i}_lateCheckoutTime`),
+          luggageStorage: propRadio(`property_${i}_luggageStorage`),
+          luggageStorageLabel: LABEL_MAP.luggageStorage[propRadio(`property_${i}_luggageStorage`)] || '',
+          luggageStorageTime: propGet(`property_${i}_luggageStorageTime`),
+          keyAccess: propGet(`property_${i}_keyAccess`),
+          messageTiming: overrideMessageTiming,
+          messageTimingLabel: overrideMessageTiming.map(v => LABEL_MAP.messageTiming[v]).join('、')
+        } : null
+      });
+    }
+    
+    return {
+      timestamp: new Date().toISOString(),
+      source: 'hearing',
+      contractor: {
+        contractedOptions: contractedOptions,
+        contractedOptionsLabel: contractedOptions.map(v => LABEL_MAP.contractedOptions[v]).join('、'),
+        contractorName: get('contractorName'),
+        contactName: get('contactName'),
+        contactEmail: get('contactEmail'),
+        propertyCount: propertyCount
+      },
+      commonSettings: commonSettings,
+      properties: properties,
+      subAccount: {
+        email: get('subEmail'),
+        password: get('subPassword'),
+        name: get('subName'),
+        phone: get('subPhone')
+      }
+    };
+  }
+  
+  // ===========================
+  // ホストタスクの生成
+  // ===========================
+  function formatPropertyList(props) {
+    return props.map(p => `物件${p.index}「${p.name}」`).join('、');
+  }
+  
+  function buildHostTasks(payload) {
+    const tasks = [];
+    
+    // 1. 特区民泊：定期借家契約書の作成・送付
+    const tokuProperties = payload.properties.filter(p => p.businessType === 'toku');
+    if (tokuProperties.length > 0) {
+      const names = formatPropertyList(tokuProperties);
+      tasks.push({
+        title: '🏠 定期借家契約書の作成・送付',
+        body: `特区民泊の物件（${names}）は<strong>定期借家契約書の作成が必要</strong>です。作成後、PDF等で <a href="mailto:customer@bizpato.com">customer@bizpato.com</a> までお送りください。`,
+        plainBody: `特区民泊の物件 (${names}) は定期借家契約書の作成が必要です。作成後、PDF等で customer@bizpato.com までお送りください。`
+      });
+    }
+    
+    // 2. Beds24「契約済み」+ Beds24連携OPなし：認証用メール追加
+    const hasBeds24Op = payload.contractor.contractedOptions.includes('beds24');
+    if (payload.commonSettings.beds24 === 'contracted' && !hasBeds24Op) {
+      tasks.push({
+        title: '📧 Beds24認証用メールアドレスの追加',
+        body: '弊社がチェックインシステムと連携するため、お客様のBeds24アカウントにログインさせていただきます。Beds24の<strong>ログイン認証用メールアドレスに <a href="mailto:customer@bizpato.com">customer@bizpato.com</a> を追加</strong>してください。<br>追加方法：<a href="https://co-reception.com/support-ticket/" target="_blank" rel="noopener">Beds24サポート</a>から「ログイン認証用メールアドレスに customer@bizpato.com を追加してください」とお伝えいただくと対応してもらえます。',
+        plainBody: '弊社がチェックインシステムと連携するため、お客様のBeds24アカウントにログインさせていただきます。Beds24のログイン認証用メールアドレスに customer@bizpato.com を追加してください。\n追加方法：Beds24サポート (https://co-reception.com/support-ticket/) から「ログイン認証用メールアドレスに customer@bizpato.com を追加してください」とお伝えいただくと対応してもらえます。'
+      });
+    }
+    
+    // 3. Beds24「未契約・契約予定」：契約完了の連絡
+    if (payload.commonSettings.beds24 === 'planned') {
+      tasks.push({
+        title: '📅 Beds24契約完了のご連絡',
+        body: 'Beds24のご契約が完了しましたら、その旨を <a href="mailto:customer@bizpato.com">customer@bizpato.com</a> までご連絡ください。',
+        plainBody: 'Beds24のご契約が完了しましたら、その旨を customer@bizpato.com までご連絡ください。'
+      });
+    }
+    
+    // 4. RemoteLOCK「未契約・契約予定」：契約完了の連絡
+    if (payload.commonSettings.remotelock === 'planned') {
+      tasks.push({
+        title: '🔐 RemoteLOCK契約完了のご連絡',
+        body: 'RemoteLOCKのご契約が完了しましたら、その旨を <a href="mailto:customer@bizpato.com">customer@bizpato.com</a> までご連絡ください。',
+        plainBody: 'RemoteLOCKのご契約が完了しましたら、その旨を customer@bizpato.com までご連絡ください。'
+      });
+    }
+    
+    // 5. 保健所立ち会い「予定あり」：完了の連絡
+    const plannedHealth = payload.properties.filter(p => p.healthInspection === 'planned');
+    if (plannedHealth.length > 0) {
+      const names = formatPropertyList(plannedHealth);
+      tasks.push({
+        title: '🏥 保健所立ち会い完了のご連絡',
+        body: `対象物件(${names})の保健所立ち会いが完了しましたら、その旨を <a href="mailto:customer@bizpato.com">customer@bizpato.com</a> までご連絡ください。`,
+        plainBody: `対象物件 (${names}) の保健所立ち会いが完了しましたら、その旨を customer@bizpato.com までご連絡ください。`
+      });
+    }
+    
+    // 6. 届出番号「発行予定」：発行後の連絡
+    const plannedReg = payload.properties.filter(p => p.registration === 'planned');
+    if (plannedReg.length > 0) {
+      const names = formatPropertyList(plannedReg);
+      tasks.push({
+        title: '📜 届出番号発行後のご連絡',
+        body: `対象物件(${names})の届出番号が発行されましたら、番号を <a href="mailto:customer@bizpato.com">customer@bizpato.com</a> までご連絡ください。`,
+        plainBody: `対象物件 (${names}) の届出番号が発行されましたら、番号を customer@bizpato.com までご連絡ください。`
+      });
+    }
+    
+    // 7. ランダム暗証番号：ゲスト様への個別通知
+    const randomPasscodeProperties = payload.properties.filter(p => p.keyType === 'other_smartlock_random');
+    if (randomPasscodeProperties.length > 0) {
+      const names = formatPropertyList(randomPasscodeProperties);
+      tasks.push({
+        title: '🔑 ゲスト様への暗証番号の個別通知',
+        body: `${names}はランダム暗証番号方式の鍵をご利用のため、チェックインシステムでの自動通知ができません。<strong>各予約ごとにホスト様自身でゲスト様へ暗証番号をお伝え</strong>いただきますようお願いいたします。`,
+        plainBody: `${names}はランダム暗証番号方式の鍵をご利用のため、チェックインシステムでの自動通知ができません。各予約ごとにホスト様自身でゲスト様へ暗証番号をお伝えいただきますようお願いいたします。`
+      });
+    }
+    
+    return tasks;
+  }
+  
+  // ===========================
+  // ホストタスクの描画
+  // ===========================
+  function renderHostTasks(tasks) {
+    if (tasks.length === 0) return;
+    
+    // サマリ表示
+    const summaryEl = document.getElementById('tasksSummary');
+    summaryEl.textContent = `⚠️ ご対応いただきたい事項が ${tasks.length} 件あります`;
+    
+    const tasksList = document.getElementById('hostTasksList');
+    tasksList.innerHTML = tasks.map((t, idx) => `
+      <div class="host-task">
+        <p class="host-task-title">${idx + 1}. ${t.title}</p>
+        <p class="host-task-body">${t.body}</p>
+      </div>
+    `).join('');
+    
+    document.getElementById('hostTasksSection').style.display = '';
+    
+    // コピーボタンの動作
+    document.getElementById('copyTasksBtn').addEventListener('click', () => {
+      const plainText = '【ご対応をお願いしたいタスク】\n\n' + 
+        tasks.map((t, idx) => `${idx + 1}. ${t.title.replace(/^[^\s]+\s/, '')}\n${t.plainBody}`).join('\n\n');
+      
+      navigator.clipboard.writeText(plainText).then(() => {
+        const btn = document.getElementById('copyTasksBtn');
+        const originalText = btn.textContent;
+        btn.textContent = '✓ コピーしました';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = originalText;
+          btn.classList.remove('copied');
+        }, 2000);
+      }).catch(() => {
+        alert('コピーに失敗しました。お手数ですが、手動でテキストをコピーしてください。');
+      });
+    });
+  }
+  
+  // ===========================
+  // フォーム送信
+  // ===========================
+  document.getElementById('hearingForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    
+    const submitError = document.getElementById('submitError');
+    submitError.classList.remove('show');
+    
+    if (!validateForm()) {
+      submitError.classList.add('show');
+      // 最初のエラー欄までスクロール
+      const firstError = document.querySelector('.field.has-error');
+      if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    
+    const submitBtn = document.getElementById('submitBtn');
+    submitBtn.disabled = true;
+    submitBtn.textContent = '送信中...';
+    
+    const payload = buildPayload();
+    
+    try {
+      const response = await fetch(N8N_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      
+      if (!response.ok) throw new Error('送信に失敗しました');
+      
+      // ホストタスクの生成・表示
+      const hostTasks = buildHostTasks(payload);
+      renderHostTasks(hostTasks);
+      
+      // 完了画面表示
+      document.getElementById('hearingForm').style.display = 'none';
+      document.getElementById('postSend').classList.add('show');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      
+    } catch (err) {
+      console.error(err);
+      submitBtn.disabled = false;
+      submitBtn.textContent = '入力内容を送信する';
+      submitError.textContent = '送信に失敗しました。お手数ですが、しばらくしてから再度お試しください。';
+      submitError.classList.add('show');
+    }
+  });
 </script>
 </body>
 </html>
