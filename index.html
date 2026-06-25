@@ -1,0 +1,1644 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>チェックインシステム設定ヒアリングフォーム | 民泊管理バンク</title>
+  <style>
+    /* ===== CSS Variables (BizPato Design Guide) ===== */
+    :root {
+      --color-main: #215387;
+      --color-bg: #d7f0ff;
+      --color-point1: #ea4d3c;
+      --color-point2: #fff050;
+      --color-white: #ffffff;
+      --color-text: #1a1a2e;
+      --color-text-light: #555;
+      --color-border: #b8d4e8;
+      --color-input-bg: #f8fcff;
+      --color-section-bg: #eef7ff;
+      --font-main: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Meiryo', sans-serif;
+      --radius: 8px;
+      --shadow: 0 2px 12px rgba(33,83,135,0.10);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-main);
+      background: var(--color-bg);
+      color: var(--color-text);
+      min-height: 100vh;
+      padding: 0 0 60px;
+    }
+
+    /* ===== Header ===== */
+    .site-header {
+      background: var(--color-main);
+      color: var(--color-white);
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .site-header .logo-text {
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+    .site-header .logo-sub {
+      font-size: 0.78rem;
+      opacity: 0.8;
+      margin-top: 2px;
+    }
+
+    /* ===== Hero ===== */
+    .hero {
+      background: linear-gradient(135deg, var(--color-main) 0%, #2d6fad 100%);
+      color: var(--color-white);
+      text-align: center;
+      padding: 40px 24px 32px;
+    }
+    .hero h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      line-height: 1.5;
+      margin-bottom: 10px;
+    }
+    .hero p {
+      font-size: 0.9rem;
+      opacity: 0.9;
+      line-height: 1.7;
+    }
+    .hero .badge {
+      display: inline-block;
+      background: var(--color-point2);
+      color: var(--color-text);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 3px 12px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+    }
+
+    /* ===== Container ===== */
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    /* ===== Progress ===== */
+    .progress-wrap {
+      background: var(--color-white);
+      border-bottom: 1px solid var(--color-border);
+      padding: 12px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(33,83,135,0.08);
+    }
+    .progress-inner {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+    .progress-steps {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+    .step-item {
+      display: flex;
+      align-items: center;
+      flex: 1;
+    }
+    .step-circle {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--color-border);
+      color: var(--color-text-light);
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.3s;
+    }
+    .step-circle.active {
+      background: var(--color-main);
+      color: var(--color-white);
+    }
+    .step-circle.done {
+      background: #4caf50;
+      color: var(--color-white);
+    }
+    .step-label {
+      font-size: 0.7rem;
+      color: var(--color-text-light);
+      margin-left: 6px;
+      white-space: nowrap;
+    }
+    .step-label.active { color: var(--color-main); font-weight: 700; }
+    .step-line {
+      flex: 1;
+      height: 2px;
+      background: var(--color-border);
+      margin: 0 6px;
+    }
+    .step-line.done { background: #4caf50; }
+
+    /* ===== Form Pages ===== */
+    .form-page { display: none; }
+    .form-page.active { display: block; }
+
+    /* ===== Section Card ===== */
+    .section-card {
+      background: var(--color-white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-top: 20px;
+      overflow: hidden;
+    }
+    .section-header {
+      background: var(--color-main);
+      color: var(--color-white);
+      padding: 14px 20px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-header .icon {
+      font-size: 1.1rem;
+    }
+    .section-body {
+      padding: 20px;
+    }
+
+    /* ===== Form Fields ===== */
+    .field-group {
+      margin-bottom: 18px;
+    }
+    .field-group:last-child { margin-bottom: 0; }
+
+    label.field-label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--color-main);
+      margin-bottom: 6px;
+    }
+    label.field-label .req {
+      color: var(--color-point1);
+      font-size: 0.75rem;
+      margin-left: 4px;
+    }
+    label.field-label .opt {
+      color: var(--color-text-light);
+      font-size: 0.72rem;
+      font-weight: 400;
+      margin-left: 4px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="number"],
+    input[type="date"],
+    input[type="time"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius);
+      font-size: 0.9rem;
+      font-family: var(--font-main);
+      background: var(--color-input-bg);
+      color: var(--color-text);
+      transition: border-color 0.2s;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--color-main);
+      background: var(--color-white);
+    }
+    input.error, select.error, textarea.error {
+      border-color: var(--color-point1);
+    }
+    textarea { resize: vertical; min-height: 80px; }
+
+    .select-wrap {
+      position: relative;
+    }
+    .select-wrap::after {
+      content: '▼';
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.7rem;
+      color: var(--color-main);
+      pointer-events: none;
+    }
+
+    /* ===== Radio / Checkbox ===== */
+    .radio-group, .check-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .radio-btn, .check-btn {
+      display: none;
+    }
+    .radio-label, .check-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border: 1.5px solid var(--color-border);
+      border-radius: 20px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: var(--color-input-bg);
+      user-select: none;
+    }
+    .radio-btn:checked + .radio-label,
+    .check-btn:checked + .check-label {
+      background: var(--color-main);
+      color: var(--color-white);
+      border-color: var(--color-main);
+    }
+    .radio-label:hover, .check-label:hover {
+      border-color: var(--color-main);
+      background: var(--color-section-bg);
+    }
+
+    /* ===== Conditional Fields ===== */
+    .conditional { display: none; }
+    .conditional.show { display: block; }
+
+    /* ===== Two columns ===== */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    @media (max-width: 480px) {
+      .two-col { grid-template-columns: 1fr; }
+    }
+
+    /* ===== Property Card ===== */
+    .property-card {
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius);
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+    .property-card-header {
+      background: var(--color-section-bg);
+      padding: 12px 16px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--color-main);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .property-card-body {
+      padding: 16px;
+    }
+
+    /* ===== Override toggle ===== */
+    .override-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      cursor: pointer;
+    }
+    .toggle-switch {
+      position: relative;
+      width: 40px;
+      height: 22px;
+    }
+    .toggle-switch input { display: none; }
+    .toggle-track {
+      position: absolute;
+      inset: 0;
+      background: var(--color-border);
+      border-radius: 11px;
+      transition: background 0.2s;
+    }
+    .toggle-thumb {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      top: 2px;
+      left: 2px;
+      background: var(--color-white);
+      border-radius: 50%;
+      transition: left 0.2s;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    }
+    .toggle-switch input:checked ~ .toggle-track { background: var(--color-main); }
+    .toggle-switch input:checked ~ .toggle-thumb { left: 20px; }
+    .toggle-label-text { font-size: 0.82rem; color: var(--color-text-light); }
+
+    .override-fields { display: none; margin-top: 10px; padding: 14px; background: var(--color-section-bg); border-radius: var(--radius); }
+    .override-fields.show { display: block; }
+    .override-note { font-size: 0.78rem; color: var(--color-text-light); margin-bottom: 10px; }
+
+    /* ===== Buttons ===== */
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+      justify-content: flex-end;
+    }
+    .btn {
+      padding: 12px 28px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      font-family: var(--font-main);
+    }
+    .btn-primary {
+      background: var(--color-main);
+      color: var(--color-white);
+    }
+    .btn-primary:hover { background: #1a4270; }
+    .btn-secondary {
+      background: var(--color-white);
+      color: var(--color-main);
+      border: 1.5px solid var(--color-main);
+    }
+    .btn-secondary:hover { background: var(--color-section-bg); }
+    .btn-submit {
+      background: var(--color-point1);
+      color: var(--color-white);
+      font-size: 1rem;
+      padding: 14px 36px;
+    }
+    .btn-submit:hover { background: #c73d2e; }
+    .btn-submit:disabled { background: #ccc; cursor: not-allowed; }
+
+    /* ===== Error message ===== */
+    .error-msg {
+      color: var(--color-point1);
+      font-size: 0.78rem;
+      margin-top: 4px;
+      display: none;
+    }
+    .error-msg.show { display: block; }
+
+    /* ===== Info box ===== */
+    .info-box {
+      background: var(--color-section-bg);
+      border-left: 4px solid var(--color-main);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 12px 16px;
+      font-size: 0.82rem;
+      color: var(--color-text-light);
+      margin-bottom: 16px;
+      line-height: 1.6;
+    }
+
+    /* ===== Confirmation Page ===== */
+    .confirm-section {
+      background: var(--color-white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-top: 20px;
+      overflow: hidden;
+    }
+    .confirm-section-header {
+      background: var(--color-section-bg);
+      padding: 10px 16px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--color-main);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .confirm-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    .confirm-table tr {
+      border-bottom: 1px solid var(--color-border);
+    }
+    .confirm-table tr:last-child { border-bottom: none; }
+    .confirm-table th {
+      width: 38%;
+      padding: 10px 14px;
+      background: var(--color-input-bg);
+      color: var(--color-text-light);
+      font-weight: 600;
+      text-align: left;
+      vertical-align: top;
+    }
+    .confirm-table td {
+      padding: 10px 14px;
+      color: var(--color-text);
+      vertical-align: top;
+      word-break: break-all;
+    }
+
+    /* ===== Complete Page ===== */
+    .complete-card {
+      background: var(--color-white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-top: 32px;
+      padding: 40px 24px;
+      text-align: center;
+    }
+    .complete-icon {
+      font-size: 3rem;
+      margin-bottom: 16px;
+    }
+    .complete-card h2 {
+      font-size: 1.3rem;
+      color: var(--color-main);
+      margin-bottom: 12px;
+    }
+    .complete-card p {
+      font-size: 0.9rem;
+      color: var(--color-text-light);
+      line-height: 1.7;
+    }
+    .complete-id {
+      display: inline-block;
+      background: var(--color-section-bg);
+      border: 1.5px solid var(--color-main);
+      border-radius: var(--radius);
+      padding: 10px 24px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--color-main);
+      margin: 16px 0;
+      letter-spacing: 0.08em;
+    }
+
+    /* ===== Loading overlay ===== */
+    .loading-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(33,83,135,0.18);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+    }
+    .loading-overlay.show { display: flex; }
+    .loading-spinner {
+      background: var(--color-white);
+      border-radius: var(--radius);
+      padding: 32px 40px;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid var(--color-border);
+      border-top-color: var(--color-main);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 12px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 1.2rem; }
+      .btn { padding: 11px 20px; font-size: 0.85rem; }
+      .btn-submit { padding: 13px 28px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Loading overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-spinner">
+    <div class="spinner"></div>
+    <div style="font-size:0.9rem;color:var(--color-text-light);">送信中...</div>
+  </div>
+</div>
+
+<!-- Header -->
+<header class="site-header">
+  <div>
+    <div class="logo-text">民泊管理バンク</div>
+    <div class="logo-sub">チェックインシステム設定ヒアリングフォーム</div>
+  </div>
+</header>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="badge">基本プラン契約者様専用</div>
+  <h1>チェックインシステム設定<br>ヒアリングフォーム</h1>
+  <p>システム構築に必要な情報をご入力ください。<br>入力内容は弊社担当者が確認し、設定を進めます。</p>
+</div>
+
+<!-- Progress -->
+<div class="progress-wrap">
+  <div class="progress-inner">
+    <div class="progress-steps">
+      <div class="step-item">
+        <div class="step-circle active" id="sc1">1</div>
+        <div class="step-label active" id="sl1">契約者情報</div>
+      </div>
+      <div class="step-line" id="line12"></div>
+      <div class="step-item">
+        <div class="step-circle" id="sc2">2</div>
+        <div class="step-label" id="sl2">共通設定</div>
+      </div>
+      <div class="step-line" id="line23"></div>
+      <div class="step-item">
+        <div class="step-circle" id="sc3">3</div>
+        <div class="step-label" id="sl3">物件情報</div>
+      </div>
+      <div class="step-line" id="line34"></div>
+      <div class="step-item">
+        <div class="step-circle" id="sc4">4</div>
+        <div class="step-label" id="sl4">サブアカウント</div>
+      </div>
+      <div class="step-line" id="line45"></div>
+      <div class="step-item">
+        <div class="step-circle" id="sc5">5</div>
+        <div class="step-label" id="sl5">確認・送信</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ========== PAGE 1: 契約者情報 ========== -->
+  <div class="form-page active" id="page1">
+    <div class="section-card">
+      <div class="section-header"><span class="icon">📋</span>契約者情報</div>
+      <div class="section-body">
+        <div class="info-box">
+          ご契約いただいたプランと、担当者の情報をご入力ください。
+        </div>
+
+        <!-- 契約オプション -->
+        <div class="field-group">
+          <label class="field-label">契約オプション <span class="req">必須</span></label>
+          <div class="check-group" id="contractedOptionsGroup">
+            <input type="checkbox" class="check-btn" id="opt_none" name="contractedOptions" value="none">
+            <label class="check-label" for="opt_none">基本プランのみ</label>
+            <input type="checkbox" class="check-btn" id="opt_identity" name="contractedOptions" value="identity">
+            <label class="check-label" for="opt_identity">本人確認OP</label>
+            <input type="checkbox" class="check-btn" id="opt_beds24" name="contractedOptions" value="beds24">
+            <label class="check-label" for="opt_beds24">Beds24連携OP</label>
+          </div>
+          <div class="error-msg" id="err_options">契約オプションを選択してください</div>
+        </div>
+
+        <!-- 契約者名 -->
+        <div class="field-group">
+          <label class="field-label" for="contractorName">契約者名（会社名・屋号） <span class="req">必須</span></label>
+          <input type="text" id="contractorName" placeholder="例：株式会社サンプル" />
+          <div class="error-msg" id="err_contractorName">契約者名を入力してください</div>
+        </div>
+
+        <!-- 担当者名 -->
+        <div class="field-group">
+          <label class="field-label" for="contactName">担当者名 <span class="req">必須</span></label>
+          <input type="text" id="contactName" placeholder="例：山田 太郎" />
+          <div class="error-msg" id="err_contactName">担当者名を入力してください</div>
+        </div>
+
+        <!-- 担当者メール -->
+        <div class="field-group">
+          <label class="field-label" for="contactEmail">担当者メールアドレス <span class="req">必須</span></label>
+          <input type="email" id="contactEmail" placeholder="例：taro@example.com" />
+          <div class="error-msg" id="err_contactEmail">正しいメールアドレスを入力してください</div>
+        </div>
+
+        <!-- 物件数 -->
+        <div class="field-group">
+          <label class="field-label" for="propertyCount">管理物件数 <span class="req">必須</span></label>
+          <input type="number" id="propertyCount" min="1" max="50" placeholder="例：2" />
+          <div class="error-msg" id="err_propertyCount">物件数を入力してください（1〜50）</div>
+        </div>
+
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="goNext(1)">次へ →</button>
+    </div>
+  </div>
+
+  <!-- ========== PAGE 2: 共通設定 ========== -->
+  <div class="form-page" id="page2">
+    <div class="section-card">
+      <div class="section-header"><span class="icon">🏢</span>建物・共通設定</div>
+      <div class="section-body">
+        <div class="info-box">
+          複数物件がある場合、共通の設定をここで入力します。物件ごとに異なる場合は、次の「物件情報」ページで上書きできます。
+        </div>
+
+        <!-- 建物住所 -->
+        <div class="field-group">
+          <label class="field-label" for="buildingAddress">建物住所 <span class="req">必須</span></label>
+          <input type="text" id="buildingAddress" placeholder="例：東京都新宿区西新宿1-2-3 サンプルビル" />
+          <div class="error-msg" id="err_buildingAddress">建物住所を入力してください</div>
+        </div>
+
+        <!-- タブレット設置場所 -->
+        <div class="field-group">
+          <label class="field-label">タブレット設置場所（共通） <span class="req">必須</span></label>
+          <div class="radio-group">
+            <input type="radio" class="radio-btn" id="tablet_indoor" name="tabletLocation" value="indoor">
+            <label class="radio-label" for="tablet_indoor">屋内設置</label>
+            <input type="radio" class="radio-btn" id="tablet_outdoor" name="tabletLocation" value="outdoor">
+            <label class="radio-label" for="tablet_outdoor">屋外設置</label>
+          </div>
+          <div class="error-msg" id="err_tabletLocation">タブレット設置場所を選択してください</div>
+        </div>
+
+        <!-- チェックイン/アウト時間 -->
+        <div class="two-col">
+          <div class="field-group">
+            <label class="field-label" for="checkinTime">チェックイン時間 <span class="req">必須</span></label>
+            <input type="time" id="checkinTime" value="15:00" />
+            <div class="error-msg" id="err_checkinTime">チェックイン時間を入力してください</div>
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="checkoutTime">チェックアウト時間 <span class="req">必須</span></label>
+            <input type="time" id="checkoutTime" value="10:00" />
+            <div class="error-msg" id="err_checkoutTime">チェックアウト時間を入力してください</div>
+          </div>
+        </div>
+
+        <!-- アーリーチェックイン -->
+        <div class="field-group">
+          <label class="field-label">アーリーチェックイン <span class="req">必須</span></label>
+          <div class="radio-group">
+            <input type="radio" class="radio-btn" id="early_yes" name="earlyCheckin" value="yes">
+            <label class="radio-label" for="early_yes">対応する</label>
+            <input type="radio" class="radio-btn" id="early_no" name="earlyCheckin" value="no">
+            <label class="radio-label" for="early_no">対応しない</label>
+          </div>
+          <div class="error-msg" id="err_earlyCheckin">選択してください</div>
+        </div>
+        <div class="conditional" id="cond_earlyCheckinTime">
+          <div class="field-group">
+            <label class="field-label" for="earlyCheckinTime">アーリーチェックイン開始時刻 <span class="req">必須</span></label>
+            <input type="time" id="earlyCheckinTime" />
+            <div class="error-msg" id="err_earlyCheckinTime">時刻を入力してください</div>
+          </div>
+        </div>
+
+        <!-- レイトチェックアウト -->
+        <div class="field-group">
+          <label class="field-label">レイトチェックアウト <span class="req">必須</span></label>
+          <div class="radio-group">
+            <input type="radio" class="radio-btn" id="late_yes" name="lateCheckout" value="yes">
+            <label class="radio-label" for="late_yes">対応する</label>
+            <input type="radio" class="radio-btn" id="late_no" name="lateCheckout" value="no">
+            <label class="radio-label" for="late_no">対応しない</label>
+          </div>
+          <div class="error-msg" id="err_lateCheckout">選択してください</div>
+        </div>
+        <div class="conditional" id="cond_lateCheckoutTime">
+          <div class="field-group">
+            <label class="field-label" for="lateCheckoutTime">レイトチェックアウト最終時刻 <span class="req">必須</span></label>
+            <input type="time" id="lateCheckoutTime" />
+            <div class="error-msg" id="err_lateCheckoutTime">時刻を入力してください</div>
+          </div>
+        </div>
+
+        <!-- 荷物預かり -->
+        <div class="field-group">
+          <label class="field-label">荷物預かり <span class="req">必須</span></label>
+          <div class="radio-group">
+            <input type="radio" class="radio-btn" id="luggage_yes" name="luggageStorage" value="yes">
+            <label class="radio-label" for="luggage_yes">対応する</label>
+            <input type="radio" class="radio-btn" id="luggage_no" name="luggageStorage" value="no">
+            <label class="radio-label" for="luggage_no">対応しない</label>
+          </div>
+          <div class="error-msg" id="err_luggageStorage">選択してください</div>
+        </div>
+        <div class="conditional" id="cond_luggageStorageTime">
+          <div class="field-group">
+            <label class="field-label" for="luggageStorageTime">荷物預かり開始時刻 <span class="req">必須</span></label>
+            <input type="time" id="luggageStorageTime" />
+            <div class="error-msg" id="err_luggageStorageTime">時刻を入力してください</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 連携サービス -->
+    <div class="section-card">
+      <div class="section-header"><span class="icon">🔗</span>連携サービス</div>
+      <div class="section-body">
+
+        <!-- Beds24 -->
+        <div class="field-group">
+          <label class="field-label">Beds24連携 <span class="req">必須</span></label>
+          <div class="radio-group">
+            <input type="radio" class="radio-btn" id="beds24_contracted" name="beds24" value="contracted">
+            <label class="radio-label" for="beds24_contracted">連携する（契約済み）</label>
+            <input type="radio" class="radio-btn" id="beds24_planned" name="beds24" value="planned">
+            <label class="radio-label" for="beds24_planned">連携する（契約予定）</label>
+            <input type="radio" class="radio-btn" id="beds24_no" name="beds24" value="no">
+            <label class="radio-label" for="beds24_no">連携しない</label>
+          </div>
+          <div class="error-msg" id="err_beds24">選択してください</div>
+        </div>
+        <div class="conditional" id="cond_beds24_contracted">
+          <div class="field-group">
+            <label class="field-label" for="beds24Account">Beds24アカウント情報 <span class="req">必須</span></label>
+            <textarea id="beds24Account" placeholder="ログインID: xxxxx&#10;パスワード: xxxxx"></textarea>
+            <div class="error-msg" id="err_beds24Account">アカウント情報を入力してください</div>
+          </div>
+        </div>
+        <div class="conditional" id="cond_beds24_planned">
+          <div class="field-group">
+            <label class="field-label" for="beds24PlannedDate">Beds24契約予定日 <span class="opt">任意</span></label>
+            <input type="date" id="beds24PlannedDate" />
+          </div>
+        </div>
+
+        <!-- RemoteLOCK -->
+        <div class="field-group">
+          <label class="field-label">RemoteLOCK連携 <span class="req">必須</span></label>
+          <div class="radio-group">
+            <input type="radio" class="radio-btn" id="rl_contracted" name="remotelock" value="contracted">
+            <label class="radio-label" for="rl_contracted">連携する（契約済み）</label>
+            <input type="radio" class="radio-btn" id="rl_planned" name="remotelock" value="planned">
+            <label class="radio-label" for="rl_planned">連携する（契約予定）</label>
+            <input type="radio" class="radio-btn" id="rl_no" name="remotelock" value="no">
+            <label class="radio-label" for="rl_no">連携しない</label>
+          </div>
+          <div class="error-msg" id="err_remotelock">選択してください</div>
+        </div>
+        <div class="conditional" id="cond_rl_contracted">
+          <div class="field-group">
+            <label class="field-label" for="remotelockAccount">RemoteLOCKアカウント情報 <span class="req">必須</span></label>
+            <textarea id="remotelockAccount" placeholder="ログインID: xxxxx&#10;パスワード: xxxxx"></textarea>
+            <div class="error-msg" id="err_remotelockAccount">アカウント情報を入力してください</div>
+          </div>
+        </div>
+        <div class="conditional" id="cond_rl_planned">
+          <div class="field-group">
+            <label class="field-label" for="remotelockPlannedDate">RemoteLOCK契約予定日 <span class="opt">任意</span></label>
+            <input type="date" id="remotelockPlannedDate" />
+          </div>
+        </div>
+
+        <!-- SESAME -->
+        <div class="field-group">
+          <label class="field-label" for="sesameAccount">SESAMEアカウント情報 <span class="opt">任意</span></label>
+          <textarea id="sesameAccount" placeholder="SESAMEを利用する場合はアカウント情報を入力"></textarea>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 鍵・通知設定 -->
+    <div class="section-card">
+      <div class="section-header"><span class="icon">🔑</span>鍵・通知設定</div>
+      <div class="section-body">
+
+        <!-- 鍵の解錠方法 -->
+        <div class="field-group">
+          <label class="field-label" for="keyAccess">鍵の解錠方法（標準） <span class="req">必須</span></label>
+          <input type="text" id="keyAccess" placeholder="例：スマートロックに暗証番号を入力して解錠" />
+          <div class="error-msg" id="err_keyAccess">解錠方法を入力してください</div>
+        </div>
+
+        <!-- 暗証番号通知方法 -->
+        <div class="field-group">
+          <label class="field-label">暗証番号通知方法 <span class="req">必須</span></label>
+          <div class="radio-group">
+            <input type="radio" class="radio-btn" id="passcode_system" name="passcodeNotify" value="system">
+            <label class="radio-label" for="passcode_system">チェックインシステムで通知</label>
+            <input type="radio" class="radio-btn" id="passcode_host" name="passcodeNotify" value="host">
+            <label class="radio-label" for="passcode_host">ホストが個別に伝える</label>
+          </div>
+          <div class="error-msg" id="err_passcodeNotify">選択してください</div>
+        </div>
+
+        <!-- 自動メッセージ送信タイミング -->
+        <div class="field-group">
+          <label class="field-label">自動メッセージ送信タイミング <span class="req">必須</span></label>
+          <div class="check-group">
+            <input type="checkbox" class="check-btn" id="msg_onReservation" name="messageTiming" value="onReservation">
+            <label class="check-label" for="msg_onReservation">予約作成時</label>
+            <input type="checkbox" class="check-btn" id="msg_1dayBefore" name="messageTiming" value="1dayBefore">
+            <label class="check-label" for="msg_1dayBefore">チェックイン1日前</label>
+            <input type="checkbox" class="check-btn" id="msg_checkinDay" name="messageTiming" value="checkinDay">
+            <label class="check-label" for="msg_checkinDay">チェックイン当日</label>
+          </div>
+          <div class="error-msg" id="err_messageTiming">送信タイミングを選択してください</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="goBack(2)">← 戻る</button>
+      <button class="btn btn-primary" onclick="goNext(2)">次へ →</button>
+    </div>
+  </div>
+
+  <!-- ========== PAGE 3: 物件情報 ========== -->
+  <div class="form-page" id="page3">
+    <div class="section-card">
+      <div class="section-header"><span class="icon">🏠</span>物件情報</div>
+      <div class="section-body">
+        <div class="info-box" id="propertyCountInfo">
+          物件数分の情報を入力してください。共通設定と異なる場合は「個別設定を上書きする」をオンにしてください。
+        </div>
+        <div id="propertiesContainer">
+          <!-- 物件カードはJSで動的生成 -->
+        </div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="goBack(3)">← 戻る</button>
+      <button class="btn btn-primary" onclick="goNext(3)">次へ →</button>
+    </div>
+  </div>
+
+  <!-- ========== PAGE 4: サブアカウント ========== -->
+  <div class="form-page" id="page4">
+    <div class="section-card">
+      <div class="section-header"><span class="icon">👤</span>サブアカウント情報</div>
+      <div class="section-body">
+        <div class="info-box">
+          弊社システムへのログイン用サブアカウントを設定します。
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="subEmail">メールアドレス <span class="req">必須</span></label>
+          <input type="email" id="subEmail" placeholder="例：sub@example.com" />
+          <div class="error-msg" id="err_subEmail">正しいメールアドレスを入力してください</div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="subPassword">パスワード <span class="req">必須</span></label>
+          <input type="text" id="subPassword" placeholder="例：Sub12345!" />
+          <div class="error-msg" id="err_subPassword">パスワードを入力してください</div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="subName">表示名 <span class="req">必須</span></label>
+          <input type="text" id="subName" placeholder="例：山田 太郎" />
+          <div class="error-msg" id="err_subName">表示名を入力してください</div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="subPhone">電話番号 <span class="opt">任意</span></label>
+          <input type="tel" id="subPhone" placeholder="例：09012345678" />
+        </div>
+
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="goBack(4)">← 戻る</button>
+      <button class="btn btn-primary" onclick="goNext(4)">確認画面へ →</button>
+    </div>
+  </div>
+
+  <!-- ========== PAGE 5: 確認・送信 ========== -->
+  <div class="form-page" id="page5">
+    <div style="margin-top:20px;font-size:0.9rem;color:var(--color-text-light);">
+      入力内容をご確認の上、送信してください。
+    </div>
+
+    <div class="confirm-section" id="confirmContractor">
+      <div class="confirm-section-header">📋 契約者情報</div>
+      <table class="confirm-table" id="confirmContractorTable"></table>
+    </div>
+
+    <div class="confirm-section" id="confirmCommon">
+      <div class="confirm-section-header">🏢 共通設定</div>
+      <table class="confirm-table" id="confirmCommonTable"></table>
+    </div>
+
+    <div id="confirmPropertiesWrap"></div>
+
+    <div class="confirm-section" id="confirmSub">
+      <div class="confirm-section-header">👤 サブアカウント</div>
+      <table class="confirm-table" id="confirmSubTable"></table>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="goBack(5)">← 戻る</button>
+      <button class="btn btn-submit" id="submitBtn" onclick="submitForm()">送信する</button>
+    </div>
+  </div>
+
+  <!-- ========== PAGE 6: 完了 ========== -->
+  <div class="form-page" id="page6">
+    <div class="complete-card">
+      <div class="complete-icon">✅</div>
+      <h2>送信が完了しました</h2>
+      <p>ヒアリングフォームのご回答ありがとうございます。<br>弊社担当者が内容を確認し、チェックインシステムの設定を進めます。</p>
+      <div class="complete-id" id="completeId">受付ID: —</div>
+      <p>ご不明な点は <strong>customer@bizpato.com</strong> までお問い合わせください。</p>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+// ===== Webhook URL =====
+const N8N_WEBHOOK_URL = 'https://YOUR-N8N-HEARING-WEBHOOK-URL-HERE';
+
+// ===== State =====
+let currentPage = 1;
+const TOTAL_PAGES = 5; // 送信前のページ数
+
+// ===== Label maps =====
+const OPTION_LABELS = { none: '基本プランのみ（オプション契約なし）', identity: '本人確認OP', beds24: 'Beds24連携OP' };
+const BUSINESS_LABELS = { minpakuLaw: '住宅宿泊事業（民泊新法）', ryokan: '旅館業', toku: '特区民泊', undecided: '未定' };
+const KEY_LABELS = {
+  remotelock: 'RemoteLOCK', sesame5: 'SESAME 5', sesame5pro: 'SESAME 5 Pro',
+  keybox: 'キーボックス', other_smartlock_fixed: 'その他のスマートロック・固定暗証番号',
+  other_smartlock_random: 'その他のスマートロック・ランダム暗証番号', other: 'その他'
+};
+const TABLET_LABELS = { indoor: '屋内設置', outdoor: '屋外設置' };
+const HEALTH_LABELS = { done: '実施済み', planned: '予定あり', undecided: '未定' };
+const REG_LABELS = { issued: '発行済み', planned: '発行予定', undecided: '未定' };
+const PASSCODE_LABELS = { system: 'チェックインシステムで通知', host: 'ホストが個別に伝える' };
+const MSG_LABELS = { onReservation: '予約作成時', '1dayBefore': 'チェックイン1日前', checkinDay: 'チェックイン当日' };
+const BEDS24_LABELS = { contracted: '連携する（契約済み）', planned: '連携する（契約予定）', no: '連携しない' };
+const RL_LABELS = { contracted: '連携する（契約済み）', planned: '連携する（契約予定）', no: '連携しない' };
+
+// ===== Progress update =====
+function updateProgress(page) {
+  for (let i = 1; i <= 5; i++) {
+    const sc = document.getElementById('sc' + i);
+    const sl = document.getElementById('sl' + i);
+    if (i < page) {
+      sc.className = 'step-circle done';
+      sc.textContent = '✓';
+      sl.className = 'step-label';
+    } else if (i === page) {
+      sc.className = 'step-circle active';
+      sc.textContent = i;
+      sl.className = 'step-label active';
+    } else {
+      sc.className = 'step-circle';
+      sc.textContent = i;
+      sl.className = 'step-label';
+    }
+  }
+  for (let i = 1; i <= 4; i++) {
+    const line = document.getElementById('line' + i + (i + 1));
+    if (line) line.className = i < page ? 'step-line done' : 'step-line';
+  }
+}
+
+// ===== Navigation =====
+function showPage(n) {
+  document.querySelectorAll('.form-page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page' + n).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  currentPage = n;
+  if (n <= 5) updateProgress(n);
+}
+
+function goBack(from) {
+  showPage(from - 1);
+}
+
+function goNext(from) {
+  if (!validatePage(from)) return;
+  if (from === 1) buildPropertyCards();
+  if (from === 4) buildConfirmPage();
+  showPage(from + 1);
+}
+
+// ===== Conditional fields =====
+function setupConditionals() {
+  // アーリーチェックイン
+  document.querySelectorAll('input[name="earlyCheckin"]').forEach(r => {
+    r.addEventListener('change', () => {
+      document.getElementById('cond_earlyCheckinTime').classList.toggle('show', r.value === 'yes' && r.checked);
+    });
+  });
+  // レイトチェックアウト
+  document.querySelectorAll('input[name="lateCheckout"]').forEach(r => {
+    r.addEventListener('change', () => {
+      document.getElementById('cond_lateCheckoutTime').classList.toggle('show', r.value === 'yes' && r.checked);
+    });
+  });
+  // 荷物預かり
+  document.querySelectorAll('input[name="luggageStorage"]').forEach(r => {
+    r.addEventListener('change', () => {
+      document.getElementById('cond_luggageStorageTime').classList.toggle('show', r.value === 'yes' && r.checked);
+    });
+  });
+  // Beds24
+  document.querySelectorAll('input[name="beds24"]').forEach(r => {
+    r.addEventListener('change', () => {
+      document.getElementById('cond_beds24_contracted').classList.toggle('show', r.value === 'contracted' && r.checked);
+      document.getElementById('cond_beds24_planned').classList.toggle('show', r.value === 'planned' && r.checked);
+    });
+  });
+  // RemoteLOCK
+  document.querySelectorAll('input[name="remotelock"]').forEach(r => {
+    r.addEventListener('change', () => {
+      document.getElementById('cond_rl_contracted').classList.toggle('show', r.value === 'contracted' && r.checked);
+      document.getElementById('cond_rl_planned').classList.toggle('show', r.value === 'planned' && r.checked);
+    });
+  });
+  // 基本プランのみ チェックボックス排他
+  document.getElementById('opt_none').addEventListener('change', function() {
+    if (this.checked) {
+      document.getElementById('opt_identity').checked = false;
+      document.getElementById('opt_beds24').checked = false;
+    }
+  });
+  ['opt_identity', 'opt_beds24'].forEach(id => {
+    document.getElementById(id).addEventListener('change', function() {
+      if (this.checked) document.getElementById('opt_none').checked = false;
+    });
+  });
+}
+
+// ===== Property Cards =====
+function buildPropertyCards() {
+  const count = parseInt(document.getElementById('propertyCount').value) || 1;
+  const container = document.getElementById('propertiesContainer');
+  const existing = container.querySelectorAll('.property-card').length;
+  if (existing === count) return; // 変更なし
+
+  container.innerHTML = '';
+  for (let i = 1; i <= count; i++) {
+    container.appendChild(createPropertyCard(i));
+  }
+}
+
+function createPropertyCard(idx) {
+  const div = document.createElement('div');
+  div.className = 'property-card';
+  div.id = 'propCard' + idx;
+  div.innerHTML = `
+    <div class="property-card-header">
+      <span>物件 ${idx}</span>
+    </div>
+    <div class="property-card-body">
+      <div class="field-group">
+        <label class="field-label">施設名 <span class="req">必須</span></label>
+        <input type="text" id="prop_name_${idx}" placeholder="例：サンプルハウス 101号室" />
+        <div class="error-msg" id="err_prop_name_${idx}">施設名を入力してください</div>
+      </div>
+      <div class="two-col">
+        <div class="field-group">
+          <label class="field-label">部屋番号 <span class="opt">任意</span></label>
+          <input type="text" id="prop_room_${idx}" placeholder="例：101" />
+        </div>
+        <div class="field-group">
+          <label class="field-label">住所（共通と異なる場合） <span class="opt">任意</span></label>
+          <input type="text" id="prop_address_${idx}" placeholder="省略可" />
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">業態 <span class="req">必須</span></label>
+        <div class="radio-group">
+          <input type="radio" class="radio-btn" id="prop_bt_minpakuLaw_${idx}" name="prop_businessType_${idx}" value="minpakuLaw">
+          <label class="radio-label" for="prop_bt_minpakuLaw_${idx}">住宅宿泊事業（民泊新法）</label>
+          <input type="radio" class="radio-btn" id="prop_bt_ryokan_${idx}" name="prop_businessType_${idx}" value="ryokan">
+          <label class="radio-label" for="prop_bt_ryokan_${idx}">旅館業</label>
+          <input type="radio" class="radio-btn" id="prop_bt_toku_${idx}" name="prop_businessType_${idx}" value="toku">
+          <label class="radio-label" for="prop_bt_toku_${idx}">特区民泊</label>
+          <input type="radio" class="radio-btn" id="prop_bt_undecided_${idx}" name="prop_businessType_${idx}" value="undecided">
+          <label class="radio-label" for="prop_bt_undecided_${idx}">未定</label>
+        </div>
+        <div class="error-msg" id="err_prop_businessType_${idx}">業態を選択してください</div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">鍵の種類 <span class="req">必須</span></label>
+        <div class="select-wrap">
+          <select id="prop_keyType_${idx}" onchange="onKeyTypeChange(${idx})">
+            <option value="">選択してください</option>
+            <option value="remotelock">RemoteLOCK</option>
+            <option value="sesame5">SESAME 5</option>
+            <option value="sesame5pro">SESAME 5 Pro</option>
+            <option value="keybox">キーボックス</option>
+            <option value="other_smartlock_fixed">その他のスマートロック・固定暗証番号</option>
+            <option value="other_smartlock_random">その他のスマートロック・ランダム暗証番号</option>
+            <option value="other">その他</option>
+          </select>
+        </div>
+        <div class="error-msg" id="err_prop_keyType_${idx}">鍵の種類を選択してください</div>
+      </div>
+      <div class="conditional" id="cond_prop_keyDetail_${idx}">
+        <div class="field-group">
+          <label class="field-label">鍵の詳細 <span class="opt">任意</span></label>
+          <input type="text" id="prop_keyTypeDetail_${idx}" placeholder="鍵の詳細情報" />
+        </div>
+      </div>
+      <div class="conditional" id="cond_prop_passcode_${idx}">
+        <div class="field-group">
+          <label class="field-label">鍵の暗証番号 <span class="opt">任意</span></label>
+          <input type="text" id="prop_passcode_${idx}" placeholder="固定暗証番号がある場合は入力" />
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">保健所立ち会い状況 <span class="req">必須</span></label>
+        <div class="radio-group">
+          <input type="radio" class="radio-btn" id="prop_hi_done_${idx}" name="prop_healthInspection_${idx}" value="done">
+          <label class="radio-label" for="prop_hi_done_${idx}">実施済み</label>
+          <input type="radio" class="radio-btn" id="prop_hi_planned_${idx}" name="prop_healthInspection_${idx}" value="planned">
+          <label class="radio-label" for="prop_hi_planned_${idx}">予定あり</label>
+          <input type="radio" class="radio-btn" id="prop_hi_undecided_${idx}" name="prop_healthInspection_${idx}" value="undecided">
+          <label class="radio-label" for="prop_hi_undecided_${idx}">未定</label>
+        </div>
+        <div class="error-msg" id="err_prop_healthInspection_${idx}">選択してください</div>
+      </div>
+      <div class="conditional" id="cond_prop_hiDate_${idx}">
+        <div class="field-group">
+          <label class="field-label">保健所立ち会い日付 <span class="opt">任意</span></label>
+          <input type="date" id="prop_healthInspectionDate_${idx}" />
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">届出番号状況 <span class="req">必須</span></label>
+        <div class="radio-group">
+          <input type="radio" class="radio-btn" id="prop_reg_issued_${idx}" name="prop_registration_${idx}" value="issued">
+          <label class="radio-label" for="prop_reg_issued_${idx}">発行済み</label>
+          <input type="radio" class="radio-btn" id="prop_reg_planned_${idx}" name="prop_registration_${idx}" value="planned">
+          <label class="radio-label" for="prop_reg_planned_${idx}">発行予定</label>
+          <input type="radio" class="radio-btn" id="prop_reg_undecided_${idx}" name="prop_registration_${idx}" value="undecided">
+          <label class="radio-label" for="prop_reg_undecided_${idx}">未定</label>
+        </div>
+        <div class="error-msg" id="err_prop_registration_${idx}">選択してください</div>
+      </div>
+      <div class="conditional" id="cond_prop_regNum_${idx}">
+        <div class="field-group">
+          <label class="field-label">届出番号 <span class="opt">任意</span></label>
+          <input type="text" id="prop_registrationNumber_${idx}" placeholder="例：M210000001" />
+        </div>
+      </div>
+      <div class="conditional" id="cond_prop_regDate_${idx}">
+        <div class="field-group">
+          <label class="field-label">発行予定日 <span class="opt">任意</span></label>
+          <input type="date" id="prop_registrationDate_${idx}" />
+        </div>
+      </div>
+
+      <!-- Override toggle -->
+      <label class="override-toggle" for="prop_override_${idx}">
+        <div class="toggle-switch">
+          <input type="checkbox" id="prop_override_${idx}" onchange="toggleOverride(${idx})">
+          <div class="toggle-track"></div>
+          <div class="toggle-thumb"></div>
+        </div>
+        <span class="toggle-label-text">この物件の設定を共通設定から上書きする</span>
+      </label>
+      <div class="override-fields" id="overrideFields_${idx}">
+        <div class="override-note">空欄の項目は共通設定が適用されます</div>
+        <div class="two-col">
+          <div class="field-group">
+            <label class="field-label">チェックイン時間 <span class="opt">任意</span></label>
+            <input type="time" id="prop_ov_checkinTime_${idx}" />
+          </div>
+          <div class="field-group">
+            <label class="field-label">チェックアウト時間 <span class="opt">任意</span></label>
+            <input type="time" id="prop_ov_checkoutTime_${idx}" />
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">アーリーチェックイン <span class="opt">任意</span></label>
+          <div class="radio-group">
+            <input type="radio" class="radio-btn" id="prop_ov_early_yes_${idx}" name="prop_ov_earlyCheckin_${idx}" value="yes">
+            <label class="radio-label" for="prop_ov_early_yes_${idx}">対応する</label>
+            <input type="radio" class="radio-btn" id="prop_ov_early_no_${idx}" name="prop_ov_earlyCheckin_${idx}" value="no">
+            <label class="radio-label" for="prop_ov_early_no_${idx}">対応しない</label>
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">アーリー開始時刻 <span class="opt">任意</span></label>
+          <input type="time" id="prop_ov_earlyCheckinTime_${idx}" />
+        </div>
+        <div class="field-group">
+          <label class="field-label">レイトチェックアウト <span class="opt">任意</span></label>
+          <div class="radio-group">
+            <input type="radio" class="radio-btn" id="prop_ov_late_yes_${idx}" name="prop_ov_lateCheckout_${idx}" value="yes">
+            <label class="radio-label" for="prop_ov_late_yes_${idx}">対応する</label>
+            <input type="radio" class="radio-btn" id="prop_ov_late_no_${idx}" name="prop_ov_lateCheckout_${idx}" value="no">
+            <label class="radio-label" for="prop_ov_late_no_${idx}">対応しない</label>
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">レイト最終時刻 <span class="opt">任意</span></label>
+          <input type="time" id="prop_ov_lateCheckoutTime_${idx}" />
+        </div>
+        <div class="field-group">
+          <label class="field-label">荷物預かり <span class="opt">任意</span></label>
+          <div class="radio-group">
+            <input type="radio" class="radio-btn" id="prop_ov_lug_yes_${idx}" name="prop_ov_luggageStorage_${idx}" value="yes">
+            <label class="radio-label" for="prop_ov_lug_yes_${idx}">対応する</label>
+            <input type="radio" class="radio-btn" id="prop_ov_lug_no_${idx}" name="prop_ov_luggageStorage_${idx}" value="no">
+            <label class="radio-label" for="prop_ov_lug_no_${idx}">対応しない</label>
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">荷物預かり開始時刻 <span class="opt">任意</span></label>
+          <input type="time" id="prop_ov_luggageStorageTime_${idx}" />
+        </div>
+        <div class="field-group">
+          <label class="field-label">タブレット設置場所 <span class="opt">任意</span></label>
+          <div class="radio-group">
+            <input type="radio" class="radio-btn" id="prop_ov_tab_indoor_${idx}" name="prop_ov_tabletLocation_${idx}" value="indoor">
+            <label class="radio-label" for="prop_ov_tab_indoor_${idx}">屋内設置</label>
+            <input type="radio" class="radio-btn" id="prop_ov_tab_outdoor_${idx}" name="prop_ov_tabletLocation_${idx}" value="outdoor">
+            <label class="radio-label" for="prop_ov_tab_outdoor_${idx}">屋外設置</label>
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">鍵の解錠方法 <span class="opt">任意</span></label>
+          <input type="text" id="prop_ov_keyAccess_${idx}" placeholder="共通設定と異なる場合のみ" />
+        </div>
+        <div class="field-group">
+          <label class="field-label">自動メッセージ送信タイミング <span class="opt">任意</span></label>
+          <div class="check-group">
+            <input type="checkbox" class="check-btn" id="prop_ov_msg_res_${idx}" name="prop_ov_messageTiming_${idx}" value="onReservation">
+            <label class="check-label" for="prop_ov_msg_res_${idx}">予約作成時</label>
+            <input type="checkbox" class="check-btn" id="prop_ov_msg_1d_${idx}" name="prop_ov_messageTiming_${idx}" value="1dayBefore">
+            <label class="check-label" for="prop_ov_msg_1d_${idx}">チェックイン1日前</label>
+            <input type="checkbox" class="check-btn" id="prop_ov_msg_cd_${idx}" name="prop_ov_messageTiming_${idx}" value="checkinDay">
+            <label class="check-label" for="prop_ov_msg_cd_${idx}">チェックイン当日</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // 保健所立ち会い conditional
+  div.querySelectorAll(`input[name="prop_healthInspection_${idx}"]`).forEach(r => {
+    r.addEventListener('change', () => {
+      div.querySelector(`#cond_prop_hiDate_${idx}`).classList.toggle('show', r.value === 'done' && r.checked);
+    });
+  });
+  // 届出番号 conditional
+  div.querySelectorAll(`input[name="prop_registration_${idx}"]`).forEach(r => {
+    r.addEventListener('change', () => {
+      div.querySelector(`#cond_prop_regNum_${idx}`).classList.toggle('show', r.value === 'issued' && r.checked);
+      div.querySelector(`#cond_prop_regDate_${idx}`).classList.toggle('show', r.value === 'planned' && r.checked);
+    });
+  });
+
+  return div;
+}
+
+function onKeyTypeChange(idx) {
+  const val = document.getElementById('prop_keyType_' + idx).value;
+  const showDetail = ['other_smartlock_fixed', 'other_smartlock_random', 'other', 'keybox'].includes(val);
+  const showPasscode = ['keybox', 'other_smartlock_fixed'].includes(val);
+  document.getElementById('cond_prop_keyDetail_' + idx).classList.toggle('show', showDetail);
+  document.getElementById('cond_prop_passcode_' + idx).classList.toggle('show', showPasscode);
+}
+
+function toggleOverride(idx) {
+  const checked = document.getElementById('prop_override_' + idx).checked;
+  document.getElementById('overrideFields_' + idx).classList.toggle('show', checked);
+}
+
+// ===== Validation =====
+function showErr(id, show) {
+  const el = document.getElementById('err_' + id);
+  if (el) el.classList.toggle('show', show);
+  const input = document.getElementById(id);
+  if (input) input.classList.toggle('error', show);
+}
+
+function getRadioValue(name) {
+  const el = document.querySelector(`input[name="${name}"]:checked`);
+  return el ? el.value : '';
+}
+
+function getCheckedValues(name) {
+  return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(e => e.value);
+}
+
+function validatePage(page) {
+  let valid = true;
+
+  if (page === 1) {
+    const opts = getCheckedValues('contractedOptions');
+    if (opts.length === 0) { showErr('options', true); valid = false; } else { showErr('options', false); }
+    const fields = ['contractorName', 'contactName', 'contactEmail', 'propertyCount'];
+    fields.forEach(f => {
+      const v = document.getElementById(f).value.trim();
+      const ok = f === 'contactEmail' ? /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) : v !== '';
+      showErr(f, !ok);
+      if (!ok) valid = false;
+    });
+    if (document.getElementById('propertyCount').value < 1) { showErr('propertyCount', true); valid = false; }
+  }
+
+  if (page === 2) {
+    const req = ['buildingAddress', 'checkinTime', 'checkoutTime', 'keyAccess'];
+    req.forEach(f => {
+      const ok = document.getElementById(f).value.trim() !== '';
+      showErr(f, !ok);
+      if (!ok) valid = false;
+    });
+    const radios = ['tabletLocation', 'earlyCheckin', 'lateCheckout', 'luggageStorage', 'beds24', 'remotelock', 'passcodeNotify'];
+    radios.forEach(r => {
+      const ok = getRadioValue(r) !== '';
+      showErr(r, !ok);
+      if (!ok) valid = false;
+    });
+    if (getRadioValue('earlyCheckin') === 'yes' && !document.getElementById('earlyCheckinTime').value) {
+      showErr('earlyCheckinTime', true); valid = false;
+    } else { showErr('earlyCheckinTime', false); }
+    if (getRadioValue('lateCheckout') === 'yes' && !document.getElementById('lateCheckoutTime').value) {
+      showErr('lateCheckoutTime', true); valid = false;
+    } else { showErr('lateCheckoutTime', false); }
+    if (getRadioValue('luggageStorage') === 'yes' && !document.getElementById('luggageStorageTime').value) {
+      showErr('luggageStorageTime', true); valid = false;
+    } else { showErr('luggageStorageTime', false); }
+    if (getRadioValue('beds24') === 'contracted' && !document.getElementById('beds24Account').value.trim()) {
+      showErr('beds24Account', true); valid = false;
+    } else { showErr('beds24Account', false); }
+    if (getRadioValue('remotelock') === 'contracted' && !document.getElementById('remotelockAccount').value.trim()) {
+      showErr('remotelockAccount', true); valid = false;
+    } else { showErr('remotelockAccount', false); }
+    if (getCheckedValues('messageTiming').length === 0) { showErr('messageTiming', true); valid = false; } else { showErr('messageTiming', false); }
+  }
+
+  if (page === 3) {
+    const count = parseInt(document.getElementById('propertyCount').value) || 1;
+    for (let i = 1; i <= count; i++) {
+      const nameOk = document.getElementById('prop_name_' + i).value.trim() !== '';
+      showErr('prop_name_' + i, !nameOk);
+      if (!nameOk) valid = false;
+      const btOk = getRadioValue('prop_businessType_' + i) !== '';
+      showErr('prop_businessType_' + i, !btOk);
+      if (!btOk) valid = false;
+      const ktOk = document.getElementById('prop_keyType_' + i).value !== '';
+      showErr('prop_keyType_' + i, !ktOk);
+      if (!ktOk) valid = false;
+      const hiOk = getRadioValue('prop_healthInspection_' + i) !== '';
+      showErr('prop_healthInspection_' + i, !hiOk);
+      if (!hiOk) valid = false;
+      const regOk = getRadioValue('prop_registration_' + i) !== '';
+      showErr('prop_registration_' + i, !regOk);
+      if (!regOk) valid = false;
+    }
+  }
+
+  if (page === 4) {
+    const subEmail = document.getElementById('subEmail').value.trim();
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(subEmail);
+    showErr('subEmail', !emailOk);
+    if (!emailOk) valid = false;
+    const subPw = document.getElementById('subPassword').value.trim() !== '';
+    showErr('subPassword', !subPw);
+    if (!subPw) valid = false;
+    const subName = document.getElementById('subName').value.trim() !== '';
+    showErr('subName', !subName);
+    if (!subName) valid = false;
+  }
+
+  return valid;
+}
+
+// ===== Build Confirm Page =====
+function buildConfirmPage() {
+  // Contractor
+  const opts = getCheckedValues('contractedOptions');
+  const optsLabel = opts.map(o => OPTION_LABELS[o] || o).join('、');
+  renderConfirmTable('confirmContractorTable', [
+    ['契約オプション', optsLabel],
+    ['契約者名', document.getElementById('contractorName').value],
+    ['担当者名', document.getElementById('contactName').value],
+    ['担当者メール', document.getElementById('contactEmail').value],
+    ['物件数', document.getElementById('propertyCount').value + '件'],
+  ]);
+
+  // Common
+  const beds24 = getRadioValue('beds24');
+  const rl = getRadioValue('remotelock');
+  const msgTiming = getCheckedValues('messageTiming').map(v => MSG_LABELS[v] || v).join('、');
+  const commonRows = [
+    ['建物住所', document.getElementById('buildingAddress').value],
+    ['タブレット設置場所', TABLET_LABELS[getRadioValue('tabletLocation')] || ''],
+    ['チェックイン時間', document.getElementById('checkinTime').value],
+    ['チェックアウト時間', document.getElementById('checkoutTime').value],
+    ['アーリーチェックイン', getRadioValue('earlyCheckin') === 'yes' ? '対応する（' + document.getElementById('earlyCheckinTime').value + '〜）' : '対応しない'],
+    ['レイトチェックアウト', getRadioValue('lateCheckout') === 'yes' ? '対応する（〜' + document.getElementById('lateCheckoutTime').value + '）' : '対応しない'],
+    ['荷物預かり', getRadioValue('luggageStorage') === 'yes' ? '対応する（' + document.getElementById('luggageStorageTime').value + '〜）' : '対応しない'],
+    ['Beds24連携', BEDS24_LABELS[beds24] || ''],
+    ['RemoteLOCK連携', RL_LABELS[rl] || ''],
+    ['鍵の解錠方法', document.getElementById('keyAccess').value],
+    ['暗証番号通知方法', PASSCODE_LABELS[getRadioValue('passcodeNotify')] || ''],
+    ['自動メッセージタイミング', msgTiming],
+  ];
+  renderConfirmTable('confirmCommonTable', commonRows);
+
+  // Properties
+  const count = parseInt(document.getElementById('propertyCount').value) || 1;
+  const wrap = document.getElementById('confirmPropertiesWrap');
+  wrap.innerHTML = '';
+  for (let i = 1; i <= count; i++) {
+    const sec = document.createElement('div');
+    sec.className = 'confirm-section';
+    sec.innerHTML = `<div class="confirm-section-header">🏠 物件 ${i}</div><table class="confirm-table" id="confirmPropTable${i}"></table>`;
+    wrap.appendChild(sec);
+    const rows = [
+      ['施設名', document.getElementById('prop_name_' + i).value],
+      ['部屋番号', document.getElementById('prop_room_' + i).value],
+      ['業態', BUSINESS_LABELS[getRadioValue('prop_businessType_' + i)] || ''],
+      ['鍵の種類', KEY_LABELS[document.getElementById('prop_keyType_' + i).value] || ''],
+      ['保健所立ち会い', HEALTH_LABELS[getRadioValue('prop_healthInspection_' + i)] || ''],
+      ['届出番号状況', REG_LABELS[getRadioValue('prop_registration_' + i)] || ''],
+    ];
+    if (document.getElementById('prop_override_' + i).checked) {
+      rows.push(['個別設定', '上書きあり']);
+    }
+    renderConfirmTable('confirmPropTable' + i, rows);
+  }
+
+  // Sub account
+  renderConfirmTable('confirmSubTable', [
+    ['メールアドレス', document.getElementById('subEmail').value],
+    ['パスワード', '●'.repeat(document.getElementById('subPassword').value.length)],
+    ['表示名', document.getElementById('subName').value],
+    ['電話番号', document.getElementById('subPhone').value],
+  ]);
+}
+
+function renderConfirmTable(tableId, rows) {
+  const tbl = document.getElementById(tableId);
+  tbl.innerHTML = rows.map(([k, v]) => `<tr><th>${k}</th><td>${v || '—'}</td></tr>`).join('');
+}
+
+// ===== Build Payload =====
+function buildPayload() {
+  const count = parseInt(document.getElementById('propertyCount').value) || 1;
+  const opts = getCheckedValues('contractedOptions');
+  const msgTiming = getCheckedValues('messageTiming');
+  const beds24 = getRadioValue('beds24');
+  const rl = getRadioValue('remotelock');
+  const earlyCheckin = getRadioValue('earlyCheckin');
+  const lateCheckout = getRadioValue('lateCheckout');
+  const luggageStorage = getRadioValue('luggageStorage');
+  const tabletLocation = getRadioValue('tabletLocation');
+  const passcodeNotify = getRadioValue('passcodeNotify');
+
+  const properties = [];
+  for (let i = 1; i <= count; i++) {
+    const hasOverride = document.getElementById('prop_override_' + i).checked;
+    const ovMsgTiming = getCheckedValues('prop_ov_messageTiming_' + i);
+    const ovTablet = getRadioValue('prop_ov_tabletLocation_' + i);
+    const ovEarly = getRadioValue('prop_ov_earlyCheckin_' + i);
+    const ovLate = getRadioValue('prop_ov_lateCheckout_' + i);
+    const ovLug = getRadioValue('prop_ov_luggageStorage_' + i);
+
+    properties.push({
+      index: i,
+      name: document.getElementById('prop_name_' + i).value.trim(),
+      room: document.getElementById('prop_room_' + i).value.trim(),
+      address: document.getElementById('prop_address_' + i).value.trim(),
+      businessType: getRadioValue('prop_businessType_' + i),
+      businessTypeLabel: BUSINESS_LABELS[getRadioValue('prop_businessType_' + i)] || '',
+      keyType: document.getElementById('prop_keyType_' + i).value,
+      keyTypeLabel: KEY_LABELS[document.getElementById('prop_keyType_' + i).value] || '',
+      keyTypeDetail: (document.getElementById('prop_keyTypeDetail_' + i) || {value: ''}).value.trim(),
+      passcode: (document.getElementById('prop_passcode_' + i) || {value: ''}).value.trim(),
+      tabletLocation: ovTablet,
+      tabletLocationLabel: TABLET_LABELS[ovTablet] || '',
+      healthInspection: getRadioValue('prop_healthInspection_' + i),
+      healthInspectionLabel: HEALTH_LABELS[getRadioValue('prop_healthInspection_' + i)] || '',
+      healthInspectionDate: (document.getElementById('prop_healthInspectionDate_' + i) || {value: ''}).value,
+      registration: getRadioValue('prop_registration_' + i),
+      registrationLabel: REG_LABELS[getRadioValue('prop_registration_' + i)] || '',
+      registrationNumber: (document.getElementById('prop_registrationNumber_' + i) || {value: ''}).value.trim(),
+      registrationDate: (document.getElementById('prop_registrationDate_' + i) || {value: ''}).value,
+      hasOverride: hasOverride,
+      override: hasOverride ? {
+        checkinTime: (document.getElementById('prop_ov_checkinTime_' + i) || {value: ''}).value,
+        checkoutTime: (document.getElementById('prop_ov_checkoutTime_' + i) || {value: ''}).value,
+        earlyCheckinLabel: ovEarly ? (ovEarly === 'yes' ? '対応する' : '対応しない') : '',
+        earlyCheckinTime: (document.getElementById('prop_ov_earlyCheckinTime_' + i) || {value: ''}).value,
+        lateCheckoutLabel: ovLate ? (ovLate === 'yes' ? '対応する' : '対応しない') : '',
+        lateCheckoutTime: (document.getElementById('prop_ov_lateCheckoutTime_' + i) || {value: ''}).value,
+        luggageStorageLabel: ovLug ? (ovLug === 'yes' ? '対応する' : '対応しない') : '',
+        luggageStorageTime: (document.getElementById('prop_ov_luggageStorageTime_' + i) || {value: ''}).value,
+        keyAccess: (document.getElementById('prop_ov_keyAccess_' + i) || {value: ''}).value.trim(),
+        messageTimingLabel: ovMsgTiming.map(v => MSG_LABELS[v] || v).join('、'),
+      } : null
+    });
+  }
+
+  return {
+    timestamp: new Date().toISOString(),
+    source: 'hearing',
+    contractor: {
+      contractedOptions: opts,
+      contractedOptionsLabel: opts.map(o => OPTION_LABELS[o] || o).join('、'),
+      contractorName: document.getElementById('contractorName').value.trim(),
+      contactName: document.getElementById('contactName').value.trim(),
+      contactEmail: document.getElementById('contactEmail').value.trim(),
+      propertyCount: count,
+    },
+    commonSettings: {
+      buildingAddress: document.getElementById('buildingAddress').value.trim(),
+      tabletLocation: tabletLocation,
+      tabletLocationLabel: TABLET_LABELS[tabletLocation] || '',
+      checkinTime: document.getElementById('checkinTime').value,
+      checkoutTime: document.getElementById('checkoutTime').value,
+      earlyCheckin: earlyCheckin,
+      earlyCheckinLabel: earlyCheckin === 'yes' ? '対応する' : '対応しない',
+      earlyCheckinTime: earlyCheckin === 'yes' ? document.getElementById('earlyCheckinTime').value : '',
+      lateCheckout: lateCheckout,
+      lateCheckoutLabel: lateCheckout === 'yes' ? '対応する' : '対応しない',
+      lateCheckoutTime: lateCheckout === 'yes' ? document.getElementById('lateCheckoutTime').value : '',
+      luggageStorage: luggageStorage,
+      luggageStorageLabel: luggageStorage === 'yes' ? '対応する' : '対応しない',
+      luggageStorageTime: luggageStorage === 'yes' ? document.getElementById('luggageStorageTime').value : '',
+      beds24: beds24,
+      beds24Label: BEDS24_LABELS[beds24] || '',
+      beds24PlannedDate: beds24 === 'planned' ? document.getElementById('beds24PlannedDate').value : '',
+      beds24Account: beds24 === 'contracted' ? document.getElementById('beds24Account').value.trim() : '',
+      remotelock: rl,
+      remotelockLabel: RL_LABELS[rl] || '',
+      remotelockPlannedDate: rl === 'planned' ? document.getElementById('remotelockPlannedDate').value : '',
+      remotelockAccount: rl === 'contracted' ? document.getElementById('remotelockAccount').value.trim() : '',
+      sesameAccount: document.getElementById('sesameAccount').value.trim(),
+      keyAccess: document.getElementById('keyAccess').value.trim(),
+      passcodeNotify: passcodeNotify,
+      passcodeNotifyLabel: PASSCODE_LABELS[passcodeNotify] || '',
+      messageTiming: msgTiming,
+      messageTimingLabel: msgTiming.map(v => MSG_LABELS[v] || v).join('、'),
+    },
+    properties: properties,
+    subAccount: {
+      email: document.getElementById('subEmail').value.trim(),
+      password: document.getElementById('subPassword').value.trim(),
+      name: document.getElementById('subName').value.trim(),
+      phone: document.getElementById('subPhone').value.trim(),
+    }
+  };
+}
+
+// ===== Submit =====
+async function submitForm() {
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  document.getElementById('loadingOverlay').classList.add('show');
+
+  const payload = buildPayload();
+
+  try {
+    const res = await fetch(N8N_WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    document.getElementById('loadingOverlay').classList.remove('show');
+
+    if (res.ok) {
+      // 受付IDはn8nから返ってくる場合もあるが、フォーム側ではtimestampベースで仮表示
+      const dateStr = new Date().toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '');
+      document.getElementById('completeId').textContent = '受付ID: H' + dateStr + '-（確認中）';
+      showPage(6);
+    } else {
+      alert('送信に失敗しました。しばらく経ってから再度お試しください。\n（エラーコード: ' + res.status + '）');
+      btn.disabled = false;
+    }
+  } catch (e) {
+    document.getElementById('loadingOverlay').classList.remove('show');
+    alert('通信エラーが発生しました。インターネット接続をご確認の上、再度お試しください。');
+    btn.disabled = false;
+  }
+}
+
+// ===== Init =====
+document.addEventListener('DOMContentLoaded', () => {
+  setupConditionals();
+  updateProgress(1);
+});
+</script>
+</body>
+</html>
