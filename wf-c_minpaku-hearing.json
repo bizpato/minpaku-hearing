@@ -1,0 +1,300 @@
+{
+  "name": "minpaku-hearing",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "minpaku-hearing",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "node_webhook",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300],
+      "webhookId": "minpaku-hearing"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "documentId": {
+          "__rl": true,
+          "value": "1RR_v4hVqh-JWhyQ-JenaG9Z3jqRW3cOCvp1gFcJ_wHU",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "基本_受付情報",
+          "mode": "name"
+        },
+        "options": {
+          "returnAllMatches": true
+        }
+      },
+      "id": "node_read_ids",
+      "name": "Read: 受付ID一覧取得",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const date = new Date();\nconst jstOffset = 9 * 60;\nconst jstDate = new Date(date.getTime() + (jstOffset + date.getTimezoneOffset()) * 60000);\n\nconst yyyy = jstDate.getFullYear();\nconst mm = String(jstDate.getMonth() + 1).padStart(2, '0');\nconst dd = String(jstDate.getDate()).padStart(2, '0');\nconst datePrefix = `H${yyyy}${mm}${dd}`;\n\n// 前ノードから取得した「受付ID一覧」を取得\nconst existingIds = $input.all().map(item => item.json['受付ID'] || '').filter(id => id.startsWith(datePrefix));\n\n// 当日の最大連番を計算\nlet maxSeq = 0;\nexistingIds.forEach(id => {\n  const match = id.match(/-(\\d{3})$/);\n  if (match) {\n    const seq = parseInt(match[1], 10);\n    if (seq > maxSeq) maxSeq = seq;\n  }\n});\n\nconst newSeq = String(maxSeq + 1).padStart(3, '0');\nconst receivedId = `${datePrefix}-${newSeq}`;\n\n// 受信したペイロードと結合\nconst payload = $('Webhook').first().json.body;\n\nreturn [{\n  json: {\n    receivedId: receivedId,\n    receivedAt: jstDate.toISOString().replace('T', ' ').substring(0, 19),\n    payload: payload\n  }\n}];"
+      },
+      "id": "node_gen_id",
+      "name": "Code: 受付ID生成",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1RR_v4hVqh-JWhyQ-JenaG9Z3jqRW3cOCvp1gFcJ_wHU",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "基本_受付情報",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "受付ID": "={{ $json.receivedId }}",
+            "受付日時": "={{ $json.receivedAt }}",
+            "契約オプション": "={{ $json.payload.contractor.contractedOptionsLabel }}",
+            "契約者名": "={{ $json.payload.contractor.contractorName }}",
+            "担当者名": "={{ $json.payload.contractor.contactName }}",
+            "担当者メール": "={{ $json.payload.contractor.contactEmail }}",
+            "物件数": "={{ $json.payload.contractor.propertyCount }}",
+            "建物住所": "={{ $json.payload.commonSettings.buildingAddress }}",
+            "タブレット設置場所(共通)": "={{ $json.payload.commonSettings.tabletLocationLabel }}",
+            "チェックイン時間": "={{ $json.payload.commonSettings.checkinTime }}",
+            "チェックアウト時間": "={{ $json.payload.commonSettings.checkoutTime }}",
+            "アーリーチェックイン": "={{ $json.payload.commonSettings.earlyCheckinLabel }}",
+            "アーリー開始時刻": "={{ $json.payload.commonSettings.earlyCheckinTime }}",
+            "レイトチェックアウト": "={{ $json.payload.commonSettings.lateCheckoutLabel }}",
+            "レイト最終時刻": "={{ $json.payload.commonSettings.lateCheckoutTime }}",
+            "荷物預かり": "={{ $json.payload.commonSettings.luggageStorageLabel }}",
+            "荷物預かり開始時刻": "={{ $json.payload.commonSettings.luggageStorageTime }}",
+            "Beds24連携": "={{ $json.payload.commonSettings.beds24Label }}",
+            "Beds24契約予定日": "={{ $json.payload.commonSettings.beds24PlannedDate }}",
+            "Beds24アカウント情報": "={{ $json.payload.commonSettings.beds24Account }}",
+            "RemoteLOCK連携": "={{ $json.payload.commonSettings.remotelockLabel }}",
+            "RemoteLOCK契約予定日": "={{ $json.payload.commonSettings.remotelockPlannedDate }}",
+            "RemoteLOCKアカウント情報": "={{ $json.payload.commonSettings.remotelockAccount }}",
+            "SESAMEアカウント情報": "={{ $json.payload.commonSettings.sesameAccount }}",
+            "鍵の解錠方法(標準)": "={{ $json.payload.commonSettings.keyAccess }}",
+            "暗証番号通知方法": "={{ $json.payload.commonSettings.passcodeNotifyLabel }}",
+            "自動メッセージ送信タイミング": "={{ $json.payload.commonSettings.messageTimingLabel }}",
+            "サブアカウントメール": "={{ $json.payload.subAccount.email }}",
+            "サブアカウントパスワード": "={{ $json.payload.subAccount.password }}",
+            "サブアカウント表示名": "={{ $json.payload.subAccount.name }}",
+            "サブアカウント電話番号": "={{ $json.payload.subAccount.phone }}"
+          },
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "node_write_basic",
+      "name": "Sheets: 基本_受付情報シートに追記",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const receivedId = $input.first().json.receivedId;\nconst payload = $input.first().json.payload;\nconst common = payload.commonSettings;\nconst properties = payload.properties;\n\n// 各物件の最終値を計算\nconst rows = properties.map(p => {\n  const ov = p.override || {};\n  \n  // override値が空でなければ採用、空なら共通設定を採用\n  const finalValue = (overrideVal, commonVal) => {\n    if (overrideVal && overrideVal !== '') return overrideVal;\n    return commonVal;\n  };\n  \n  return {\n    受付ID: receivedId,\n    物件連番: p.index,\n    施設名: p.name,\n    部屋番号: p.room,\n    住所: p.address,\n    業態: p.businessTypeLabel,\n    鍵の種類: p.keyTypeLabel,\n    鍵の詳細: p.keyTypeDetail,\n    鍵の暗証番号: p.passcode,\n    保健所立ち会い状況: p.healthInspectionLabel,\n    保健所立ち会い日付: p.healthInspectionDate,\n    届出番号状況: p.registrationLabel,\n    届出番号: p.registrationNumber,\n    発行予定日: p.registrationDate,\n    'チェックイン時間(最終値)': finalValue(ov.checkinTime, common.checkinTime),\n    'チェックアウト時間(最終値)': finalValue(ov.checkoutTime, common.checkoutTime),\n    'アーリーチェックイン(最終値)': finalValue(ov.earlyCheckinLabel, common.earlyCheckinLabel),\n    'アーリー開始時刻(最終値)': finalValue(ov.earlyCheckinTime, common.earlyCheckinTime),\n    'レイトチェックアウト(最終値)': finalValue(ov.lateCheckoutLabel, common.lateCheckoutLabel),\n    'レイト最終時刻(最終値)': finalValue(ov.lateCheckoutTime, common.lateCheckoutTime),\n    '荷物預かり(最終値)': finalValue(ov.luggageStorageLabel, common.luggageStorageLabel),\n    '荷物預かり開始時刻(最終値)': finalValue(ov.luggageStorageTime, common.luggageStorageTime),\n    'タブレット設置場所(最終値)': finalValue(p.tabletLocationLabel, common.tabletLocationLabel),\n    '鍵の解錠方法(最終値)': finalValue(ov.keyAccess, common.keyAccess),\n    '自動メッセージ送信タイミング(最終値)': finalValue(ov.messageTimingLabel, common.messageTimingLabel),\n    '共通設定からの上書きあり': p.hasOverride ? 'TRUE' : 'FALSE'\n  };\n});\n\n// 物件数分のアイテムとして返す（n8n側で1行ずつスプレッドシートに追記される）\nreturn rows.map(row => ({ json: row }));"
+      },
+      "id": "node_expand_props",
+      "name": "Code: 物件配列を行に展開＆最終値計算",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1RR_v4hVqh-JWhyQ-JenaG9Z3jqRW3cOCvp1gFcJ_wHU",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "基本_物件詳細",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "受付ID": "={{ $json['受付ID'] }}",
+            "物件連番": "={{ $json['物件連番'] }}",
+            "施設名": "={{ $json['施設名'] }}",
+            "部屋番号": "={{ $json['部屋番号'] }}",
+            "住所": "={{ $json['住所'] }}",
+            "業態": "={{ $json['業態'] }}",
+            "鍵の種類": "={{ $json['鍵の種類'] }}",
+            "鍵の詳細": "={{ $json['鍵の詳細'] }}",
+            "鍵の暗証番号": "={{ $json['鍵の暗証番号'] }}",
+            "保健所立ち会い状況": "={{ $json['保健所立ち会い状況'] }}",
+            "保健所立ち会い日付": "={{ $json['保健所立ち会い日付'] }}",
+            "届出番号状況": "={{ $json['届出番号状況'] }}",
+            "届出番号": "={{ $json['届出番号'] }}",
+            "発行予定日": "={{ $json['発行予定日'] }}",
+            "チェックイン時間(最終値)": "={{ $json['チェックイン時間(最終値)'] }}",
+            "チェックアウト時間(最終値)": "={{ $json['チェックアウト時間(最終値)'] }}",
+            "アーリーチェックイン(最終値)": "={{ $json['アーリーチェックイン(最終値)'] }}",
+            "アーリー開始時刻(最終値)": "={{ $json['アーリー開始時刻(最終値)'] }}",
+            "レイトチェックアウト(最終値)": "={{ $json['レイトチェックアウト(最終値)'] }}",
+            "レイト最終時刻(最終値)": "={{ $json['レイト最終時刻(最終値)'] }}",
+            "荷物預かり(最終値)": "={{ $json['荷物預かり(最終値)'] }}",
+            "荷物預かり開始時刻(最終値)": "={{ $json['荷物預かり開始時刻(最終値)'] }}",
+            "タブレット設置場所(最終値)": "={{ $json['タブレット設置場所(最終値)'] }}",
+            "鍵の解錠方法(最終値)": "={{ $json['鍵の解錠方法(最終値)'] }}",
+            "自動メッセージ送信タイミング(最終値)": "={{ $json['自動メッセージ送信タイミング(最終値)'] }}",
+            "共通設定からの上書きあり": "={{ $json['共通設定からの上書きあり'] }}"
+          },
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "node_write_detail",
+      "name": "Sheets: 基本_物件詳細シートに追記",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [1340, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 元の Webhook ペイロードから情報を取得\n// 注意: 前段で物件詳細を追記したアイテムが複数あるため、Webhookノードを参照する\nconst payload = $('Webhook').first().json.body;\nconst receivedId = $('Code: 受付ID生成').first().json.receivedId;\nconst properties = payload.properties;\nconst common = payload.commonSettings;\nconst tasks = [];\n\nconst formatList = (props) => props.map(p => `物件${p.index}「${p.name}」`).join('、');\n\n// 1. 特区民泊\nconst toku = properties.filter(p => p.businessType === 'toku');\nif (toku.length > 0) {\n  tasks.push(`【定期借家契約書の作成・送付】特区民泊の物件 (${formatList(toku)}) は定期借家契約書の作成が必要です。作成後、PDF等で customer@bizpato.com までお送りください。`);\n}\n\n// 2. Beds24メール追加\nconst hasBeds24Op = payload.contractor.contractedOptions.includes('beds24');\nif (common.beds24 === 'contracted' && !hasBeds24Op) {\n  tasks.push(`【Beds24認証用メールアドレスの追加】Beds24のログイン認証用メールアドレスに customer@bizpato.com を追加してください。追加方法: Beds24サポート(https://co-reception.com/support-ticket/)に依頼。`);\n}\n\n// 3. Beds24未契約\nif (common.beds24 === 'planned') {\n  tasks.push(`【Beds24契約完了の連絡】Beds24のご契約が完了しましたら、customer@bizpato.com までご連絡ください。`);\n}\n\n// 4. RemoteLOCK未契約\nif (common.remotelock === 'planned') {\n  tasks.push(`【RemoteLOCK契約完了の連絡】RemoteLOCKのご契約が完了しましたら、customer@bizpato.com までご連絡ください。`);\n}\n\n// 5. 保健所立ち会い予定\nconst plannedHealth = properties.filter(p => p.healthInspection === 'planned');\nif (plannedHealth.length > 0) {\n  tasks.push(`【保健所立ち会い完了の連絡】対象物件 (${formatList(plannedHealth)}) の保健所立ち会い完了後、customer@bizpato.com までご連絡ください。`);\n}\n\n// 6. 届出番号発行予定\nconst plannedReg = properties.filter(p => p.registration === 'planned');\nif (plannedReg.length > 0) {\n  tasks.push(`【届出番号発行後の連絡】対象物件 (${formatList(plannedReg)}) の届出番号発行後、番号を customer@bizpato.com までご連絡ください。`);\n}\n\n// 7. ランダム暗証番号\nconst random = properties.filter(p => p.keyType === 'other_smartlock_random');\nif (random.length > 0) {\n  tasks.push(`【ゲスト様への暗証番号の個別通知】対象物件 (${formatList(random)}) はランダム暗証番号のスマートロックです。チェックイン前にゲスト様へ暗証番号を個別にお伝えください。`);\n}\n\nreturn [{\n  json: {\n    receivedId: receivedId,\n    payload: payload,\n    tasks: tasks,\n    tasksText: tasks.length > 0\n      ? tasks.map((t, i) => `${i + 1}. ${t}`).join('\\n\\n')\n      : '（特になし）'\n  }\n}];"
+      },
+      "id": "node_host_tasks",
+      "name": "Code: ホストタスク生成",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1560, 300]
+    },
+    {
+      "parameters": {
+        "sendTo": "customer@bizpato.com",
+        "subject": "=【新規ヒアリング受付】{{ $json.payload.contractor.contractorName }}様 ({{ $json.receivedId }})",
+        "emailType": "text",
+        "message": "=ヒアリングフォームから新規受付がありました。\n\n━━━━━━━━━━━━━━━━━━━━━\n【受付情報】\n受付ID: {{ $json.receivedId }}\n受付日時: {{ $json.payload.timestamp }}\n契約者名: {{ $json.payload.contractor.contractorName }}\nご担当者: {{ $json.payload.contractor.contactName }}\n連絡先: {{ $json.payload.contractor.contactEmail }}\n契約オプション: {{ $json.payload.contractor.contractedOptionsLabel }}\n物件数: {{ $json.payload.contractor.propertyCount }}件\n━━━━━━━━━━━━━━━━━━━━━\n\n【ホスト様への対応タスク（自動判定）】\n{{ $json.tasksText }}\n━━━━━━━━━━━━━━━━━━━━━\n\n▼ 詳細はスプレッドシートをご確認ください\nhttps://docs.google.com/spreadsheets/d/1RR_v4hVqh-JWhyQ-JenaG9Z3jqRW3cOCvp1gFcJ_wHU/edit",
+        "options": {}
+      },
+      "id": "node_gmail",
+      "name": "Gmail: customer@bizpato.com宛通知",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [1780, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Read: 受付ID一覧取得",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read: 受付ID一覧取得": {
+      "main": [
+        [
+          {
+            "node": "Code: 受付ID生成",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code: 受付ID生成": {
+      "main": [
+        [
+          {
+            "node": "Sheets: 基本_受付情報シートに追記",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sheets: 基本_受付情報シートに追記": {
+      "main": [
+        [
+          {
+            "node": "Code: 物件配列を行に展開＆最終値計算",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code: 物件配列を行に展開＆最終値計算": {
+      "main": [
+        [
+          {
+            "node": "Sheets: 基本_物件詳細シートに追記",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sheets: 基本_物件詳細シートに追記": {
+      "main": [
+        [
+          {
+            "node": "Code: ホストタスク生成",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code: ホストタスク生成": {
+      "main": [
+        [
+          {
+            "node": "Gmail: customer@bizpato.com宛通知",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": ""
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": ""
+  },
+  "pinData": {},
+  "versionId": "",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2026-06-25T00:00:00.000Z",
+      "updatedAt": "2026-06-25T00:00:00.000Z",
+      "id": "tag_wfc",
+      "name": "WF-C"
+    }
+  ]
+}
