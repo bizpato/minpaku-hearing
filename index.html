@@ -1107,7 +1107,7 @@
                 <div class="field-error">タブレット設置場所をお選びください</div>
               </div>
         
-        <div class="field" data-field="buildingAddress">
+        <div class="field" data-field="buildingAddress" style="display:none;">
                 <label class="field-label">建物住所（複数物件が同じ建物の場合）<span class="optional">任意</span></label>
                 <p class="field-desc">複数物件が<strong>同じ建物内</strong>にある場合、ここに<strong>部屋番号を除いた建物の住所</strong>（都道府県〜建物名まで）をご入力ください。各物件では「部屋番号」だけ入力すればOKです。<br>物件ごとに住所が異なる場合（戸建て・別建物など）は<strong>空欄</strong>のままにしてください。</p>
                 <input type="text" name="buildingAddress" id="buildingAddress" placeholder="例：東京都〇〇区〇〇1-2-3 △△マンション">
@@ -1668,6 +1668,19 @@
     document.querySelectorAll('.property-block').forEach((block, i) => {
       block.classList.toggle('show', i < count);
     });
+    // 建物住所欄の表示制御（2件以上の時のみ表示）
+    const buildingAddressField = document.querySelector('[data-field="buildingAddress"]');
+    if (buildingAddressField) {
+      buildingAddressField.style.display = count >= 2 ? '' : 'none';
+      // 1件の場合は値もクリア
+      if (count < 2) {
+        const buildingInput = document.getElementById('buildingAddress');
+        if (buildingInput) {
+          buildingInput.value = '';
+          buildingInput.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+      }
+    }
     // 鍵関連の動的フィールドも再評価
     setTimeout(updateKeyDependentFields, 50);
   });
