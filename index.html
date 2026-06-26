@@ -1053,15 +1053,14 @@
                 </div>
               </div>
         
-        <div class="field" data-field="remotelock">
-                <label class="field-label">RemoteLOCKとの連携<span class="required">必須</span></label>
-                <p class="field-desc">スマートロックシステム「RemoteLOCK」との連携状況をお選びください。</p>
+        <div class="field" data-field="remotelock" id="remotelockField" style="display:none;">
+                <label class="field-label">RemoteLOCKの契約状況<span class="required">必須</span></label>
+                <p class="field-desc">RemoteLOCKを利用する物件があるため、ご契約状況をお選びください。</p>
                 <div class="radio-group" id="remotelockGroup">
-                  <label data-remotelock-option="no"><input type="radio" name="remotelock" value="no" required> 連携しない</label>
-                  <label><input type="radio" name="remotelock" value="planned"> 連携する（未契約・これから契約予定）</label>
-                  <label><input type="radio" name="remotelock" value="contracted"> 連携する（契約済み）</label>
+                  <label><input type="radio" name="remotelock" value="planned"> 未契約・これから契約予定</label>
+                  <label><input type="radio" name="remotelock" value="contracted"> 契約済み</label>
                 </div>
-                <div class="field-error">RemoteLOCK連携の状況をお選びください</div>
+                <div class="field-error">RemoteLOCKの契約状況をお選びください</div>
                 <div class="conditional" id="remotelockPlannedDateWrap">
                   <label class="field-label">RemoteLOCK契約予定日<span class="optional">任意</span></label>
                   <p class="field-desc">いつ頃RemoteLOCKをご契約予定かをご記入ください。</p>
@@ -1069,7 +1068,7 @@
                 </div>
                 <div class="conditional" id="remotelockAccountWrap">
                   <label class="field-label">RemoteLOCKアカウント情報<span class="required">必須</span></label>
-                  <p class="field-desc">システム連携に必要なRemoteLOCKのログインIDとパスワードをご記入ください。</p>
+                  <p class="field-desc">システム連携に必要なRemoteLOCKのログインIDとパスワードをご記入ください。複数物件で同じアカウントを利用する場合は1回入力すればOKです。</p>
                   <div class="account-pair">
                     <div class="account-field">
                       <label class="field-label-sub">ログインID</label>
@@ -1960,15 +1959,22 @@
         hasRemotelockProperty = true;
       }
     });
-    const remotelockNoOption = document.querySelector('[data-remotelock-option="no"]');
-    if (remotelockNoOption) {
-      remotelockNoOption.style.display = hasRemotelockProperty ? 'none' : '';
-      if (hasRemotelockProperty) {
-        const noRadio = remotelockNoOption.querySelector('input[type="radio"]');
-        if (noRadio?.checked) {
-          noRadio.checked = false;
-          remotelockNoOption.classList.remove('selected');
-        }
+    // RemoteLOCKフィールド全体の表示制御
+    // 物件で1つでもRemoteLOCKを選んでいる → 表示
+    // 0個 → 非表示、選択値もクリア
+    const remotelockField = document.getElementById('remotelockField');
+    if (remotelockField) {
+      remotelockField.style.display = hasRemotelockProperty ? '' : 'none';
+      if (!hasRemotelockProperty) {
+        // 値・選択をクリア
+        document.querySelectorAll('input[name="remotelock"]').forEach(r => {
+          r.checked = false;
+        });
+        document.getElementById('remotelockPlannedDate').value = '';
+        document.getElementById('remotelockLoginId').value = '';
+        document.getElementById('remotelockPassword').value = '';
+        document.getElementById('remotelockPlannedDateWrap')?.classList.remove('show');
+        document.getElementById('remotelockAccountWrap')?.classList.remove('show');
       }
     }
     
@@ -2385,13 +2391,25 @@ STEP4: 施錠は...（鍵に合わせて記載してください）`
       }
     });
     
-    // ラジオボタン必須
-    ['earlyCheckin', 'lateCheckout', 'luggageStorage', 'beds24', 'remotelock'].forEach(name => {
+    // ラジオボタン必須（remotelock は物件選択時のみ必須）
+    ['earlyCheckin', 'lateCheckout', 'luggageStorage', 'beds24'].forEach(name => {
       if (!document.querySelector(`input[name="${name}"]:checked`)) {
         document.querySelector(`[data-field="${name}"]`).classList.add('has-error');
         valid = false;
       }
     });
+    
+    // RemoteLOCK：物件で1つ以上選択している場合のみ必須
+    const hasRemotelockProp = Array.from(document.querySelectorAll('.property-block.show')).some(b => {
+      const n = Array.from(document.querySelectorAll('.property-block')).indexOf(b) + 1;
+      return b.querySelector(`input[name="property_${n}_keyType"]:checked`)?.value === 'remotelock';
+    });
+    if (hasRemotelockProp) {
+      if (!document.querySelector('input[name="remotelock"]:checked')) {
+        document.querySelector('[data-field="remotelock"]').classList.add('has-error');
+        valid = false;
+      }
+    }
     
     // アーリー/レイト/荷物預かりの時刻
     if (document.querySelector('input[name="earlyCheckin"]:checked')?.value === 'yes') {
@@ -2576,14 +2594,6 @@ STEP4: 施錠は...（鍵に合わせて記載してください）`
       const sesameAccountInput = document.getElementById('sesameAccount');
       if (!sesameAccountInput.value.trim()) {
         document.querySelector('[data-field="sesameAccount"]').classList.add('has-error');
-        valid = false;
-      }
-    }
-    
-    // 固定暗証番号方式の物件がある場合、通知方法も必須
-    if (hasFixedPasscodeProperty) {
-      if (!document.querySelector('input[name="passcodeNotify"]:checked')) {
-        document.querySelector('[data-field="passcodeNotify"]').classList.add('has-error');
         valid = false;
       }
     }
