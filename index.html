@@ -469,6 +469,33 @@
   }
   .passcode-warning strong { color: #6e2222; }
   
+  /* ===== 同上チェックボックス ===== */
+  .same-as-check {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    color: #2c5aa0;
+    user-select: none;
+    padding: 4px 10px;
+    background: #f0f4fa;
+    border-radius: 4px;
+    transition: background 0.2s;
+  }
+  .same-as-check:hover {
+    background: #e0ebf5;
+  }
+  .same-as-check input[type="checkbox"] {
+    cursor: pointer;
+  }
+  input[readonly] {
+    background-color: #f5f5f5 !important;
+    color: #666;
+    cursor: not-allowed;
+  }
+  
   /* ===== サブセクション ===== */
   .subsection {
     background: #f7f9fc;
@@ -1173,13 +1200,14 @@
       <div class="field" data-field="subEmail">
         <label class="field-label">サブアカウント用メールアドレス<span class="required">必須</span></label>
         <p class="field-desc">サブアカウントへのログインに使用するメールアドレスをご記入ください。今後システムからの通知もこちらに届きます。</p>
+        <label class="same-as-check"><input type="checkbox" id="subEmailSameAs" data-same-as="contactEmail"> 担当者メールアドレスと同じ</label>
         <input type="email" name="subEmail" id="subEmail" required>
         <div class="field-error">有効なメールアドレスをご入力ください</div>
       </div>
       
       <div class="field" data-field="subPassword">
         <label class="field-label">サブアカウント用パスワード<span class="required">必須</span></label>
-        <p class="field-desc">サブアカウントのログイン時に使用するパスワードをご記入ください（半角英数字8文字以上を推奨いたします）。</p>
+        <p class="field-desc">サブアカウントのログイン時に使用するパスワードをご記入ください(半角英数字8文字以上を推奨いたします)。</p>
         <input type="password" name="subPassword" id="subPassword" required minlength="8">
         <div class="field-error">8文字以上のパスワードをご入力ください</div>
       </div>
@@ -1187,6 +1215,7 @@
       <div class="field" data-field="subName">
         <label class="field-label">サブアカウント表示名<span class="required">必須</span></label>
         <p class="field-desc">システム上に表示されるお名前をご記入ください。</p>
+        <label class="same-as-check"><input type="checkbox" id="subNameSameAs" data-same-as="contractorName"> 契約者名と同じ</label>
         <input type="text" name="subName" id="subName" required>
         <div class="field-error">表示名をご入力ください</div>
       </div>
@@ -2220,6 +2249,40 @@
         setupAutoSave();
       }, 500);
     }, 100);
+  });
+  
+  // ===========================
+  // 「同上」チェックボックス処理
+  // ===========================
+  document.querySelectorAll('[data-same-as]').forEach(check => {
+    const targetId = check.id.replace('SameAs', ''); // subEmailSameAs → subEmail
+    const sourceId = check.dataset.sameAs;
+    const target = document.getElementById(targetId);
+    const source = document.getElementById(sourceId);
+    if (!target || !source) return;
+    
+    const updateValue = () => {
+      if (check.checked) {
+        target.value = source.value;
+        target.readOnly = true;
+        // バリデーションエラーをクリア
+        target.closest('.field')?.classList.remove('has-error');
+        // 値の変更を通知（自動保存トリガー）
+        target.dispatchEvent(new Event('input', { bubbles: true }));
+      } else {
+        target.readOnly = false;
+      }
+    };
+    
+    check.addEventListener('change', updateValue);
+    
+    // ソース変更時、チェックが入っていれば連動
+    source.addEventListener('input', () => {
+      if (check.checked) {
+        target.value = source.value;
+        target.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+    });
   });
   
   // ===========================
