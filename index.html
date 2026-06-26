@@ -1097,16 +1097,6 @@
       <div class="subsection">
         <h3 class="subsection-title" data-num="3">その他</h3>
         
-        <div class="field" data-field="passcodeNotify" id="passcodeNotifyField" style="display:none;">
-                <label class="field-label">鍵の暗証番号の通知方法<span class="required">必須</span></label>
-                <p class="field-desc">RemoteLOCK / SESAME 5 / SESAME 5 Pro 以外の鍵をご利用の物件がある場合、ゲスト様への暗証番号のお伝え方法をお選びください。</p>
-                <div class="radio-group" id="passcodeNotifyGroup">
-                  <label><input type="radio" name="passcodeNotify" value="system"> チェックインシステムで本人確認完了後にゲストへ通知する</label>
-                  <label><input type="radio" name="passcodeNotify" value="host"> ホストが個別にゲストへお伝えする</label>
-                </div>
-                <div class="field-error">通知方法をお選びください</div>
-              </div>
-        
         <div class="field" data-field="tabletLocation" id="tabletLocationField" style="display:none;">
                 <label class="field-label">タブレット設置場所（標準）<span class="required">必須</span></label>
                 <p class="field-desc">本人確認OPでご利用いただくタブレットの設置場所をお選びください。<br>全物件で同じ場合はここでお選びください。物件ごとに異なる場合は、各物件の「共通設定と一部異なる」で個別に上書きできます。</p>
@@ -1373,6 +1363,17 @@
             ビデオ通話による本人確認<strong>前</strong>にゲストが入室する可能性があります。<br>
             確実な本人確認には固定暗証番号の鍵（キーボックス等）への変更をご検討ください。
           </div>
+        </div>
+        
+        <!-- 鍵の暗証番号の通知方法（RemoteLOCK/SESAME系・ランダム以外で表示） -->
+        <div class="field" id="passcodeNotifyWrap-${n}" style="display:none;">
+          <label class="field-label">鍵の暗証番号の通知方法<span class="required">必須</span></label>
+          <p class="field-desc">この物件の暗証番号を、ゲスト様にどのようにお伝えするかをお選びください。</p>
+          <div class="radio-group">
+            <label><input type="radio" name="property_${n}_passcodeNotify" value="system" data-passcode-notify-radio data-property-index="${index}"> チェックインシステムで本人確認完了後にゲストへ通知する</label>
+            <label><input type="radio" name="property_${n}_passcodeNotify" value="host" data-passcode-notify-radio data-property-index="${index}"> ホストが個別にゲストへお伝えする</label>
+          </div>
+          <div class="field-error">通知方法をお選びください</div>
         </div>
         
         <!-- 鍵の暗証番号（条件付き：RemoteLOCK/SESAME 5系以外 かつ 通知方法=system） -->
@@ -1958,25 +1959,34 @@
       }
     }
     
-    // 共通設定の「暗証番号の通知方法」フィールドの表示制御
-    const passcodeNotifyField = document.getElementById('passcodeNotifyField');
-    passcodeNotifyField.style.display = hasFixedPasscodeProperty ? '' : 'none';
-    
-    // 通知方法が「システムで通知」かつ固定暗証番号方式の物件で、暗証番号欄を表示
-    const notifyMethod = document.querySelector('input[name="passcodeNotify"]:checked')?.value || '';
+    // 物件ごとの「暗証番号の通知方法」と「暗証番号」欄の表示制御
     document.querySelectorAll('.property-block').forEach((block, idx) => {
       const n = idx + 1;
       const checkedKey = block.querySelector(`input[name="property_${n}_keyType"]:checked`);
       const keyValue = checkedKey?.value || '';
       
+      // 通知方法欄の表示制御
+      // RemoteLOCK/SESAME系/ランダム → 非表示
+      // 固定暗証番号系（keybox, other_smartlock_fixed, other） → 表示
+      const noNotifyNeeded = ['remotelock', 'sesame5', 'sesame5pro', 'other_smartlock_random', ''].includes(keyValue);
+      const notifyWrap = document.getElementById(`passcodeNotifyWrap-${n}`);
+      if (notifyWrap) {
+        notifyWrap.style.display = noNotifyNeeded ? 'none' : '';
+      }
+      
+      // 暗証番号欄の表示制御
+      // 固定暗証番号系の鍵 かつ 通知方法="system" の時のみ表示
       const isFixedPasscode =
         keyValue === 'keybox' ||
         keyValue === 'other' ||
         keyValue === 'other_smartlock_fixed';
       
+      const notifyMethod = block.querySelector(`input[name="property_${n}_passcodeNotify"]:checked`)?.value || '';
       const passcodeWrap = document.getElementById(`passcodeWrap-${n}`);
-      const showPasscode = isFixedPasscode && notifyMethod === 'system';
-      passcodeWrap.style.display = showPasscode ? '' : 'none';
+      if (passcodeWrap) {
+        const showPasscode = isFixedPasscode && notifyMethod === 'system';
+        passcodeWrap.style.display = showPasscode ? '' : 'none';
+      }
     });
   }
   
@@ -2241,18 +2251,32 @@ STEP4: 施錠は...（鍵に合わせて記載してください）`
       const passcodeInput = block.querySelector(`input[name="property_${n}_passcode"]`);
       if (passcodeInput) passcodeInput.value = '';
       
+      // 通知方法の自動セット
+      // RemoteLOCK/SESAME系 → 通知方法は使わないのでクリア
+      // ランダム → 自動的に "host"
+      // 固定系 → クリア（ホストに選ばせる）
+      block.querySelectorAll(`input[name="property_${n}_passcodeNotify"]`).forEach(r => {
+        r.checked = false;
+      });
+      if (keyValue === 'other_smartlock_random') {
+        const hostRadio = block.querySelector(`input[name="property_${n}_passcodeNotify"][value="host"]`);
+        if (hostRadio) hostRadio.checked = true;
+      }
+      
       updateKeyDependentFields();
     }
     if (e.target.matches('input[name="tabletLocation"]') || e.target.matches('[data-tablet-radio]')) {
       // タブレット設置場所変更時に屋外×リスク鍵の警告を再評価
       updateKeyDependentFields();
     }
-    if (e.target.matches('input[name="passcodeNotify"]')) {
-      // 通知方法を「ホスト個別」に変更時：全物件の暗証番号をクリア
+    if (e.target.matches('[data-passcode-notify-radio]')) {
+      // 物件ごとの通知方法を変更：その物件の暗証番号をクリアして表示制御
+      const idx = e.target.dataset.propertyIndex;
+      const n = parseInt(idx, 10) + 1;
+      const block = document.getElementById(`property-${n}`);
       if (e.target.value === 'host') {
-        document.querySelectorAll('[name^="property_"][name$="_passcode"]').forEach(input => {
-          input.value = '';
-        });
+        const passcodeInput = block.querySelector(`input[name="property_${n}_passcode"]`);
+        if (passcodeInput) passcodeInput.value = '';
       }
       updateKeyDependentFields();
     }
@@ -2409,7 +2433,6 @@ STEP4: 施錠は...（鍵に合わせて記載してください）`
     const hasBuilding = document.getElementById('buildingAddress').value.trim() !== '';
     let hasFixedPasscodeProperty = false;
     let hasSesameProperty = false;
-    const notifyMethod = document.querySelector('input[name="passcodeNotify"]:checked')?.value || '';
     
     for (let i = 1; i <= propertyCount; i++) {
       const block = document.getElementById(`property-${i}`);
@@ -2462,8 +2485,14 @@ STEP4: 施錠は...（鍵に合わせて記載してください）`
         
         if (isFixedPasscode) {
           hasFixedPasscodeProperty = true;
-          // 通知方法が「システムで通知」なら暗証番号必須
-          if (notifyMethod === 'system') {
+          // 物件ごとの通知方法（必須）: 固定暗証番号系の鍵の場合
+          const propNotifyChecked = block.querySelector(`input[name="property_${i}_passcodeNotify"]:checked`);
+          if (!propNotifyChecked) {
+            const notifyWrap = document.getElementById(`passcodeNotifyWrap-${i}`);
+            if (notifyWrap) notifyWrap.classList.add('has-error');
+            valid = false;
+          } else if (propNotifyChecked.value === 'system') {
+            // 通知方法が「システムで通知」なら暗証番号必須
             const passcodeInput = block.querySelector(`input[name="property_${i}_passcode"]`);
             if (!passcodeInput.value.trim()) {
               passcodeInput.closest('.field').classList.add('has-error');
@@ -2595,8 +2624,6 @@ STEP4: 施錠は...（鍵に合わせて記載してください）`
         ? `ログインID: ${get('remotelockLoginId')}\nパスワード: ${get('remotelockPassword')}`
         : '',
       sesameAccount: get('sesameAccount'),
-      passcodeNotify: radio('passcodeNotify'),
-      passcodeNotifyLabel: LABEL_MAP.passcodeNotify[radio('passcodeNotify')] || '',
       messageTiming: messageTimings,
       messageTimingLabel: messageTimings.map(v => LABEL_MAP.messageTiming[v]).join('、')
     };
@@ -2632,6 +2659,8 @@ STEP4: 施錠は...（鍵に合わせて記載してください）`
         keyTypeLabel: LABEL_MAP.keyType[keyTypeValue] || '',
         keyTypeDetail: propGet(`property_${i}_keyTypeDetail`),
         passcode: propGet(`property_${i}_passcode`),
+        passcodeNotify: propRadio(`property_${i}_passcodeNotify`),
+        passcodeNotifyLabel: LABEL_MAP.passcodeNotify[propRadio(`property_${i}_passcodeNotify`)] || '',
         keyAccess: propGet(`property_${i}_keyAccess`),
         tabletLocation: propTabletLocation,
         tabletLocationLabel: LABEL_MAP.tabletLocation[propTabletLocation] || '',
@@ -2762,6 +2791,20 @@ STEP4: 施錠は...（鍵に合わせて記載してください）`
         title: '🔑 ゲスト様への暗証番号の個別通知',
         body: `${names}はランダム暗証番号方式の鍵をご利用のため、チェックインシステムでの自動通知ができません。<strong>各予約ごとにホスト様自身でゲスト様へ暗証番号をお伝え</strong>いただきますようお願いいたします。`,
         plainBody: `${names}はランダム暗証番号方式の鍵をご利用のため、チェックインシステムでの自動通知ができません。各予約ごとにホスト様自身でゲスト様へ暗証番号をお伝えいただきますようお願いいたします。`
+      });
+    }
+    
+    // 8. ホスト個別通知を選んだ物件（固定暗証番号系で「host」選択）
+    const hostNotifyProperties = payload.properties.filter(p => 
+      p.passcodeNotify === 'host' && 
+      ['keybox', 'other_smartlock_fixed', 'other'].includes(p.keyType)
+    );
+    if (hostNotifyProperties.length > 0) {
+      const names = formatPropertyList(hostNotifyProperties);
+      tasks.push({
+        title: '🔑 暗証番号の個別通知（ホスト管理）',
+        body: `${names}は「ホスト個別通知」を選択されています。<strong>各予約ごとにホスト様から直接ゲスト様へ暗証番号をお伝え</strong>いただきますようお願いいたします。`,
+        plainBody: `${names}は「ホスト個別通知」を選択されています。各予約ごとにホスト様から直接ゲスト様へ暗証番号をお伝えいただきますようお願いいたします。`
       });
     }
     
