@@ -316,6 +316,92 @@
   }
   .submit-error.show { display: block; }
   
+  /* ===== 次のステップ ===== */
+  .next-steps {
+    margin: 30px 0;
+    padding: 20px;
+    background: #f0f4fa;
+    border-radius: 8px;
+    border-left: 4px solid #2c5aa0;
+  }
+  .next-steps h3 {
+    margin: 0 0 6px;
+    color: #2c5aa0;
+    font-size: 16px;
+  }
+  .next-steps-desc {
+    margin: 0 0 16px;
+    font-size: 13px;
+    color: #555;
+  }
+  .next-step-item {
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    background: #fff;
+    border-radius: 6px;
+    border-left: 3px solid #d0d7e2;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .next-step-item.host {
+    border-left-color: #ea4d3c;
+    background: #fff8f6;
+  }
+  .next-step-item-day {
+    font-size: 11px;
+    color: #888;
+    font-weight: 500;
+    margin-bottom: 2px;
+  }
+  .next-step-item-title {
+    font-weight: 600;
+    color: #2c5aa0;
+  }
+  .next-step-item.host .next-step-item-title {
+    color: #ea4d3c;
+  }
+  .next-steps-caution {
+    margin-top: 16px;
+    padding: 12px 14px;
+    background: #fff8f6;
+    border: 1px solid #f5d6d0;
+    border-radius: 6px;
+    font-size: 12px;
+    color: #555;
+    line-height: 1.6;
+  }
+  .next-steps-caution strong {
+    color: #2c5aa0;
+  }
+  .contract-date-config {
+    margin: 16px 0 0;
+    padding: 12px 14px;
+    background: #f0f4fa;
+    border-radius: 6px;
+    border: 1px solid #d0d7e2;
+  }
+  .contract-date-config label {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: #2c5aa0;
+    font-weight: 600;
+  }
+  .contract-date-config input[type="date"] {
+    font-size: 14px;
+    padding: 6px 10px;
+    border: 1px solid #c0c8d4;
+    border-radius: 4px;
+    background: #fff;
+  }
+  .contract-date-hint {
+    margin: 8px 0 0;
+    font-size: 11px;
+    color: #666;
+    line-height: 1.5;
+  }
+  
   /* ===== 送信完了画面 ===== */
   .post-send {
     display: none;
@@ -468,6 +554,186 @@
     line-height: 1.6;
   }
   .passcode-warning strong { color: #6e2222; }
+  
+  /* ===== スケジュール案内 ===== */
+  .schedule-info {
+    margin-bottom: 24px;
+    border: 1px solid #d0d7e2;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .schedule-info summary {
+    padding: 14px 18px;
+    cursor: pointer;
+    background: #f0f4fa;
+    font-weight: 600;
+    color: #2c5aa0;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+  }
+  .schedule-info summary::-webkit-details-marker {
+    display: none;
+  }
+  .schedule-info summary::after {
+    content: '▼';
+    font-size: 11px;
+    transition: transform 0.2s;
+  }
+  .schedule-info[open] summary::after {
+    transform: rotate(180deg);
+  }
+  .schedule-info summary:hover {
+    background: #e3ebf5;
+  }
+  .schedule-info-body {
+    padding: 18px;
+  }
+  .schedule-style-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  .schedule-style-tab {
+    padding: 8px 16px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: #666;
+    font-size: 13px;
+    font-weight: 500;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+  }
+  .schedule-style-tab.active {
+    color: #2c5aa0;
+    border-bottom-color: #2c5aa0;
+    font-weight: 600;
+  }
+  .schedule-style-tab:hover:not(.active) {
+    color: #2c5aa0;
+  }
+  .schedule-style-content {
+    display: none;
+  }
+  .schedule-style-content.active {
+    display: block;
+  }
+  /* シンプル版（チェックリスト形式） */
+  .schedule-simple {
+    margin: 0;
+  }
+  .schedule-simple-group {
+    margin-bottom: 16px;
+  }
+  .schedule-simple-group:last-child {
+    margin-bottom: 0;
+  }
+  .schedule-simple-group-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2c5aa0;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid #e0e7f0;
+  }
+  .schedule-simple ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .schedule-simple li {
+    padding: 6px 0 6px 24px;
+    position: relative;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .schedule-simple li::before {
+    content: '□';
+    position: absolute;
+    left: 0;
+    color: #2c5aa0;
+    font-size: 14px;
+  }
+  .schedule-simple li.highlight {
+    background: #fff8e0;
+    padding-left: 24px;
+    padding-right: 8px;
+    border-radius: 4px;
+  }
+  /* 詳細版（タイムライン形式） */
+  .schedule-detailed {
+    margin: 0;
+  }
+  .schedule-timeline {
+    border-left: 2px solid #d0d7e2;
+    padding-left: 20px;
+    margin: 0;
+    position: relative;
+  }
+  .schedule-timeline-item {
+    position: relative;
+    padding: 10px 0 10px 12px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .schedule-timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -27px;
+    top: 16px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #d0d7e2;
+  }
+  .schedule-timeline-item.host::before {
+    background: #ea4d3c;
+    border-color: #ea4d3c;
+    box-shadow: 0 0 0 3px rgba(234,77,60,0.15);
+  }
+  .schedule-timeline-item.host {
+    background: #fff8e0;
+    border-radius: 4px;
+    padding-left: 14px;
+    padding-right: 10px;
+    margin-left: 4px;
+  }
+  .schedule-day {
+    display: inline-block;
+    min-width: 100px;
+    color: #888;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .schedule-host-badge {
+    display: inline-block;
+    padding: 2px 6px;
+    background: #ea4d3c;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: 3px;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+  .schedule-note {
+    margin-top: 14px;
+    padding: 10px 14px;
+    background: #f7f9fc;
+    border-radius: 6px;
+    font-size: 12px;
+    color: #555;
+    line-height: 1.6;
+  }
+  .schedule-note strong {
+    color: #2c5aa0;
+  }
   
   /* ===== 同上チェックボックス ===== */
   .same-as-check {
@@ -784,6 +1050,44 @@
       </div>
       <button type="button" class="reset-form-btn" onclick="resetFormData()">最初からやり直す</button>
     </div>
+    
+    <!-- =========================
+         ご契約後のスケジュール案内（折りたたみ）
+         ========================= -->
+    <details class="schedule-info" id="scheduleInfo">
+      <summary>📋 ご契約後の進行スケジュールとご対応事項を確認する</summary>
+      <div class="schedule-info-body">
+        
+        <!-- 表示スタイルタブ -->
+        <div class="schedule-style-tabs">
+          <button type="button" class="schedule-style-tab active" data-style="simple">シンプル表示</button>
+          <button type="button" class="schedule-style-tab" data-style="detailed">詳細スケジュール</button>
+        </div>
+        
+        <!-- シンプル版 -->
+        <div class="schedule-style-content active" data-style-content="simple">
+          <div class="schedule-simple" id="scheduleSimple">
+            <!-- JSで動的生成 -->
+          </div>
+        </div>
+        
+        <!-- 詳細版 -->
+        <div class="schedule-style-content" data-style-content="detailed">
+          <div class="schedule-detailed" id="scheduleDetailed">
+            <!-- JSで動的生成 -->
+          </div>
+        </div>
+        
+        <div class="schedule-note" id="scheduleNote">
+          <strong>※ スケジュールについて</strong><br>
+          上記はあくまで<strong>標準的なスケジュールの目安</strong>であり、ご契約の始期や各工程の進捗状況により前後する場合がございます。<br>
+          <strong style="color:#d23838;">ご対応事項の進行が予定より遅れた場合、その分だけ納品スケジュールも後ろ倒しになる可能性がございます。</strong>あらかじめご了承くださいませ。<br><br>
+          <strong>※ オプション契約について</strong><br>
+          契約オプション（特に Beds24連携OP）のご契約有無により、納品までの期間が変動いたします。<br>
+          <strong style="color:#2c5aa0;">「① ご契約者様情報」で契約オプションをお選びいただくと、スケジュールが自動的に更新されます。</strong>
+        </div>
+      </div>
+    </details>
     
     <!-- =========================
          セクション1: ご契約者様情報
@@ -1255,6 +1559,33 @@
       <div class="task-actions">
         <button type="button" class="task-action-btn" id="copyTasksBtn">📋 リストをコピー</button>
         <button type="button" class="task-action-btn" onclick="window.print()">🖨️ 印刷する</button>
+      </div>
+    </div>
+    
+    <!-- 次のステップ -->
+    <div class="next-steps" id="nextStepsSection">
+      <h3>📍 次のステップ</h3>
+      <p class="next-steps-desc">ご契約からの流れに沿って、次に行っていただく内容をご案内いたします。</p>
+      <div id="nextStepsList"></div>
+      <div class="next-steps-caution">
+        <strong>※ スケジュールについて</strong><br>
+        上記はあくまで<strong>標準的なスケジュールの目安</strong>であり、ご契約の始期や各工程の進捗状況により前後する場合がございます。<br>
+        <strong style="color:#d23838;">ご対応事項の進行が予定より遅れた場合、その分だけ納品スケジュールも後ろ倒しになる可能性がございます。</strong>あらかじめご了承くださいませ。
+      </div>
+      
+      <div class="contract-date-config">
+        <label for="contractDateForCal">
+          📅 ご契約日：
+          <input type="date" id="contractDateForCal">
+        </label>
+        <p class="contract-date-hint">この日を基準に「次のステップ」とカレンダーの日付が計算されます。<br>正確なご契約日に合わせて変更いただけます。</p>
+      </div>
+      
+      <div class="task-actions" style="margin-top:12px;">
+        <button type="button" class="task-action-btn" id="copyNextStepsBtn">📋 内容をコピー</button>
+        <button type="button" class="task-action-btn" id="emailNextStepsBtn">✉️ 自分宛にメール送信</button>
+        <button type="button" class="task-action-btn" id="calendarBtn">📅 カレンダーに追加</button>
+        <button type="button" class="task-action-btn" onclick="window.print()">🖨️ このページを印刷</button>
       </div>
     </div>
     
@@ -2252,6 +2583,201 @@
   });
   
   // ===========================
+  // ===========================
+  // ご契約後のスケジュール案内
+  // ===========================
+  // スケジュールデータ定義
+  const SCHEDULE_DATA = {
+    // 基本プラン（Beds24連携なし）
+    base: {
+      label: '基本プラン（標準）',
+      timeline: [
+        { day: 0, host: false, label: '契約申し込み' },
+        { day: 4, host: false, label: '契約締結 → 当社にてCS連携開始' },
+        { day: 7, host: false, label: '請求書発行・ヒアリングフォーム送付' },
+        { day: 14, host: true, label: 'ご入金（請求書発行日から7日以内）' },
+        { day: 14, host: true, label: '本ヒアリングフォームのご提出' },
+        { day: 14, host: true, label: 'Wi-Fi環境のご準備' },
+        { day: 14, host: true, label: 'ご入金完了の連絡（customer@bizpato.com まで）' },
+        { day: 15, host: false, label: '入金確認後、チェックインシステム初期設定' },
+        { day: 21, host: false, label: '一次納品・QRコードデータ納品' },
+        { day: 24, host: true, label: '届出番号の取得' },
+        { day: 24, host: true, label: 'QRコードの現地設置（運用開始）' }
+      ],
+      tasks: [
+        {
+          deadline: '契約後 14日目まで',
+          items: [
+            '請求書のご確認・ご入金（請求書発行日から7日以内）',
+            'ご入金完了後、customer@bizpato.com までご連絡（契約者名・お振込み日・担当者名）',
+            'ヒアリングフォームのご提出',
+            '物件のWi-Fi環境のご準備'
+          ]
+        },
+        {
+          deadline: '契約後 24日目まで',
+          items: [
+            '届出番号の取得（保健所立ち会い・届出申請）',
+            'チェックインQRコードの現地設置'
+          ]
+        }
+      ]
+    },
+    // 基本プラン + Beds24連携あり
+    withBeds24: {
+      label: '基本プラン + Beds24連携あり',
+      timeline: [
+        { day: 0, host: false, label: '契約申し込み' },
+        { day: 4, host: false, label: '契約締結 → 当社にてCS連携開始' },
+        { day: 7, host: false, label: '請求書発行・ヒアリングフォーム送付' },
+        { day: 14, host: true, label: 'ご入金（請求書発行日から7日以内）' },
+        { day: 14, host: true, label: 'ご入金完了の連絡（customer@bizpato.com まで）' },
+        { day: 15, host: false, label: '入金確認' },
+        { day: 24, host: true, label: '届出番号の取得・OTA作成着手' },
+        { day: 29, host: true, label: 'Beds24アカウント作成・OTA新規連動依頼' },
+        { day: 35, host: true, label: 'Beds24新規連動完了の確認' },
+        { day: 35, host: true, label: '本ヒアリングフォームのご提出' },
+        { day: 35, host: true, label: 'Wi-Fi環境のご準備・鍵設置完了' },
+        { day: 36, host: false, label: 'SmartInn↔Beds24連携・SmartInn↔RemoteLOCK連携設定' },
+        { day: 42, host: false, label: '一次納品・QRコードデータ納品' },
+        { day: 45, host: true, label: 'QRコードの現地設置（運用開始）' }
+      ],
+      tasks: [
+        {
+          deadline: '契約後 14日目まで',
+          items: [
+            '請求書のご確認・ご入金（請求書発行日から7日以内）',
+            'ご入金完了後、customer@bizpato.com までご連絡（契約者名・お振込み日・担当者名）'
+          ]
+        },
+        {
+          deadline: '契約後 24日目まで',
+          items: [
+            '届出番号の取得（保健所立ち会い・届出申請）',
+            'OTA（Airbnb / Booking.com 等）の作成着手'
+          ]
+        },
+        {
+          deadline: '契約後 29日目まで',
+          items: [
+            'Beds24アカウントの新規作成',
+            'Beds24における OTA新規連動のご依頼'
+          ]
+        },
+        {
+          deadline: '契約後 35日目まで',
+          items: [
+            'Beds24における OTA新規連動の完了確認',
+            'ヒアリングフォームのご提出',
+            '物件のWi-Fi環境のご準備',
+            '鍵設置完了（RemoteLOCK・SESAME等の物理的設置）'
+          ]
+        },
+        {
+          deadline: '契約後 45日目まで',
+          items: [
+            'チェックインQRコードの現地設置'
+          ]
+        }
+      ]
+    }
+  };
+  
+  // 現在のスケジュールタイプを判定
+  function getCurrentScheduleType() {
+    // Beds24連携OP契約 or 物件でRemoteLOCK選択時は withBeds24
+    const hasBeds24Op = document.querySelector('input[name="contractedOptions"][value="beds24"]:checked');
+    // 物件でRemoteLOCKを選択している場合も対象（Beds24連携と並列）
+    let hasRemotelockProperty = false;
+    document.querySelectorAll('.property-block.show').forEach((block, idx) => {
+      const n = idx + 1;
+      if (block.querySelector(`input[name="property_${n}_keyType"][value="remotelock"]:checked`)) {
+        hasRemotelockProperty = true;
+      }
+    });
+    return (hasBeds24Op || hasRemotelockProperty) ? 'withBeds24' : 'base';
+  }
+  
+  // シンプル版のレンダリング
+  function renderScheduleSimple() {
+    const type = getCurrentScheduleType();
+    const data = SCHEDULE_DATA[type];
+    const container = document.getElementById('scheduleSimple');
+    if (!container) return;
+    
+    let html = `<p style="font-size:13px;margin:0 0 14px;color:#555;">
+      <strong style="color:#2c5aa0;">${data.label}</strong>でのご対応事項です。
+      ご契約からの日数（暦日）で表示しています。
+    </p>`;
+    
+    data.tasks.forEach(group => {
+      html += `<div class="schedule-simple-group">
+        <div class="schedule-simple-group-title">${group.deadline}</div>
+        <ul>`;
+      group.items.forEach(item => {
+        html += `<li>${item}</li>`;
+      });
+      html += `</ul></div>`;
+    });
+    container.innerHTML = html;
+  }
+  
+  // 詳細版のレンダリング
+  function renderScheduleDetailed() {
+    const type = getCurrentScheduleType();
+    const data = SCHEDULE_DATA[type];
+    const container = document.getElementById('scheduleDetailed');
+    if (!container) return;
+    
+    let html = `<p style="font-size:13px;margin:0 0 14px;color:#555;">
+      <strong style="color:#2c5aa0;">${data.label}</strong>の標準スケジュールです。
+      <span class="schedule-host-badge">ホスト</span>がついた項目がご対応事項です。
+    </p>`;
+    
+    html += `<div class="schedule-timeline">`;
+    data.timeline.forEach(item => {
+      html += `<div class="schedule-timeline-item${item.host ? ' host' : ''}">
+        <span class="schedule-day">契約後 ${item.day}日目</span>
+        ${item.host ? '<span class="schedule-host-badge">ホスト</span>' : ''}
+        ${item.label}
+      </div>`;
+    });
+    html += `</div>`;
+    container.innerHTML = html;
+  }
+  
+  // 両方レンダリング
+  function renderAllSchedules() {
+    renderScheduleSimple();
+    renderScheduleDetailed();
+  }
+  
+  // タブ切替
+  document.querySelectorAll('.schedule-style-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const style = tab.dataset.style;
+      document.querySelectorAll('.schedule-style-tab').forEach(t => t.classList.toggle('active', t === tab));
+      document.querySelectorAll('.schedule-style-content').forEach(c => {
+        c.classList.toggle('active', c.dataset.styleContent === style);
+      });
+    });
+  });
+  
+  // 契約オプション変更時に再描画
+  document.querySelectorAll('input[name="contractedOptions"]').forEach(el => {
+    el.addEventListener('change', () => setTimeout(renderAllSchedules, 50));
+  });
+  // 鍵タイプ変更時にも再描画（物件のRemoteLOCK選択で切り替わる）
+  document.addEventListener('change', (e) => {
+    if (e.target.matches('[data-key-radio]')) {
+      setTimeout(renderAllSchedules, 100);
+    }
+  });
+  
+  // 初期描画
+  renderAllSchedules();
+  
+  // ===========================
   // 「同上」チェックボックス処理
   // ===========================
   document.querySelectorAll('[data-same-as]').forEach(check => {
@@ -2975,6 +3501,266 @@ STEP4: 施錠は...（鍵に合わせて記載してください）`
   }
   
   // ===========================
+  // 次のステップの描画
+  // ===========================
+  function renderNextSteps(payload) {
+    const list = document.getElementById('nextStepsList');
+    if (!list) return;
+    
+    // payload からスケジュールタイプを判定
+    const hasBeds24Op = payload.contractor.contractedOptions.includes('beds24');
+    const hasRemotelock = payload.properties.some(p => p.keyType === 'remotelock');
+    const type = (hasBeds24Op || hasRemotelock) ? 'withBeds24' : 'base';
+    const data = SCHEDULE_DATA[type];
+    
+    // タイムラインから「未来のホスト対応事項」のみ抽出
+    // 既にヒアリングフォーム提出済みなので、それ以降を表示
+    const futureSteps = [];
+    let foundHearingDay = false;
+    data.timeline.forEach(item => {
+      if (!foundHearingDay && item.label.includes('ヒアリングフォーム')) {
+        foundHearingDay = true;
+        return; // 自分自身はスキップ
+      }
+      if (foundHearingDay) {
+        futureSteps.push(item);
+      }
+    });
+    
+    // もしヒアリングがなかった場合（base版で日付一致で取れる）はWi-Fi以降
+    if (!foundHearingDay) {
+      data.timeline.forEach(item => {
+        if (item.day >= 14) futureSteps.push(item);
+      });
+    }
+    
+    // 契約日のデフォルト値設定（今日）
+    const contractDateInput = document.getElementById('contractDateForCal');
+    if (contractDateInput && !contractDateInput.value) {
+      contractDateInput.value = formatDateLocal(new Date());
+    }
+    
+    // 初回レンダリング
+    renderNextStepsList(futureSteps);
+    
+    // 契約日変更時に再描画
+    if (contractDateInput) {
+      const newInput = contractDateInput.cloneNode(true);
+      contractDateInput.parentNode.replaceChild(newInput, contractDateInput);
+      newInput.addEventListener('change', () => renderNextStepsList(futureSteps));
+    }
+    
+    // コピー・メール送信・カレンダーボタンのイベント設定
+    setupNextStepsActions(payload, futureSteps);
+  }
+  
+  // 次のステップリストを描画（契約日に基づいて日付計算）
+  function renderNextStepsList(futureSteps) {
+    const list = document.getElementById('nextStepsList');
+    if (!list) return;
+    
+    const contractDateInput = document.getElementById('contractDateForCal');
+    const baseDate = contractDateInput?.value ? new Date(contractDateInput.value + 'T00:00:00') : new Date();
+    
+    let html = '';
+    futureSteps.forEach(item => {
+      const itemDate = addDays(baseDate, item.day);
+      const dateStr = formatDateJP(itemDate);
+      html += `<div class="next-step-item${item.host ? ' host' : ''}">
+        <div class="next-step-item-day">${dateStr}（契約後 ${item.day}日目）${item.host ? ' ／ ご対応事項' : ' ／ 弊社対応'}</div>
+        <div class="next-step-item-title">${item.label}</div>
+      </div>`;
+    });
+    list.innerHTML = html;
+  }
+  
+  // 日付ユーティリティ
+  function formatDateLocal(date) {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  }
+  function formatDateJP(date) {
+    const y = date.getFullYear();
+    const m = date.getMonth() + 1;
+    const d = date.getDate();
+    const w = ['日','月','火','水','木','金','土'][date.getDay()];
+    return `${y}年${m}月${d}日（${w}）`;
+  }
+  function formatDateICS(date) {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}${m}${d}`;
+  }
+  function addDays(date, days) {
+    const result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
+  }
+  
+  // 次のステップをプレーンテキストに変換
+  function buildNextStepsPlainText(payload, futureSteps) {
+    const contractDateInput = document.getElementById('contractDateForCal');
+    const baseDate = contractDateInput?.value ? new Date(contractDateInput.value + 'T00:00:00') : new Date();
+    
+    let text = '【次のステップ - ご契約後の進行スケジュール】\n\n';
+    text += `ご契約日：${formatDateJP(baseDate)}\n\n`;
+    text += 'ご契約からの流れに沿って、次に行っていただく内容のご案内です。\n\n';
+    
+    futureSteps.forEach(item => {
+      const itemDate = addDays(baseDate, item.day);
+      const role = item.host ? '【ご対応事項】' : '【弊社対応】';
+      text += `■ ${formatDateJP(itemDate)}（契約後 ${item.day}日目）  ${role}\n`;
+      text += `   ${item.label}\n\n`;
+    });
+    
+    text += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+    text += '※ スケジュールについて\n';
+    text += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+    text += '上記はあくまで標準的なスケジュールの目安であり、\n';
+    text += 'ご契約の始期や各工程の進捗状況により前後する場合がございます。\n\n';
+    text += 'ご対応事項の進行が予定より遅れた場合、その分だけ納品スケジュールも\n';
+    text += '後ろ倒しになる可能性がございます。あらかじめご了承くださいませ。\n\n';
+    
+    text += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+    text += 'ご不明な点がございましたら、お気軽にお問い合わせください。\n';
+    text += '株式会社BizPato カスタマーサポート\n';
+    text += 'customer@bizpato.com\n';
+    text += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+    
+    return text;
+  }
+  
+  // .ics ファイル生成（ホスト対応事項のみ）
+  function buildICSContent(payload, futureSteps) {
+    const contractDateInput = document.getElementById('contractDateForCal');
+    const baseDate = contractDateInput?.value ? new Date(contractDateInput.value + 'T00:00:00') : new Date();
+    const now = new Date();
+    const dtstamp = now.toISOString().replace(/[-:]/g, '').replace(/\.\d+/, '');
+    
+    const lines = [];
+    lines.push('BEGIN:VCALENDAR');
+    lines.push('VERSION:2.0');
+    lines.push('PRODID:-//BizPato//Hearing Form Schedule//JP');
+    lines.push('CALSCALE:GREGORIAN');
+    lines.push('METHOD:PUBLISH');
+    
+    // ホスト対応事項のみイベント化
+    const hostSteps = futureSteps.filter(s => s.host);
+    hostSteps.forEach((item, idx) => {
+      const itemDate = addDays(baseDate, item.day);
+      const dateStr = formatDateICS(itemDate);
+      const nextDate = addDays(itemDate, 1);
+      const nextDateStr = formatDateICS(nextDate);
+      
+      const uid = `bizpato-${formatDateICS(baseDate)}-step${idx}-${item.day}@bizpato.com`;
+      const summary = `【BizPato】${item.label}`;
+      const description = [
+        `ご対応事項：${item.label}`,
+        ``,
+        `契約日：${formatDateJP(baseDate)}`,
+        `本予定日：${formatDateJP(itemDate)}（契約後${item.day}日目）`,
+        ``,
+        `※ 上記はあくまで標準的なスケジュールの目安です。`,
+        `ご対応事項の進行が予定より遅れた場合、その分だけ納品も`,
+        `後ろ倒しになる可能性がございます。`,
+        ``,
+        `お問い合わせ: customer@bizpato.com`,
+        `株式会社BizPato（民泊管理バンク）`
+      ].join('\\n');
+      
+      lines.push('BEGIN:VEVENT');
+      lines.push(`UID:${uid}`);
+      lines.push(`DTSTAMP:${dtstamp}`);
+      lines.push(`DTSTART;VALUE=DATE:${dateStr}`);
+      lines.push(`DTEND;VALUE=DATE:${nextDateStr}`);
+      lines.push(`SUMMARY:${summary}`);
+      lines.push(`DESCRIPTION:${description}`);
+      // 1日前にリマインダー
+      lines.push('BEGIN:VALARM');
+      lines.push('ACTION:DISPLAY');
+      lines.push('TRIGGER:-P1D');
+      lines.push(`DESCRIPTION:${summary}`);
+      lines.push('END:VALARM');
+      lines.push('END:VEVENT');
+    });
+    
+    lines.push('END:VCALENDAR');
+    return lines.join('\r\n');
+  }
+  
+  // .ics ダウンロード
+  function downloadICS(payload, futureSteps) {
+    const ics = buildICSContent(payload, futureSteps);
+    const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'bizpato_schedule.ics';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+  
+  // コピー・メール送信・カレンダーボタンのイベント設定
+  function setupNextStepsActions(payload, futureSteps) {
+    // コピーボタン
+    const copyBtn = document.getElementById('copyNextStepsBtn');
+    if (copyBtn) {
+      const newCopyBtn = copyBtn.cloneNode(true);
+      copyBtn.parentNode.replaceChild(newCopyBtn, copyBtn);
+      newCopyBtn.addEventListener('click', () => {
+        const text = buildNextStepsPlainText(payload, futureSteps);
+        navigator.clipboard.writeText(text).then(() => {
+          const originalText = newCopyBtn.textContent;
+          newCopyBtn.textContent = '✓ コピーしました';
+          newCopyBtn.classList.add('copied');
+          setTimeout(() => {
+            newCopyBtn.textContent = originalText;
+            newCopyBtn.classList.remove('copied');
+          }, 2000);
+        }).catch(() => {
+          alert('コピーに失敗しました。お手数ですが、内容を手動でコピーしてください。');
+        });
+      });
+    }
+    
+    // メール送信ボタン
+    const emailBtn = document.getElementById('emailNextStepsBtn');
+    if (emailBtn) {
+      const newEmailBtn = emailBtn.cloneNode(true);
+      emailBtn.parentNode.replaceChild(newEmailBtn, emailBtn);
+      newEmailBtn.addEventListener('click', () => {
+        const subject = '【BizPato】ご契約後の進行スケジュール - 次のステップ';
+        const body = buildNextStepsPlainText(payload, futureSteps);
+        const email = payload.contractor.contactEmail || '';
+        const mailtoUrl = `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        window.location.href = mailtoUrl;
+      });
+    }
+    
+    // カレンダーボタン
+    const calBtn = document.getElementById('calendarBtn');
+    if (calBtn) {
+      const newCalBtn = calBtn.cloneNode(true);
+      calBtn.parentNode.replaceChild(newCalBtn, calBtn);
+      newCalBtn.addEventListener('click', () => {
+        downloadICS(payload, futureSteps);
+        const originalText = newCalBtn.textContent;
+        newCalBtn.textContent = '✓ ダウンロードしました';
+        newCalBtn.classList.add('copied');
+        setTimeout(() => {
+          newCalBtn.textContent = originalText;
+          newCalBtn.classList.remove('copied');
+        }, 2500);
+      });
+    }
+  }
+  
+  // ===========================
   // フォーム送信
   // ===========================
   document.getElementById('hearingForm').addEventListener('submit', async e => {
@@ -3012,6 +3798,9 @@ STEP4: 施錠は...（鍵に合わせて記載してください）`
       // ホストタスクの生成・表示
       const hostTasks = buildHostTasks(payload);
       renderHostTasks(hostTasks);
+      
+      // 次のステップを表示
+      renderNextSteps(payload);
       
       // 完了画面表示
       document.getElementById('hearingForm').style.display = 'none';
