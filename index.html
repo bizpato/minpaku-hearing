@@ -1053,43 +1053,6 @@
                 </div>
               </div>
         
-        <div class="field" data-field="remotelock" id="remotelockField" style="display:none;">
-                <label class="field-label">RemoteLOCKの契約状況<span class="required">必須</span></label>
-                <p class="field-desc">RemoteLOCKを利用する物件があるため、ご契約状況をお選びください。</p>
-                <div class="radio-group" id="remotelockGroup">
-                  <label><input type="radio" name="remotelock" value="planned"> 未契約・これから契約予定</label>
-                  <label><input type="radio" name="remotelock" value="contracted"> 契約済み</label>
-                </div>
-                <div class="field-error">RemoteLOCKの契約状況をお選びください</div>
-                <div class="conditional" id="remotelockPlannedDateWrap">
-                  <label class="field-label">RemoteLOCK契約予定日<span class="optional">任意</span></label>
-                  <p class="field-desc">いつ頃RemoteLOCKをご契約予定かをご記入ください。</p>
-                  <input type="date" name="remotelockPlannedDate" id="remotelockPlannedDate">
-                </div>
-                <div class="conditional" id="remotelockAccountWrap">
-                  <label class="field-label">RemoteLOCKアカウント情報<span class="required">必須</span></label>
-                  <p class="field-desc">システム連携に必要なRemoteLOCKのログインIDとパスワードをご記入ください。複数物件で同じアカウントを利用する場合は1回入力すればOKです。</p>
-                  <div class="account-pair">
-                    <div class="account-field">
-                      <label class="field-label-sub">ログインID</label>
-                      <input type="text" name="remotelockLoginId" id="remotelockLoginId">
-                    </div>
-                    <div class="account-field">
-                      <label class="field-label-sub">パスワード</label>
-                      <input type="text" name="remotelockPassword" id="remotelockPassword">
-                    </div>
-                  </div>
-                  <div class="field-error">ログインIDとパスワードをご入力ください</div>
-                </div>
-              </div>
-        
-        <div class="field" data-field="sesameAccount" id="sesameAccountField" style="display:none;">
-                <label class="field-label">SESAMEアカウント情報<span class="required">必須</span></label>
-                <p class="field-desc">SESAME 5 / SESAME 5 Pro をご利用の物件があるため、CANDY HOUSE社の管理画面（<a href="https://biz.candyhouse.co/" target="_blank" rel="noopener">https://biz.candyhouse.co/</a>）にログインできるアカウント情報をご記入ください。弊社にてシステム連携用の情報（APIキー・デバイスUUID等）を取得いたします。</p>
-                <textarea name="sesameAccount" id="sesameAccount" placeholder="例：&#10;ログインID（メールアドレス）: ○○○○&#10;パスワード: ○○○○"></textarea>
-                <div class="field-error">SESAMEアカウント情報をご入力ください</div>
-              </div>
-        
       </div>
       
       <!-- ── サブセクション3: その他 ── -->
@@ -1142,10 +1105,65 @@
     </section>
     
     <!-- =========================
-         セクション4: サブアカウント発行情報
+         セクション4: 鍵関連の共通設定
+         （物件で RemoteLOCK / SESAME 5系 を選択した場合のみ表示）
+         ========================= -->
+    <section class="form-section" id="keyAccountSection" style="display:none;">
+      <h2>④ 鍵関連の共通アカウント情報</h2>
+      <p class="section-desc">物件情報でRemoteLOCKまたはSESAMEを選択された場合、システム連携に必要なアカウント情報をご記入ください。<br>複数物件で同じアカウントをご利用の場合は、ここで1回ご入力いただければOKです。</p>
+      
+      <div class="field" data-field="remotelock" id="remotelockField" style="display:none;">
+        <label class="field-label">RemoteLOCKの契約状況<span class="required">必須</span></label>
+        <p class="field-desc">RemoteLOCKを利用する物件があるため、ご契約状況をお選びください。</p>
+        <div class="radio-group" id="remotelockGroup">
+          <label><input type="radio" name="remotelock" value="planned"> 未契約・これから契約予定</label>
+          <label><input type="radio" name="remotelock" value="contracted"> 契約済み</label>
+        </div>
+        <div class="field-error">RemoteLOCKの契約状況をお選びください</div>
+        <div class="conditional" id="remotelockPlannedDateWrap">
+          <label class="field-label">RemoteLOCK契約予定日<span class="optional">任意</span></label>
+          <p class="field-desc">いつ頃RemoteLOCKをご契約予定かをご記入ください。</p>
+          <input type="date" name="remotelockPlannedDate" id="remotelockPlannedDate">
+        </div>
+        <div class="conditional" id="remotelockAccountWrap">
+          <label class="field-label">RemoteLOCKアカウント情報<span class="required">必須</span></label>
+          <p class="field-desc">システム連携に必要なRemoteLOCKのログインIDとパスワードをご記入ください。</p>
+          <div class="account-pair">
+            <div class="account-field">
+              <label class="field-label-sub">ログインID</label>
+              <input type="text" name="remotelockLoginId" id="remotelockLoginId">
+            </div>
+            <div class="account-field">
+              <label class="field-label-sub">パスワード</label>
+              <input type="text" name="remotelockPassword" id="remotelockPassword">
+            </div>
+          </div>
+          <div class="field-error">ログインIDとパスワードをご入力ください</div>
+        </div>
+      </div>
+      
+      <div class="field" data-field="sesameAccount" id="sesameAccountField" style="display:none;">
+        <label class="field-label">SESAMEアカウント情報<span class="required">必須</span></label>
+        <p class="field-desc">SESAME 5 / SESAME 5 Pro をご利用の物件があるため、CANDY HOUSE社の管理画面（<a href="https://biz.candyhouse.co/" target="_blank" rel="noopener">https://biz.candyhouse.co/</a>）にログインできるアカウント情報をご記入ください。弊社にてシステム連携用の情報（APIキー・デバイスUUID等）を取得いたします。</p>
+        <div class="account-pair">
+          <div class="account-field">
+            <label class="field-label-sub">ログインID（メールアドレス）</label>
+            <input type="text" name="sesameLoginId" id="sesameLoginId">
+          </div>
+          <div class="account-field">
+            <label class="field-label-sub">パスワード</label>
+            <input type="text" name="sesamePassword" id="sesamePassword">
+          </div>
+        </div>
+        <div class="field-error">ログインIDとパスワードをご入力ください</div>
+      </div>
+    </section>
+    
+    <!-- =========================
+         セクション5: サブアカウント発行情報
          ========================= -->
     <section class="form-section">
-      <h2>④ サブアカウント発行情報</h2>
+      <h2>⑤ サブアカウント発行情報</h2>
       <p class="section-desc">チェックインシステムは弊社アカウントにて作成し、ホスト様用のサブアカウントを発行することで管理権限を付与いたします。下記にご希望のサブアカウント情報をご記入ください。</p>
       
       <div class="security-note">
@@ -1949,8 +1967,15 @@
     // SESAMEアカウント情報フィールドの表示制御
     const sesameAccountField = document.getElementById('sesameAccountField');
     sesameAccountField.style.display = hasSesameProperty ? '' : 'none';
+    if (!hasSesameProperty) {
+      // 値をクリア
+      const sesameLoginInput = document.getElementById('sesameLoginId');
+      const sesamePwdInput = document.getElementById('sesamePassword');
+      if (sesameLoginInput) sesameLoginInput.value = '';
+      if (sesamePwdInput) sesamePwdInput.value = '';
+    }
     
-    // いずれかの物件で「RemoteLOCK」を選んだ場合、共通設定のRemoteLOCK「連携しない」を非表示
+    // いずれかの物件で「RemoteLOCK」を選んだか判定
     let hasRemotelockProperty = false;
     document.querySelectorAll('.property-block.show').forEach((block, idx) => {
       const n = idx + 1;
@@ -1976,6 +2001,13 @@
         document.getElementById('remotelockPlannedDateWrap')?.classList.remove('show');
         document.getElementById('remotelockAccountWrap')?.classList.remove('show');
       }
+    }
+    
+    // 鍵関連の共通設定セクション全体の表示制御
+    // RemoteLOCK or SESAME のいずれかを選んだら表示
+    const keyAccountSection = document.getElementById('keyAccountSection');
+    if (keyAccountSection) {
+      keyAccountSection.style.display = (hasRemotelockProperty || hasSesameProperty) ? '' : 'none';
     }
     
     // 物件ごとの「暗証番号の通知方法」と「暗証番号」欄の表示制御
@@ -2589,10 +2621,11 @@ STEP4: 施錠は...（鍵に合わせて記載してください）`
       }
     }
     
-    // SESAME 5系の物件がある場合、SESAMEアカウント情報も必須
+    // SESAME 5系の物件がある場合、SESAMEアカウント情報（ID/パスワード）も必須
     if (hasSesameProperty) {
-      const sesameAccountInput = document.getElementById('sesameAccount');
-      if (!sesameAccountInput.value.trim()) {
+      const loginId = document.getElementById('sesameLoginId').value.trim();
+      const password = document.getElementById('sesamePassword').value.trim();
+      if (!loginId || !password) {
         document.querySelector('[data-field="sesameAccount"]').classList.add('has-error');
         valid = false;
       }
@@ -2646,7 +2679,11 @@ STEP4: 施錠は...（鍵に合わせて記載してください）`
       remotelockAccount: (get('remotelockLoginId') || get('remotelockPassword'))
         ? `ログインID: ${get('remotelockLoginId')}\nパスワード: ${get('remotelockPassword')}`
         : '',
-      sesameAccount: get('sesameAccount'),
+      sesameLoginId: get('sesameLoginId'),
+      sesamePassword: get('sesamePassword'),
+      sesameAccount: (get('sesameLoginId') || get('sesamePassword'))
+        ? `ログインID: ${get('sesameLoginId')}\nパスワード: ${get('sesamePassword')}`
+        : '',
       messageTiming: messageTimings,
       messageTimingLabel: messageTimings.map(v => LABEL_MAP.messageTiming[v]).join('、')
     };
