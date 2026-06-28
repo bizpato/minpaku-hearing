@@ -506,6 +506,7 @@
   .schedule-info-body {
     padding: 18px;
   }
+  /* タブ */
   .schedule-style-tabs {
     display: flex;
     gap: 4px;
@@ -513,7 +514,7 @@
     border-bottom: 1px solid #e0e0e0;
   }
   .schedule-style-tab {
-    padding: 8px 16px;
+    padding: 10px 18px;
     cursor: pointer;
     border: none;
     background: none;
@@ -537,51 +538,27 @@
   .schedule-style-content.active {
     display: block;
   }
-  /* シンプル版（チェックリスト形式） */
-  .schedule-simple {
-    margin: 0;
-  }
-  .schedule-simple-group {
-    margin-bottom: 16px;
-  }
-  .schedule-simple-group:last-child {
-    margin-bottom: 0;
-  }
-  .schedule-simple-group-title {
-    font-size: 14px;
-    font-weight: 600;
-    color: #2c5aa0;
-    margin-bottom: 8px;
-    padding-bottom: 4px;
-    border-bottom: 1px solid #e0e7f0;
-  }
-  .schedule-simple ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  .schedule-simple li {
-    padding: 6px 0 6px 24px;
-    position: relative;
-    font-size: 13px;
-    line-height: 1.6;
-  }
-  .schedule-simple li::before {
-    content: '□';
-    position: absolute;
-    left: 0;
-    color: #2c5aa0;
-    font-size: 14px;
-  }
-  .schedule-simple li.highlight {
-    background: #fff8e0;
-    padding-left: 24px;
-    padding-right: 8px;
-    border-radius: 4px;
-  }
   /* 詳細版（タイムライン形式） */
   .schedule-detailed {
     margin: 0;
+  }
+  .schedule-section {
+    margin-bottom: 28px;
+    padding: 16px;
+    background: #fafbfd;
+    border-radius: 6px;
+    border: 1px solid #e0e7f0;
+  }
+  .schedule-section:last-child {
+    margin-bottom: 0;
+  }
+  .schedule-section-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #2c5aa0;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #d0e0f0;
   }
   .schedule-timeline {
     border-left: 2px solid #d0d7e2;
@@ -972,22 +949,22 @@
       <summary>📋 ご契約後の進行スケジュールとご対応事項を確認する</summary>
       <div class="schedule-info-body">
         
-        <!-- 表示スタイルタブ -->
+        <!-- タブ：Beds24連携なし / あり -->
         <div class="schedule-style-tabs">
-          <button type="button" class="schedule-style-tab active" data-style="simple">シンプル表示</button>
-          <button type="button" class="schedule-style-tab" data-style="detailed">詳細スケジュール</button>
+          <button type="button" class="schedule-style-tab active" data-style="base">Beds24連携なし</button>
+          <button type="button" class="schedule-style-tab" data-style="withBeds24">Beds24連携あり</button>
         </div>
         
-        <!-- シンプル版 -->
-        <div class="schedule-style-content active" data-style-content="simple">
-          <div class="schedule-simple" id="scheduleSimple">
+        <!-- 連携なし版 -->
+        <div class="schedule-style-content active" data-style-content="base">
+          <div class="schedule-timeline" id="scheduleBase">
             <!-- JSで動的生成 -->
           </div>
         </div>
         
-        <!-- 詳細版 -->
-        <div class="schedule-style-content" data-style-content="detailed">
-          <div class="schedule-detailed" id="scheduleDetailed">
+        <!-- 連携あり版 -->
+        <div class="schedule-style-content" data-style-content="withBeds24">
+          <div class="schedule-timeline" id="scheduleWithBeds24">
             <!-- JSで動的生成 -->
           </div>
         </div>
@@ -996,9 +973,8 @@
           <strong>※ スケジュールについて</strong><br>
           上記はあくまで<strong>標準的なスケジュールの目安</strong>であり、ご契約の始期や各工程の進捗状況により前後する場合がございます。<br>
           <strong style="color:#d23838;">ご対応事項の進行が予定より遅れた場合、その分だけ納品スケジュールも後ろ倒しになる可能性がございます。</strong>あらかじめご了承くださいませ。<br><br>
-          <strong>※ オプション契約について</strong><br>
-          契約オプション（特に Beds24連携OP）のご契約有無により、納品までの期間が変動いたします。<br>
-          <strong style="color:#2c5aa0;">「① ご契約者様情報」で契約オプションをお選びいただくと、スケジュールが自動的に更新されます。</strong>
+          <strong>※ 契約オプションについて</strong><br>
+          契約オプション（特に Beds24連携OP）のご契約有無により、納品までの期間が変動いたします。
         </div>
       </div>
     </details>
@@ -1291,7 +1267,7 @@
                   </div>
                   <div class="field-error">ログインIDとパスワードをご入力ください</div>
                   <div class="info-note" id="beds24EmailNote">
-                    ℹ️ チェックインシステムとの連携設定のため、弊社がお客様のBeds24アカウントにログインする必要がございます。<br>
+                    ℹ️ チェックインシステムとの連携設定のため、弊社がホスト様のBeds24アカウントにログインする必要がございます。<br>
                     お手数ですが、Beds24の<strong>ログイン認証用メールアドレスに <a href="mailto:customer@bizpato.com">customer@bizpato.com</a> を追加</strong>してください。<br>
                     追加方法：<a href="https://co-reception.com/support-ticket/" target="_blank" rel="noopener">Beds24サポート</a>から「ログイン認証用メールアドレスに customer@bizpato.com を追加してください」とお伝えいただくと対応してもらえます。
                   </div>
@@ -2480,14 +2456,14 @@
       label: '基本プラン（標準）',
       timeline: [
         { day: 0, host: false, label: '契約申し込み' },
-        { day: 4, host: false, label: '契約締結 → 当社にてCS連携開始' },
+        { day: 4, host: false, label: '契約締結' },
         { day: 7, host: false, label: '請求書発行・ヒアリングフォーム送付' },
         { day: 14, host: true, label: 'ご入金（請求書発行日から7日以内）' },
         { day: 14, host: true, label: '本ヒアリングフォームのご提出' },
         { day: 14, host: true, label: 'Wi-Fi環境のご準備' },
         { day: 14, host: true, label: 'ご入金完了の連絡（customer@bizpato.com まで）' },
         { day: 15, host: false, label: '入金確認後、チェックインシステム初期設定' },
-        { day: 21, host: false, label: '一次納品・QRコードデータ納品' },
+        { day: 21, host: false, label: 'QRコードデータ納品' },
         { day: 24, host: true, label: '届出番号の取得' },
         { day: 24, host: true, label: 'QRコードの現地設置（運用開始）' }
       ],
@@ -2515,7 +2491,7 @@
       label: '基本プラン + Beds24連携あり',
       timeline: [
         { day: 0, host: false, label: '契約申し込み' },
-        { day: 4, host: false, label: '契約締結 → 当社にてCS連携開始' },
+        { day: 4, host: false, label: '契約締結' },
         { day: 7, host: false, label: '請求書発行・ヒアリングフォーム送付' },
         { day: 14, host: true, label: 'ご入金（請求書発行日から7日以内）' },
         { day: 14, host: true, label: 'ご入金完了の連絡（customer@bizpato.com まで）' },
@@ -2526,7 +2502,7 @@
         { day: 35, host: true, label: '本ヒアリングフォームのご提出' },
         { day: 35, host: true, label: 'Wi-Fi環境のご準備・鍵設置完了' },
         { day: 36, host: false, label: 'SmartInn↔Beds24連携・SmartInn↔RemoteLOCK連携設定' },
-        { day: 42, host: false, label: '一次納品・QRコードデータ納品' },
+        { day: 42, host: false, label: 'QRコードデータ納品' },
         { day: 45, host: true, label: 'QRコードの現地設置（運用開始）' }
       ],
       tasks: [
@@ -2570,58 +2546,17 @@
     }
   };
   
-  // 現在のスケジュールタイプを判定
-  function getCurrentScheduleType() {
-    // Beds24連携OP契約 or 物件でRemoteLOCK選択時は withBeds24
-    const hasBeds24Op = document.querySelector('input[name="contractedOptions"][value="beds24"]:checked');
-    // 物件でRemoteLOCKを選択している場合も対象（Beds24連携と並列）
-    let hasRemotelockProperty = false;
-    document.querySelectorAll('.property-block.show').forEach((block, idx) => {
-      const n = idx + 1;
-      if (block.querySelector(`input[name="property_${n}_keyType"][value="remotelock"]:checked`)) {
-        hasRemotelockProperty = true;
-      }
-    });
-    return (hasBeds24Op || hasRemotelockProperty) ? 'withBeds24' : 'base';
-  }
-  
-  // シンプル版のレンダリング
-  function renderScheduleSimple() {
-    const type = getCurrentScheduleType();
+  // タイムライン描画（指定タイプを指定コンテナに）
+  function renderScheduleTimeline(type, containerId) {
     const data = SCHEDULE_DATA[type];
-    const container = document.getElementById('scheduleSimple');
-    if (!container) return;
+    const container = document.getElementById(containerId);
+    if (!container || !data) return;
     
     let html = `<p style="font-size:13px;margin:0 0 14px;color:#555;">
-      <strong style="color:#2c5aa0;">${data.label}</strong>でのご対応事項です。
-      ご契約からの日数（暦日）で表示しています。
-    </p>`;
-    
-    data.tasks.forEach(group => {
-      html += `<div class="schedule-simple-group">
-        <div class="schedule-simple-group-title">${group.deadline}</div>
-        <ul>`;
-      group.items.forEach(item => {
-        html += `<li>${item}</li>`;
-      });
-      html += `</ul></div>`;
-    });
-    container.innerHTML = html;
-  }
-  
-  // 詳細版のレンダリング
-  function renderScheduleDetailed() {
-    const type = getCurrentScheduleType();
-    const data = SCHEDULE_DATA[type];
-    const container = document.getElementById('scheduleDetailed');
-    if (!container) return;
-    
-    let html = `<p style="font-size:13px;margin:0 0 14px;color:#555;">
-      <strong style="color:#2c5aa0;">${data.label}</strong>の標準スケジュールです。
+      <strong style="color:#2c5aa0;">${data.label}</strong>のスケジュールです。
       <span class="schedule-host-badge">ホスト</span>がついた項目がご対応事項です。
     </p>`;
     
-    html += `<div class="schedule-timeline">`;
     data.timeline.forEach(item => {
       html += `<div class="schedule-timeline-item${item.host ? ' host' : ''}">
         <span class="schedule-day">契約後 ${item.day}日目</span>
@@ -2629,40 +2564,30 @@
         ${item.label}
       </div>`;
     });
-    html += `</div>`;
     container.innerHTML = html;
   }
   
-  // 両方レンダリング
-  function renderAllSchedules() {
-    renderScheduleSimple();
-    renderScheduleDetailed();
+  // 全タイムライン描画
+  function renderScheduleDetailed() {
+    renderScheduleTimeline('base', 'scheduleBase');
+    renderScheduleTimeline('withBeds24', 'scheduleWithBeds24');
   }
   
-  // タブ切替
+  // タブ切替動作
   document.querySelectorAll('.schedule-style-tab').forEach(tab => {
     tab.addEventListener('click', () => {
       const style = tab.dataset.style;
-      document.querySelectorAll('.schedule-style-tab').forEach(t => t.classList.toggle('active', t === tab));
-      document.querySelectorAll('.schedule-style-content').forEach(c => {
-        c.classList.toggle('active', c.dataset.styleContent === style);
-      });
+      document.querySelectorAll('.schedule-style-tab').forEach(t => 
+        t.classList.toggle('active', t === tab)
+      );
+      document.querySelectorAll('.schedule-style-content').forEach(c => 
+        c.classList.toggle('active', c.dataset.styleContent === style)
+      );
     });
   });
   
-  // 契約オプション変更時に再描画
-  document.querySelectorAll('input[name="contractedOptions"]').forEach(el => {
-    el.addEventListener('change', () => setTimeout(renderAllSchedules, 50));
-  });
-  // 鍵タイプ変更時にも再描画（物件のRemoteLOCK選択で切り替わる）
-  document.addEventListener('change', (e) => {
-    if (e.target.matches('[data-key-radio]')) {
-      setTimeout(renderAllSchedules, 100);
-    }
-  });
-  
   // 初期描画
-  renderAllSchedules();
+  renderScheduleDetailed();
   
   // ===========================
   // 「同上」チェックボックス処理
@@ -3274,8 +3199,8 @@ STEP4: 施錠は...（鍵に合わせて記載してください）`
     if (payload.commonSettings.beds24 === 'contracted' && !hasBeds24Op) {
       tasks.push({
         title: '📧 Beds24認証用メールアドレスの追加',
-        body: '弊社がチェックインシステムと連携するため、お客様のBeds24アカウントにログインさせていただきます。Beds24の<strong>ログイン認証用メールアドレスに <a href="mailto:customer@bizpato.com">customer@bizpato.com</a> を追加</strong>してください。<br>追加方法：<a href="https://co-reception.com/support-ticket/" target="_blank" rel="noopener">Beds24サポート</a>から「ログイン認証用メールアドレスに customer@bizpato.com を追加してください」とお伝えいただくと対応してもらえます。',
-        plainBody: '弊社がチェックインシステムと連携するため、お客様のBeds24アカウントにログインさせていただきます。Beds24のログイン認証用メールアドレスに customer@bizpato.com を追加してください。\n追加方法：Beds24サポート (https://co-reception.com/support-ticket/) から「ログイン認証用メールアドレスに customer@bizpato.com を追加してください」とお伝えいただくと対応してもらえます。'
+        body: '弊社がチェックインシステムと連携するため、ホスト様のBeds24アカウントにログインさせていただきます。Beds24の<strong>ログイン認証用メールアドレスに <a href="mailto:customer@bizpato.com">customer@bizpato.com</a> を追加</strong>してください。<br>追加方法：<a href="https://co-reception.com/support-ticket/" target="_blank" rel="noopener">Beds24サポート</a>から「ログイン認証用メールアドレスに customer@bizpato.com を追加してください」とお伝えいただくと対応してもらえます。',
+        plainBody: '弊社がチェックインシステムと連携するため、ホスト様のBeds24アカウントにログインさせていただきます。Beds24のログイン認証用メールアドレスに customer@bizpato.com を追加してください。\n追加方法：Beds24サポート (https://co-reception.com/support-ticket/) から「ログイン認証用メールアドレスに customer@bizpato.com を追加してください」とお伝えいただくと対応してもらえます。'
       });
     }
     
