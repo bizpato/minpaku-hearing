@@ -720,6 +720,36 @@
     color: #2c5aa0;
   }
   
+  /* ===== Beds24登録 / OTA連携 ===== */
+  .signup-field {
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px dashed #e0e7f0;
+  }
+  .signup-field:last-of-type {
+    margin-bottom: 18px;
+    border-bottom: none;
+  }
+  .field-desc-sub {
+    margin: 2px 0 6px;
+    font-size: 12px;
+    color: #666;
+    line-height: 1.5;
+  }
+  .ota-detail {
+    margin-top: 20px;
+    padding: 16px;
+    background: #fafbfd;
+    border-radius: 6px;
+    border-left: 3px solid #2c5aa0;
+  }
+  .ota-detail-title {
+    margin: 0 0 10px;
+    font-size: 14px;
+    color: #2c5aa0;
+    font-weight: 700;
+  }
+  
   /* ===== 同上チェックボックス ===== */
   .same-as-check {
     display: inline-flex;
@@ -1332,7 +1362,7 @@
       <div class="subsection">
         <h3 class="subsection-title" data-num="2">システム連携</h3>
         
-        <div class="field" data-field="beds24">
+        <div class="field" data-field="beds24" id="beds24Field">
                 <label class="field-label">Beds24との連携<span class="required">必須</span></label>
                 <p class="field-desc">予約管理システム「Beds24」との連携状況をお選びください。</p>
                 <div class="radio-group" id="beds24Group">
@@ -1367,6 +1397,130 @@
                   </div>
                 </div>
               </div>
+        
+        <!-- Beds24連携OP契約時のセクション（Beds24アカウント登録情報） -->
+        <div class="field" data-field="beds24Signup" id="beds24SignupField" style="display:none;">
+          <label class="field-label">Beds24アカウント登録情報<span class="required">必須</span></label>
+          <p class="field-desc">「Beds24連携OP」をご契約いただいているため、弊社にて代行でBeds24アカウントを作成いたします。Beds24への登録に必要な以下の情報をご記入ください。</p>
+          
+          <div class="signup-field">
+            <label class="field-label-sub">希望する登録メールアドレス</label>
+            <label class="same-as-check"><input type="checkbox" id="beds24SignupEmailSameAs" data-same-as="contactEmail"> 担当者メールアドレスと同じ</label>
+            <input type="email" name="beds24SignupEmail" id="beds24SignupEmail">
+          </div>
+          
+          <div class="signup-field">
+            <label class="field-label-sub">希望するパスワード</label>
+            <p class="field-desc-sub">半角英数字8文字以上を推奨します。</p>
+            <input type="text" name="beds24SignupPassword" id="beds24SignupPassword" minlength="8">
+          </div>
+          
+          <div class="signup-field">
+            <label class="field-label-sub">Beds24の契約者名</label>
+            <label class="same-as-check"><input type="checkbox" id="beds24ContractorNameSameAs" data-same-as="contractorName"> 契約者名と同じ</label>
+            <input type="text" name="beds24ContractorName" id="beds24ContractorName">
+          </div>
+          
+          <div class="signup-field">
+            <label class="field-label-sub">Beds24登録時の担当者名</label>
+            <label class="same-as-check"><input type="checkbox" id="beds24ContactNameSameAs" data-same-as="contactName"> ご担当者様お名前と同じ</label>
+            <input type="text" name="beds24ContactName" id="beds24ContactName">
+          </div>
+          
+          <div class="signup-field">
+            <label class="field-label-sub">ホスト電話番号</label>
+            <p class="field-desc-sub">Beds24からの連絡時に使用されます。半角数字（ハイフンなし）でご入力ください。</p>
+            <input type="tel" name="beds24HostPhone" id="beds24HostPhone">
+          </div>
+          
+          <div class="signup-field">
+            <label class="field-label-sub">連絡先メールアドレス</label>
+            <label class="same-as-check"><input type="checkbox" id="beds24ContactEmailSameAs" data-same-as="contactEmail"> 担当者メールアドレスと同じ</label>
+            <input type="email" name="beds24ContactEmail" id="beds24ContactEmail">
+          </div>
+          
+          <div class="field-error">すべての項目をご入力ください</div>
+          
+          <div class="info-note">
+            ℹ️ ご入力いただいた情報をもとに、弊社にてBeds24アカウントを作成いたします。アカウント作成後、ログイン認証用メールアドレスに <a href="mailto:customer@bizpato.com">customer@bizpato.com</a> を自動的に追加いたします。
+          </div>
+        </div>
+        
+        <!-- 連携するOTA選択（Beds24連携OP契約時のみ表示） -->
+        <div class="field" data-field="otaList" id="otaListField" style="display:none;">
+          <label class="field-label">連携するOTA<span class="required">必須</span></label>
+          <p class="field-desc">Beds24と連携してリスティング管理するOTAをお選びください（複数選択可）。<br>※ Airbnb / Booking.com 以外のOTAについては、ホスト様にて連携対応をお願いいたします。</p>
+          
+          <div class="checkbox-group">
+            <label><input type="checkbox" name="otaList" value="airbnb" id="otaAirbnb"> Airbnb</label>
+            <label><input type="checkbox" name="otaList" value="booking" id="otaBooking"> Booking.com</label>
+          </div>
+          <div class="field-error">1つ以上ご選択ください</div>
+          
+          <!-- Airbnb詳細 -->
+          <div class="conditional ota-detail" id="airbnbDetailWrap">
+            <h4 class="ota-detail-title">📌 Airbnbリスティング作成状況</h4>
+            <div class="radio-group">
+              <label><input type="radio" name="airbnbListingStatus" value="created"> 作成済み</label>
+              <label><input type="radio" name="airbnbListingStatus" value="not_created"> 未作成</label>
+            </div>
+            <div class="field-error" data-airbnb-status-error>リスティング作成状況をお選びください</div>
+            
+            <div class="conditional" id="airbnbAccountWrap">
+              <label class="field-label-sub">Airbnbアカウント情報<span class="required">必須</span></label>
+              <p class="field-desc-sub">Beds24と連携するため、ログイン情報をご記入ください。</p>
+              <div class="account-pair">
+                <div class="account-field">
+                  <label class="field-label-sub">ログインID（メール）</label>
+                  <input type="text" name="airbnbLoginId" id="airbnbLoginId">
+                </div>
+                <div class="account-field">
+                  <label class="field-label-sub">パスワード</label>
+                  <input type="text" name="airbnbPassword" id="airbnbPassword">
+                </div>
+              </div>
+              <div class="field-error">ログインIDとパスワードをご入力ください</div>
+            </div>
+            
+            <div class="conditional" id="airbnbNotCreatedNote">
+              <div class="info-note">
+                ℹ️ Airbnbリスティングが未作成のため、本フォーム送信後 <a href="mailto:customer@bizpato.com">customer@bizpato.com</a> までご連絡くださいませ。弊社にてリスティング作成についてご案内いたします。
+              </div>
+            </div>
+          </div>
+          
+          <!-- Booking.com詳細 -->
+          <div class="conditional ota-detail" id="bookingDetailWrap">
+            <h4 class="ota-detail-title">📌 Booking.comリスティング作成状況</h4>
+            <div class="radio-group">
+              <label><input type="radio" name="bookingListingStatus" value="created"> 作成済み</label>
+              <label><input type="radio" name="bookingListingStatus" value="not_created"> 未作成</label>
+            </div>
+            <div class="field-error" data-booking-status-error>リスティング作成状況をお選びください</div>
+            
+            <div class="conditional" id="bookingAccountWrap">
+              <label class="field-label-sub">Booking.comアカウント情報<span class="required">必須</span></label>
+              <p class="field-desc-sub">Beds24と連携するため、ログイン情報をご記入ください。</p>
+              <div class="account-pair">
+                <div class="account-field">
+                  <label class="field-label-sub">ログインID（メール）</label>
+                  <input type="text" name="bookingLoginId" id="bookingLoginId">
+                </div>
+                <div class="account-field">
+                  <label class="field-label-sub">パスワード</label>
+                  <input type="text" name="bookingPassword" id="bookingPassword">
+                </div>
+              </div>
+              <div class="field-error">ログインIDとパスワードをご入力ください</div>
+            </div>
+            
+            <div class="conditional" id="bookingNotCreatedNote">
+              <div class="info-note">
+                ℹ️ Booking.comリスティング作成は、<strong>届出番号発行後に可能</strong>となります。届出番号取得後、<a href="mailto:customer@bizpato.com">customer@bizpato.com</a> までご連絡くださいませ。
+              </div>
+            </div>
+          </div>
+        </div>
         
       </div>
       
@@ -2152,6 +2306,56 @@
       }
     }
     
+    // Beds24連携OP契約時：既存のBeds24セクション(連携状況の質問)を非表示にして、
+    // 代わりにBeds24登録情報セクションとOTAセクションを表示
+    const beds24Field = document.getElementById('beds24Field');
+    const beds24SignupField = document.getElementById('beds24SignupField');
+    const otaListField = document.getElementById('otaListField');
+    if (hasBeds24Op) {
+      // 既存のbeds24セクションを非表示
+      if (beds24Field) beds24Field.style.display = 'none';
+      // 値は 'contracted' として自動設定（後方互換用、ペイロード等で利用）
+      const contractedRadio = document.querySelector('input[name="beds24"][value="contracted"]');
+      if (contractedRadio) contractedRadio.checked = true;
+      // 新セクションを表示
+      if (beds24SignupField) beds24SignupField.style.display = '';
+      if (otaListField) otaListField.style.display = '';
+    } else {
+      // OP未契約時は既存フローに戻す
+      if (beds24Field) beds24Field.style.display = '';
+      if (beds24SignupField) {
+        beds24SignupField.style.display = 'none';
+        // 値クリア
+        ['beds24SignupEmail', 'beds24SignupPassword', 'beds24ContractorName', 'beds24ContactName', 'beds24HostPhone', 'beds24ContactEmail'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.value = '';
+        });
+        // 同上チェックも外す
+        ['beds24SignupEmailSameAs', 'beds24ContractorNameSameAs', 'beds24ContactNameSameAs', 'beds24ContactEmailSameAs'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) {
+            el.checked = false;
+            const targetId = id.replace('SameAs', '');
+            const target = document.getElementById(targetId);
+            if (target) target.readOnly = false;
+          }
+        });
+      }
+      if (otaListField) {
+        otaListField.style.display = 'none';
+        // OTA関連値クリア
+        document.querySelectorAll('input[name="otaList"]').forEach(c => c.checked = false);
+        ['airbnbListingStatus', 'bookingListingStatus'].forEach(n => {
+          document.querySelectorAll(`input[name="${n}"]`).forEach(r => r.checked = false);
+        });
+        ['airbnbLoginId', 'airbnbPassword', 'bookingLoginId', 'bookingPassword'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.value = '';
+        });
+        document.querySelectorAll('.ota-detail').forEach(el => el.classList.remove('show'));
+      }
+    }
+    
     // Beds24アカウント情報の表示制御
     // Beds24連携OPを契約している場合は、アカウント情報の入力欄を非表示（弊社で作成）
     const beds24AccountWrap = document.getElementById('beds24AccountWrap');
@@ -2169,6 +2373,9 @@
       beds24AccountWrap.style.display = '';
       beds24AccountWrap.classList.toggle('show', !!beds24Contracted);
     }
+    
+    // OTA詳細セクションの表示制御
+    updateOtaDetails();
     
     // 屋外×リスク鍵警告の再評価（タブレット設置場所欄の表示変更に伴い）
     if (typeof updateKeyDependentFields === 'function') {
@@ -2242,6 +2449,74 @@
       const dateWrap = document.getElementById(`registrationDateWrap-${n}`);
       numberWrap.classList.toggle('show', value === 'issued');
       dateWrap.classList.toggle('show', value === 'planned');
+    }
+  });
+  
+  // ===========================
+  // OTA詳細セクションの表示制御
+  // ===========================
+  function updateOtaDetails() {
+    // Airbnb
+    const airbnbChecked = document.getElementById('otaAirbnb')?.checked;
+    const airbnbDetail = document.getElementById('airbnbDetailWrap');
+    if (airbnbDetail) {
+      airbnbDetail.classList.toggle('show', !!airbnbChecked);
+      if (!airbnbChecked) {
+        // チェック解除時：値クリア
+        document.querySelectorAll('input[name="airbnbListingStatus"]').forEach(r => r.checked = false);
+        const lid = document.getElementById('airbnbLoginId');
+        const pwd = document.getElementById('airbnbPassword');
+        if (lid) lid.value = '';
+        if (pwd) pwd.value = '';
+        document.getElementById('airbnbAccountWrap')?.classList.remove('show');
+        document.getElementById('airbnbNotCreatedNote')?.classList.remove('show');
+      }
+    }
+    // Airbnb 作成済み/未作成 切替
+    const airbnbStatus = document.querySelector('input[name="airbnbListingStatus"]:checked')?.value;
+    document.getElementById('airbnbAccountWrap')?.classList.toggle('show', airbnbStatus === 'created');
+    document.getElementById('airbnbNotCreatedNote')?.classList.toggle('show', airbnbStatus === 'not_created');
+    if (airbnbStatus !== 'created') {
+      // 作成済みでない時はアカウント情報クリア
+      const lid = document.getElementById('airbnbLoginId');
+      const pwd = document.getElementById('airbnbPassword');
+      if (lid) lid.value = '';
+      if (pwd) pwd.value = '';
+    }
+    
+    // Booking
+    const bookingChecked = document.getElementById('otaBooking')?.checked;
+    const bookingDetail = document.getElementById('bookingDetailWrap');
+    if (bookingDetail) {
+      bookingDetail.classList.toggle('show', !!bookingChecked);
+      if (!bookingChecked) {
+        document.querySelectorAll('input[name="bookingListingStatus"]').forEach(r => r.checked = false);
+        const lid = document.getElementById('bookingLoginId');
+        const pwd = document.getElementById('bookingPassword');
+        if (lid) lid.value = '';
+        if (pwd) pwd.value = '';
+        document.getElementById('bookingAccountWrap')?.classList.remove('show');
+        document.getElementById('bookingNotCreatedNote')?.classList.remove('show');
+      }
+    }
+    // Booking 作成済み/未作成 切替
+    const bookingStatus = document.querySelector('input[name="bookingListingStatus"]:checked')?.value;
+    document.getElementById('bookingAccountWrap')?.classList.toggle('show', bookingStatus === 'created');
+    document.getElementById('bookingNotCreatedNote')?.classList.toggle('show', bookingStatus === 'not_created');
+    if (bookingStatus !== 'created') {
+      const lid = document.getElementById('bookingLoginId');
+      const pwd = document.getElementById('bookingPassword');
+      if (lid) lid.value = '';
+      if (pwd) pwd.value = '';
+    }
+  }
+  
+  // OTA関連の変更イベント
+  document.addEventListener('change', (e) => {
+    if (e.target.matches('input[name="otaList"]') || 
+        e.target.matches('input[name="airbnbListingStatus"]') ||
+        e.target.matches('input[name="bookingListingStatus"]')) {
+      updateOtaDetails();
     }
   });
   
@@ -3023,6 +3298,63 @@ STEP4: 施錠は...（鍵に合わせて記載してください）`
         valid = false;
       }
     }
+    
+    // Beds24連携OP契約時：Beds24登録情報の必須チェック
+    if (hasBeds24Op) {
+      const signupFields = [
+        'beds24SignupEmail',
+        'beds24SignupPassword',
+        'beds24ContractorName',
+        'beds24ContactName',
+        'beds24HostPhone',
+        'beds24ContactEmail'
+      ];
+      let signupHasError = false;
+      signupFields.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el?.value.trim()) {
+          signupHasError = true;
+        }
+      });
+      // パスワード文字数チェック
+      const pwd = document.getElementById('beds24SignupPassword').value.trim();
+      if (pwd && pwd.length < 8) {
+        signupHasError = true;
+      }
+      if (signupHasError) {
+        document.querySelector('[data-field="beds24Signup"]').classList.add('has-error');
+        valid = false;
+      }
+      
+      // OTA選択必須
+      const otaChecked = document.querySelectorAll('input[name="otaList"]:checked');
+      if (otaChecked.length === 0) {
+        document.querySelector('[data-field="otaList"]').classList.add('has-error');
+        valid = false;
+      } else {
+        // 各OTAについて、作成状況の選択必須
+        otaChecked.forEach(ota => {
+          const otaValue = ota.value;
+          const statusName = otaValue === 'airbnb' ? 'airbnbListingStatus' : 'bookingListingStatus';
+          const status = document.querySelector(`input[name="${statusName}"]:checked`);
+          if (!status) {
+            const detailWrap = document.getElementById(`${otaValue}DetailWrap`);
+            if (detailWrap) detailWrap.classList.add('has-error');
+            valid = false;
+          } else if (status.value === 'created') {
+            // 作成済み時はアカウント情報必須
+            const lid = document.getElementById(`${otaValue}LoginId`).value.trim();
+            const pwd2 = document.getElementById(`${otaValue}Password`).value.trim();
+            if (!lid || !pwd2) {
+              const accountWrap = document.getElementById(`${otaValue}AccountWrap`);
+              if (accountWrap) accountWrap.classList.add('has-error');
+              valid = false;
+            }
+          }
+        });
+      }
+    }
+    
     if (document.querySelector('input[name="remotelock"]:checked')?.value === 'contracted') {
       const loginId = document.getElementById('remotelockLoginId').value.trim();
       const password = document.getElementById('remotelockPassword').value.trim();
@@ -3223,6 +3555,50 @@ STEP4: 施錠は...（鍵に合わせて記載してください）`
       beds24Account: (get('beds24LoginId') || get('beds24Password'))
         ? `ログインID: ${get('beds24LoginId')}\nパスワード: ${get('beds24Password')}`
         : '',
+      // Beds24連携OP契約時の登録情報
+      beds24Signup: {
+        email: get('beds24SignupEmail'),
+        password: get('beds24SignupPassword'),
+        contractorName: get('beds24ContractorName'),
+        contactName: get('beds24ContactName'),
+        hostPhone: get('beds24HostPhone'),
+        contactEmail: get('beds24ContactEmail')
+      },
+      beds24SignupText: (get('beds24SignupEmail') || get('beds24SignupPassword'))
+        ? [
+            `登録メール: ${get('beds24SignupEmail')}`,
+            `パスワード: ${get('beds24SignupPassword')}`,
+            `契約者名: ${get('beds24ContractorName')}`,
+            `担当者名: ${get('beds24ContactName')}`,
+            `ホスト電話番号: ${get('beds24HostPhone')}`,
+            `連絡先メール: ${get('beds24ContactEmail')}`
+          ].join('\n')
+        : '',
+      // 連携OTA
+      otaList: checks('otaList'),
+      otaListLabel: checks('otaList').map(v => v === 'airbnb' ? 'Airbnb' : v === 'booking' ? 'Booking.com' : v).join('、'),
+      otaDetails: {
+        airbnb: {
+          selected: checks('otaList').includes('airbnb'),
+          status: radio('airbnbListingStatus'),
+          statusLabel: radio('airbnbListingStatus') === 'created' ? '作成済み' : radio('airbnbListingStatus') === 'not_created' ? '未作成' : '',
+          loginId: get('airbnbLoginId'),
+          password: get('airbnbPassword'),
+          account: (get('airbnbLoginId') || get('airbnbPassword'))
+            ? `ログインID: ${get('airbnbLoginId')}\nパスワード: ${get('airbnbPassword')}`
+            : ''
+        },
+        booking: {
+          selected: checks('otaList').includes('booking'),
+          status: radio('bookingListingStatus'),
+          statusLabel: radio('bookingListingStatus') === 'created' ? '作成済み' : radio('bookingListingStatus') === 'not_created' ? '未作成' : '',
+          loginId: get('bookingLoginId'),
+          password: get('bookingPassword'),
+          account: (get('bookingLoginId') || get('bookingPassword'))
+            ? `ログインID: ${get('bookingLoginId')}\nパスワード: ${get('bookingPassword')}`
+            : ''
+        }
+      },
       remotelock: radio('remotelock'),
       remotelockLabel: LABEL_MAP.remotelock[radio('remotelock')] || '',
       remotelockPlannedDate: get('remotelockPlannedDate'),
@@ -3418,6 +3794,31 @@ STEP4: 施錠は...（鍵に合わせて記載してください）`
         body: `${names}は「ホスト個別通知」を選択されています。<strong>各予約ごとにホスト様から直接ゲスト様へ暗証番号をお伝え</strong>いただきますようお願いいたします。`,
         plainBody: `${names}は「ホスト個別通知」を選択されています。各予約ごとにホスト様から直接ゲスト様へ暗証番号をお伝えいただきますようお願いいたします。`
       });
+    }
+    
+    // 9. OTAリスティング未作成：customer@bizpato.com宛に連絡依頼
+    if (hasBeds24Op && payload.commonSettings.otaDetails) {
+      const airbnb = payload.commonSettings.otaDetails.airbnb;
+      const booking = payload.commonSettings.otaDetails.booking;
+      const notCreatedOTAs = [];
+      if (airbnb?.selected && airbnb.status === 'not_created') notCreatedOTAs.push('Airbnb');
+      if (booking?.selected && booking.status === 'not_created') notCreatedOTAs.push('Booking.com');
+      
+      if (notCreatedOTAs.length > 0) {
+        // Booking.comが含まれる場合は届出番号発行後の旨を追記
+        const includesBooking = notCreatedOTAs.includes('Booking.com');
+        let body = `<strong>${notCreatedOTAs.join('・')}</strong>のリスティングが未作成です。リスティング作成についてご相談させていただきますので、<a href="mailto:customer@bizpato.com">customer@bizpato.com</a> までご連絡くださいませ。`;
+        let plainBody = `${notCreatedOTAs.join('・')}のリスティングが未作成です。リスティング作成についてご相談させていただきますので、customer@bizpato.com までご連絡くださいませ。`;
+        if (includesBooking) {
+          body += `<br><br>※ <strong>Booking.comリスティング作成は届出番号発行後</strong>に可能となります。届出番号取得後にご連絡をお願いいたします。`;
+          plainBody += `\n\n※ Booking.comリスティング作成は届出番号発行後に可能となります。届出番号取得後にご連絡をお願いいたします。`;
+        }
+        tasks.push({
+          title: '📋 OTAリスティング作成のご相談',
+          body: body,
+          plainBody: plainBody
+        });
+      }
     }
     
     return tasks;
