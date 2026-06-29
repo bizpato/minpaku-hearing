@@ -2281,12 +2281,27 @@
       }
       
       // 鍵の解錠方法フィールドの表示制御
-      // RemoteLOCK / SESAME 5 / SESAME 5 Pro は不要（標準フロー）
-      // それ以外（keybox, other_smartlock_fixed/random, other）は必要
+      // 非表示条件：
+      // - 鍵タイプ未選択
+      // - RemoteLOCK / SESAME 5 / SESAME 5 Pro（標準フローのため不要）
+      // - 通知方法 = host または ランダム暗証番号（ホスト個別通知のため不要）
       const keyAccessWrap = document.getElementById(`keyAccessWrap-${n}`);
       if (keyAccessWrap) {
-        const noKeyAccessNeeded = keyValue === '' || ['remotelock', 'sesame5', 'sesame5pro'].includes(keyValue);
+        const passcodeNotifyValue = block.querySelector(`input[name="property_${n}_passcodeNotify"]:checked`)?.value;
+        const isRandomKey = keyValue === 'other_smartlock_random';
+        const isHostNotify = passcodeNotifyValue === 'host' || isRandomKey;
+        const noKeyAccessNeeded = 
+          keyValue === '' || 
+          ['remotelock', 'sesame5', 'sesame5pro'].includes(keyValue) ||
+          isHostNotify;
         keyAccessWrap.style.display = noKeyAccessNeeded ? 'none' : '';
+        // 非表示時は値クリア
+        if (noKeyAccessNeeded) {
+          const textarea = block.querySelector(`textarea[name="property_${n}_keyAccess"]`);
+          if (textarea && textarea.value) textarea.value = '';
+          // エラーもクリア
+          keyAccessWrap.classList.remove('has-error');
+        }
       }
       
       // 物件ごとのタブレット設置場所（上書き）を取得し、最終値を判定
@@ -3102,9 +3117,13 @@ STEP4: 施錠は...（鍵に合わせて記載してください）`
           hasSesameProperty = true;
         }
         
-        // 鍵の解錠方法（必須）: RemoteLOCK/SESAME 5系以外
+        // 鍵の解錠方法（必須）: RemoteLOCK/SESAME系以外 かつ システム通知の場合
         const noKeyAccessNeeded = ['remotelock', 'sesame5', 'sesame5pro'].includes(keyValue);
-        if (!noKeyAccessNeeded) {
+        // ランダム暗証番号や通知方法=hostの場合はホストが個別に伝えるため不要
+        const propNotify = block.querySelector(`input[name="property_${i}_passcodeNotify"]:checked`)?.value;
+        const isRandomKey = keyValue === 'other_smartlock_random';
+        const isHostNotify = propNotify === 'host' || isRandomKey;
+        if (!noKeyAccessNeeded && !isHostNotify) {
           const keyAccessInput = block.querySelector(`textarea[name="property_${i}_keyAccess"]`);
           if (keyAccessInput && !keyAccessInput.value.trim()) {
             keyAccessInput.closest('.field').classList.add('has-error');
