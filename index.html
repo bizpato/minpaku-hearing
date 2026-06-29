@@ -1392,6 +1392,7 @@
                   <div class="info-note" id="beds24EmailNote">
                     ℹ️ チェックインシステムとの連携設定のため、弊社がホスト様のBeds24アカウントにログインする必要がございます。<br>
                     お手数ですが、Beds24の<strong>ログイン認証用メールアドレスに <a href="mailto:customer@bizpato.com">customer@bizpato.com</a> を追加</strong>してください。<br>
+                    <strong>※ チェックインシステムの連携設定作業期間中のみとなり、作業完了後は弊社にて削除いたします。</strong><br>
                     追加方法：<a href="https://co-reception.com/support-ticket/" target="_blank" rel="noopener">Beds24サポート</a>から「ログイン認証用メールアドレスに customer@bizpato.com を追加してください」とお伝えいただくと対応してもらえます。
                   </div>
                 </div>
@@ -1451,7 +1452,9 @@
           <div class="field-error">すべての項目をご入力ください</div>
           
           <div class="info-note">
-            ℹ️ ご入力いただいた情報をもとに、弊社にてBeds24アカウントを作成いたします。アカウント作成後、ログイン認証用メールアドレスに <a href="mailto:customer@bizpato.com">customer@bizpato.com</a> を自動的に追加いたします。
+            ℹ️ ご入力いただいた情報をもとに、弊社にてBeds24アカウントを作成いたします。<br>
+            アカウント作成後、ログイン認証用メールアドレスに <a href="mailto:customer@bizpato.com">customer@bizpato.com</a> を弊社にて追加いたします。<br>
+            <strong>※ チェックインシステムの連携設定作業期間中のみ追加し、作業完了後は弊社にて削除いたします。</strong>
           </div>
           </div>
           <!-- 新規ここまで -->
@@ -1475,6 +1478,7 @@
             <div class="info-note">
               ⚠️ <strong>ホスト様にご対応いただく事項</strong><br>
               チェックインシステムとの連携設定のため、弊社がBeds24アカウントへログインする必要がございます。お手数ですが、Beds24の<strong>ログイン認証用メールアドレスに <a href="mailto:customer@bizpato.com">customer@bizpato.com</a> を追加</strong>してください。<br>
+              <strong>※ チェックインシステムの連携設定作業期間中のみとなり、作業完了後は弊社にて削除いたします。</strong><br>
               追加方法：<a href="https://co-reception.com/support-ticket/" target="_blank" rel="noopener">Beds24サポート</a>から「ログイン認証用メールアドレスに customer@bizpato.com を追加してください」とお伝えいただくと対応してもらえます。
             </div>
           </div>
@@ -1685,7 +1689,8 @@
       
       <div class="field" data-field="subPassword">
         <label class="field-label">サブアカウント用パスワード<span class="required">必須</span></label>
-        <p class="field-desc">サブアカウントのログイン時に使用するパスワードをご記入ください(半角英数字8文字以上を推奨いたします)。</p>
+        <p class="field-desc">サブアカウントのログイン時に使用するパスワードをご記入ください（半角英数字8文字以上を推奨いたします）。</p>
+        <label class="same-as-check beds24-link-check" id="subPasswordSameAsWrap" style="display:none;"><input type="checkbox" id="subPasswordSameAs" data-same-as="beds24SignupPassword"> Beds24登録パスワードと同じ</label>
         <input type="text" name="subPassword" id="subPassword" required minlength="8">
         <div class="field-error">8文字以上のパスワードをご入力ください</div>
       </div>
@@ -1701,6 +1706,7 @@
       <div class="field" data-field="subPhone">
         <label class="field-label">サブアカウント用電話番号<span class="required">必須</span></label>
         <p class="field-desc">サブアカウントに登録する電話番号を半角数字（ハイフンなし）でご記入ください。</p>
+        <label class="same-as-check beds24-link-check" id="subPhoneSameAsWrap" style="display:none;"><input type="checkbox" id="subPhoneSameAs" data-same-as="beds24HostPhone"> Beds24登録電話番号と同じ</label>
         <input type="tel" name="subPhone" id="subPhone" required pattern="[0-9]+">
         <div class="field-error">半角数字（ハイフンなし）でご入力ください</div>
       </div>
@@ -2511,6 +2517,9 @@
     newWrap.classList.toggle('show', status === 'new');
     existingWrap.classList.toggle('show', status === 'existing');
     
+    // サブアカウント側の同上チェック表示制御（Beds24連携OP+新規時のみ表示）
+    updateSubBeds24LinkVisibility();
+    
     // 切替時は反対側の値をクリア
     if (status === 'new') {
       // 既存側クリア
@@ -2537,10 +2546,48 @@
     }
   }
   
+  // サブアカウント側のBeds24同上チェックの表示制御
+  function updateSubBeds24LinkVisibility() {
+    const hasBeds24Op = document.querySelector('input[name="contractedOptions"][value="beds24"]:checked');
+    const status = document.querySelector('input[name="beds24SignupStatus"]:checked')?.value;
+    const showLink = !!(hasBeds24Op && status === 'new');
+    
+    const pwdWrap = document.getElementById('subPasswordSameAsWrap');
+    const phoneWrap = document.getElementById('subPhoneSameAsWrap');
+    
+    if (pwdWrap) {
+      pwdWrap.style.display = showLink ? '' : 'none';
+      // 非表示時はチェック解除
+      if (!showLink) {
+        const chk = document.getElementById('subPasswordSameAs');
+        if (chk?.checked) {
+          chk.checked = false;
+          const sub = document.getElementById('subPassword');
+          if (sub) sub.readOnly = false;
+        }
+      }
+    }
+    if (phoneWrap) {
+      phoneWrap.style.display = showLink ? '' : 'none';
+      if (!showLink) {
+        const chk = document.getElementById('subPhoneSameAs');
+        if (chk?.checked) {
+          chk.checked = false;
+          const sub = document.getElementById('subPhone');
+          if (sub) sub.readOnly = false;
+        }
+      }
+    }
+  }
+  
   // ステータス変更時のイベント
   document.addEventListener('change', (e) => {
     if (e.target.matches('input[name="beds24SignupStatus"]')) {
       updateBeds24SignupStatus();
+    }
+    if (e.target.matches('input[name="contractedOptions"]')) {
+      // OP変更時もサブアカウント側を再評価
+      setTimeout(updateSubBeds24LinkVisibility, 100);
     }
   });
   
@@ -3852,8 +3899,8 @@ STEP4: 施錠は...（鍵に合わせて記載してください）`
     if (payload.commonSettings.beds24 === 'contracted' && !hasBeds24Op) {
       tasks.push({
         title: '📧 Beds24認証用メールアドレスの追加',
-        body: '弊社がチェックインシステムと連携するため、ホスト様のBeds24アカウントにログインさせていただきます。Beds24の<strong>ログイン認証用メールアドレスに <a href="mailto:customer@bizpato.com">customer@bizpato.com</a> を追加</strong>してください。<br>追加方法：<a href="https://co-reception.com/support-ticket/" target="_blank" rel="noopener">Beds24サポート</a>から「ログイン認証用メールアドレスに customer@bizpato.com を追加してください」とお伝えいただくと対応してもらえます。',
-        plainBody: '弊社がチェックインシステムと連携するため、ホスト様のBeds24アカウントにログインさせていただきます。Beds24のログイン認証用メールアドレスに customer@bizpato.com を追加してください。\n追加方法：Beds24サポート (https://co-reception.com/support-ticket/) から「ログイン認証用メールアドレスに customer@bizpato.com を追加してください」とお伝えいただくと対応してもらえます。'
+        body: '弊社がチェックインシステムと連携するため、ホスト様のBeds24アカウントにログインさせていただきます。Beds24の<strong>ログイン認証用メールアドレスに <a href="mailto:customer@bizpato.com">customer@bizpato.com</a> を追加</strong>してください。<br><strong>※ チェックインシステムの連携設定作業期間中のみとなり、作業完了後は弊社にて削除いたします。</strong><br>追加方法：<a href="https://co-reception.com/support-ticket/" target="_blank" rel="noopener">Beds24サポート</a>から「ログイン認証用メールアドレスに customer@bizpato.com を追加してください」とお伝えいただくと対応してもらえます。',
+        plainBody: '弊社がチェックインシステムと連携するため、ホスト様のBeds24アカウントにログインさせていただきます。Beds24のログイン認証用メールアドレスに customer@bizpato.com を追加してください。\n※ チェックインシステムの連携設定作業期間中のみとなり、作業完了後は弊社にて削除いたします。\n追加方法：Beds24サポート (https://co-reception.com/support-ticket/) から「ログイン認証用メールアドレスに customer@bizpato.com を追加してください」とお伝えいただくと対応してもらえます。'
       });
     }
     
@@ -3861,8 +3908,8 @@ STEP4: 施錠は...（鍵に合わせて記載してください）`
     if (hasBeds24Op && payload.commonSettings.beds24Signup?.status === 'existing') {
       tasks.push({
         title: '📧 Beds24認証用メールアドレスの追加',
-        body: 'すでにBeds24アカウントをお持ちとのことですので、弊社がチェックインシステムと連携するため、Beds24アカウントへログインさせていただきます。Beds24の<strong>ログイン認証用メールアドレスに <a href="mailto:customer@bizpato.com">customer@bizpato.com</a> を追加</strong>してください。<br>追加方法：<a href="https://co-reception.com/support-ticket/" target="_blank" rel="noopener">Beds24サポート</a>から「ログイン認証用メールアドレスに customer@bizpato.com を追加してください」とお伝えいただくと対応してもらえます。',
-        plainBody: 'すでにBeds24アカウントをお持ちとのことですので、弊社がチェックインシステムと連携するため、Beds24アカウントへログインさせていただきます。Beds24のログイン認証用メールアドレスに customer@bizpato.com を追加してください。\n追加方法：Beds24サポート (https://co-reception.com/support-ticket/) から「ログイン認証用メールアドレスに customer@bizpato.com を追加してください」とお伝えいただくと対応してもらえます。'
+        body: 'すでにBeds24アカウントをお持ちとのことですので、弊社がチェックインシステムと連携するため、Beds24アカウントへログインさせていただきます。Beds24の<strong>ログイン認証用メールアドレスに <a href="mailto:customer@bizpato.com">customer@bizpato.com</a> を追加</strong>してください。<br><strong>※ チェックインシステムの連携設定作業期間中のみとなり、作業完了後は弊社にて削除いたします。</strong><br>追加方法：<a href="https://co-reception.com/support-ticket/" target="_blank" rel="noopener">Beds24サポート</a>から「ログイン認証用メールアドレスに customer@bizpato.com を追加してください」とお伝えいただくと対応してもらえます。',
+        plainBody: 'すでにBeds24アカウントをお持ちとのことですので、弊社がチェックインシステムと連携するため、Beds24アカウントへログインさせていただきます。Beds24のログイン認証用メールアドレスに customer@bizpato.com を追加してください。\n※ チェックインシステムの連携設定作業期間中のみとなり、作業完了後は弊社にて削除いたします。\n追加方法：Beds24サポート (https://co-reception.com/support-ticket/) から「ログイン認証用メールアドレスに customer@bizpato.com を追加してください」とお伝えいただくと対応してもらえます。'
       });
     }
     
