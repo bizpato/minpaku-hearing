@@ -2000,8 +2000,8 @@
           </div>
         </div>
         
-        <!-- 共通設定と一部異なる -->
-        <div class="override-toggle">
+        <!-- 共通設定と一部異なる（物件2件以上の場合のみ表示） -->
+        <div class="override-toggle override-wrap-${n}">
           <label>
             <input type="checkbox" name="property_${n}_override" data-override-toggle data-property-index="${index}">
             <span>この物件は<strong>共通設定と一部異なる項目がある</strong>（チェックすると個別設定欄が表示されます）</span>
@@ -2249,6 +2249,19 @@
         }
       }
     }
+    // 個別設定(override)の表示制御(2件以上の時のみ表示)
+    document.querySelectorAll('.override-toggle').forEach(toggle => {
+      toggle.style.display = count >= 2 ? '' : 'none';
+      // 1件の場合はチェックを外して個別設定をリセット
+      if (count < 2) {
+        const checkbox = toggle.querySelector('input[type="checkbox"][data-override-toggle]');
+        if (checkbox?.checked) {
+          checkbox.checked = false;
+          const content = toggle.querySelector('.override-content');
+          if (content) content.classList.remove('show');
+        }
+      }
+    });
     // 鍵関連の動的フィールドも再評価
     setTimeout(updateKeyDependentFields, 50);
   });
