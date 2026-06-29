@@ -316,6 +316,100 @@
   }
   .submit-error.show { display: block; }
   
+  /* ===== サブアカウント情報セクション ===== */
+  .account-info {
+    margin: 30px 0;
+    padding: 24px;
+    background: #fff;
+    border: 2px solid #2c5aa0;
+    border-radius: 10px;
+    text-align: left;
+  }
+  .account-info-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .account-info-icon {
+    font-size: 22px;
+  }
+  .account-info-header h3 {
+    margin: 0;
+    color: #2c5aa0;
+    font-size: 17px;
+  }
+  .account-info-notice {
+    padding: 12px 14px;
+    background: #fff8e0;
+    border-radius: 6px;
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 18px;
+    color: #555;
+  }
+  .account-info-notice strong {
+    color: #d23838;
+  }
+  .account-info-list {
+    background: #f7f9fc;
+    border-radius: 6px;
+    padding: 6px 14px;
+    margin-bottom: 18px;
+  }
+  .account-info-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #e0e7f0;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .account-info-item:last-child {
+    border-bottom: none;
+  }
+  .account-info-label {
+    flex: 0 0 140px;
+    font-size: 13px;
+    color: #666;
+    font-weight: 600;
+  }
+  .account-info-value {
+    flex: 1;
+    font-size: 15px;
+    color: #2c2c2c;
+    font-weight: 600;
+    word-break: break-all;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+  }
+  .toggle-password-btn {
+    padding: 4px 10px;
+    background: #f0f4fa;
+    border: 1px solid #c0c8d4;
+    border-radius: 4px;
+    color: #2c5aa0;
+    font-size: 12px;
+    cursor: pointer;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .toggle-password-btn:hover {
+    background: #e0ebf5;
+  }
+  @media (max-width: 600px) {
+    .account-info-label {
+      flex: 0 0 100%;
+      margin-bottom: 4px;
+    }
+    .account-info-value {
+      flex: 0 0 100%;
+      padding-left: 0;
+    }
+  }
+  
   /* ===== 送信完了画面 ===== */
   .post-send {
     display: none;
@@ -1402,7 +1496,7 @@
       <div class="field" data-field="subPassword">
         <label class="field-label">サブアカウント用パスワード<span class="required">必須</span></label>
         <p class="field-desc">サブアカウントのログイン時に使用するパスワードをご記入ください(半角英数字8文字以上を推奨いたします)。</p>
-        <input type="password" name="subPassword" id="subPassword" required minlength="8">
+        <input type="text" name="subPassword" id="subPassword" required minlength="8">
         <div class="field-error">8文字以上のパスワードをご入力ください</div>
       </div>
       
@@ -1439,6 +1533,44 @@
     <h2>送信が完了しました</h2>
     <p>ご入力いただきありがとうございました。内容は弊社担当者へ共有されました。</p>
     <p>頂いた情報をもとに、チェックインシステムの構築作業を進めさせていただきます。担当者よりあらためてご連絡させていただきますので、今しばらくお待ちください。</p>
+    
+    <!-- サブアカウント情報セクション（メモ用） -->
+    <div class="account-info" id="accountInfoSection">
+      <div class="account-info-header">
+        <span class="account-info-icon">🔐</span>
+        <h3>ご入力いただいたサブアカウント情報</h3>
+      </div>
+      <div class="account-info-notice">
+        <strong>※ こちらの情報は、システム稼働後のログイン時に必要となります。</strong><br>
+        以下の方法でお手元にお控えくださいませ。
+      </div>
+      <div class="account-info-list">
+        <div class="account-info-item">
+          <span class="account-info-label">📧 メールアドレス</span>
+          <span class="account-info-value" id="displaySubEmail">-</span>
+        </div>
+        <div class="account-info-item">
+          <span class="account-info-label">🔑 パスワード</span>
+          <span class="account-info-value">
+            <span id="displaySubPassword" data-masked="true">••••••••</span>
+            <button type="button" class="toggle-password-btn" id="togglePasswordBtn">👁 表示</button>
+          </span>
+        </div>
+        <div class="account-info-item">
+          <span class="account-info-label">👤 表示名</span>
+          <span class="account-info-value" id="displaySubName">-</span>
+        </div>
+        <div class="account-info-item">
+          <span class="account-info-label">📞 電話番号</span>
+          <span class="account-info-value" id="displaySubPhone">-</span>
+        </div>
+      </div>
+      <div class="task-actions">
+        <button type="button" class="task-action-btn" id="copyAccountInfoBtn">📋 アカウント情報をコピー</button>
+        <button type="button" class="task-action-btn" id="emailAccountInfoBtn">✉️ 自分宛にメール送信</button>
+        <button type="button" class="task-action-btn" onclick="window.print()">🖨️ 印刷する</button>
+      </div>
+    </div>
     
     <!-- ホストタスクセクション（動的表示） -->
     <div class="host-tasks" id="hostTasksSection" style="display:none;">
@@ -3273,6 +3405,97 @@ STEP4: 施錠は...（鍵に合わせて記載してください）`
   }
   
   // ===========================
+  // サブアカウント情報の描画
+  // ===========================
+  function renderAccountInfo(payload) {
+    const sub = payload.subAccount;
+    if (!sub) return;
+    
+    document.getElementById('displaySubEmail').textContent = sub.email || '-';
+    document.getElementById('displaySubName').textContent = sub.name || '-';
+    document.getElementById('displaySubPhone').textContent = sub.phone || '-';
+    
+    // パスワードはマスク表示にしておき、ボタンで表示切替
+    const pwdEl = document.getElementById('displaySubPassword');
+    pwdEl.dataset.actualPassword = sub.password || '';
+    pwdEl.textContent = '••••••••';
+    pwdEl.dataset.masked = 'true';
+    
+    // 表示/非表示トグルボタン
+    const toggleBtn = document.getElementById('togglePasswordBtn');
+    if (toggleBtn) {
+      const newToggleBtn = toggleBtn.cloneNode(true);
+      toggleBtn.parentNode.replaceChild(newToggleBtn, toggleBtn);
+      newToggleBtn.addEventListener('click', () => {
+        if (pwdEl.dataset.masked === 'true') {
+          pwdEl.textContent = pwdEl.dataset.actualPassword;
+          pwdEl.dataset.masked = 'false';
+          newToggleBtn.textContent = '🙈 隠す';
+        } else {
+          pwdEl.textContent = '••••••••';
+          pwdEl.dataset.masked = 'true';
+          newToggleBtn.textContent = '👁 表示';
+        }
+      });
+    }
+    
+    // コピーボタン
+    const copyBtn = document.getElementById('copyAccountInfoBtn');
+    if (copyBtn) {
+      const newCopyBtn = copyBtn.cloneNode(true);
+      copyBtn.parentNode.replaceChild(newCopyBtn, copyBtn);
+      newCopyBtn.addEventListener('click', () => {
+        const text = buildAccountInfoText(sub);
+        navigator.clipboard.writeText(text).then(() => {
+          const original = newCopyBtn.textContent;
+          newCopyBtn.textContent = '✓ コピーしました';
+          newCopyBtn.classList.add('copied');
+          setTimeout(() => {
+            newCopyBtn.textContent = original;
+            newCopyBtn.classList.remove('copied');
+          }, 2000);
+        }).catch(() => {
+          alert('コピーに失敗しました。お手数ですが、内容を手動でコピーしてください。');
+        });
+      });
+    }
+    
+    // メール送信ボタン
+    const emailBtn = document.getElementById('emailAccountInfoBtn');
+    if (emailBtn) {
+      const newEmailBtn = emailBtn.cloneNode(true);
+      emailBtn.parentNode.replaceChild(newEmailBtn, emailBtn);
+      newEmailBtn.addEventListener('click', () => {
+        const subject = '【民泊管理バンク】チェックインシステム サブアカウント情報';
+        const body = buildAccountInfoText(sub);
+        const email = sub.email || '';
+        const mailtoUrl = `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        window.location.href = mailtoUrl;
+      });
+    }
+  }
+  
+  // アカウント情報をプレーンテキスト化
+  function buildAccountInfoText(sub) {
+    return [
+      '【チェックインシステム サブアカウント情報】',
+      '',
+      'ログイン時に必要となる情報です。大切に保管してください。',
+      '',
+      `メールアドレス: ${sub.email || ''}`,
+      `パスワード: ${sub.password || ''}`,
+      `表示名: ${sub.name || ''}`,
+      `電話番号: ${sub.phone || ''}`,
+      '',
+      '━━━━━━━━━━━━━━━━━━━━',
+      'ご不明な点がございましたら、お気軽にお問い合わせください。',
+      '民泊管理バンク',
+      'customer@bizpato.com',
+      '━━━━━━━━━━━━━━━━━━━━'
+    ].join('\n');
+  }
+  
+  // ===========================
   // ホストタスクの描画
   // ===========================
   function renderHostTasks(tasks) {
@@ -3351,6 +3574,9 @@ STEP4: 施錠は...（鍵に合わせて記載してください）`
       // ホストタスクの生成・表示
       const hostTasks = buildHostTasks(payload);
       renderHostTasks(hostTasks);
+      
+      // サブアカウント情報を完了画面に表示
+      renderAccountInfo(payload);
       
       // 完了画面表示（ヘッダーとフォームを隠す）
       document.querySelector('header').style.display = 'none';
