@@ -741,7 +741,6 @@
     padding: 16px;
     background: #fafbfd;
     border-radius: 6px;
-    border-left: 3px solid #2c5aa0;
   }
   .ota-detail-title {
     margin: 0 0 10px;
@@ -1400,8 +1399,18 @@
         
         <!-- Beds24連携OP契約時のセクション（Beds24アカウント登録情報） -->
         <div class="field" data-field="beds24Signup" id="beds24SignupField" style="display:none;">
-          <label class="field-label">Beds24アカウント登録情報<span class="required">必須</span></label>
-          <p class="field-desc">「Beds24連携OP」をご契約いただいているため、弊社にて代行でBeds24アカウントを作成いたします。Beds24への登録に必要な以下の情報をご記入ください。</p>
+          <label class="field-label">Beds24アカウント情報<span class="required">必須</span></label>
+          <p class="field-desc">「Beds24連携OP」をご契約いただいているため、Beds24連携の準備を弊社にて進めさせていただきます。ご状況をお選びください。</p>
+          
+          <div class="radio-group" id="beds24SignupStatusGroup">
+            <label><input type="radio" name="beds24SignupStatus" value="new"> まだ持っていない（弊社で新規作成代行いたします）</label>
+            <label><input type="radio" name="beds24SignupStatus" value="existing"> すでにBeds24アカウントを持っている</label>
+          </div>
+          <div class="field-error">ご状況をお選びください</div>
+          
+          <!-- 新規作成代行（new）の場合の入力欄 -->
+          <div class="conditional" id="beds24SignupNewWrap">
+          <p class="field-desc" style="margin-top:14px;">弊社にて代行でBeds24アカウントを作成いたします。Beds24への登録に必要な以下の情報をご記入ください。</p>
           
           <div class="signup-field">
             <label class="field-label-sub">希望する登録メールアドレス</label>
@@ -1444,6 +1453,31 @@
           <div class="info-note">
             ℹ️ ご入力いただいた情報をもとに、弊社にてBeds24アカウントを作成いたします。アカウント作成後、ログイン認証用メールアドレスに <a href="mailto:customer@bizpato.com">customer@bizpato.com</a> を自動的に追加いたします。
           </div>
+          </div>
+          <!-- 新規ここまで -->
+          
+          <!-- 既存アカウント（existing）の場合の入力欄 -->
+          <div class="conditional" id="beds24SignupExistingWrap">
+            <p class="field-desc" style="margin-top:14px;">既存のBeds24アカウント情報をご記入ください。</p>
+            
+            <div class="signup-field">
+              <label class="field-label-sub">Beds24ログインID（メールアドレス）</label>
+              <input type="text" name="beds24ExistingLoginId" id="beds24ExistingLoginId">
+            </div>
+            
+            <div class="signup-field">
+              <label class="field-label-sub">パスワード</label>
+              <input type="text" name="beds24ExistingPassword" id="beds24ExistingPassword">
+            </div>
+            
+            <div class="field-error">ログインIDとパスワードをご入力ください</div>
+            
+            <div class="info-note">
+              ⚠️ <strong>ホスト様にご対応いただく事項</strong><br>
+              チェックインシステムとの連携設定のため、弊社がBeds24アカウントへログインする必要がございます。お手数ですが、Beds24の<strong>ログイン認証用メールアドレスに <a href="mailto:customer@bizpato.com">customer@bizpato.com</a> を追加</strong>してください。<br>
+              追加方法：<a href="https://co-reception.com/support-ticket/" target="_blank" rel="noopener">Beds24サポート</a>から「ログイン認証用メールアドレスに customer@bizpato.com を追加してください」とお伝えいただくと対応してもらえます。
+            </div>
+          </div>
         </div>
         
         <!-- 連携するOTA選択（Beds24連携OP契約時のみ表示） -->
@@ -1484,7 +1518,8 @@
             
             <div class="conditional" id="airbnbNotCreatedNote">
               <div class="info-note">
-                ℹ️ Airbnbリスティングが未作成のため、本フォーム送信後 <a href="mailto:customer@bizpato.com">customer@bizpato.com</a> までご連絡くださいませ。弊社にてリスティング作成についてご案内いたします。
+                ℹ️ Airbnbリスティングが未作成の場合、<strong>ホスト様にてリスティングをご作成いただく</strong>必要がございます。<br>
+                リスティング作成後、アカウント情報（ログインID・パスワード）を <a href="mailto:customer@bizpato.com">customer@bizpato.com</a> までお送りください。
               </div>
             </div>
           </div>
@@ -1516,7 +1551,8 @@
             
             <div class="conditional" id="bookingNotCreatedNote">
               <div class="info-note">
-                ℹ️ Booking.comリスティング作成は、<strong>届出番号発行後に可能</strong>となります。届出番号取得後、<a href="mailto:customer@bizpato.com">customer@bizpato.com</a> までご連絡くださいませ。
+                ℹ️ Booking.comリスティング作成は、<strong>届出番号発行後</strong>にホスト様にて可能となります。<br>
+                リスティング作成後、アカウント情報（ログインID・パスワード）を <a href="mailto:customer@bizpato.com">customer@bizpato.com</a> までお送りください。
               </div>
             </div>
           </div>
@@ -2320,13 +2356,24 @@
       // 新セクションを表示
       if (beds24SignupField) beds24SignupField.style.display = '';
       if (otaListField) otaListField.style.display = '';
+      // ステータス分岐の表示制御
+      updateBeds24SignupStatus();
     } else {
       // OP未契約時は既存フローに戻す
       if (beds24Field) beds24Field.style.display = '';
       if (beds24SignupField) {
         beds24SignupField.style.display = 'none';
-        // 値クリア
+        // ステータスもクリア
+        document.querySelectorAll('input[name="beds24SignupStatus"]').forEach(r => r.checked = false);
+        document.getElementById('beds24SignupNewWrap')?.classList.remove('show');
+        document.getElementById('beds24SignupExistingWrap')?.classList.remove('show');
+        // 新規用フィールドのクリア
         ['beds24SignupEmail', 'beds24SignupPassword', 'beds24ContractorName', 'beds24ContactName', 'beds24HostPhone', 'beds24ContactEmail'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.value = '';
+        });
+        // 既存アカウント用フィールドのクリア
+        ['beds24ExistingLoginId', 'beds24ExistingPassword'].forEach(id => {
           const el = document.getElementById(id);
           if (el) el.value = '';
         });
@@ -2449,6 +2496,51 @@
       const dateWrap = document.getElementById(`registrationDateWrap-${n}`);
       numberWrap.classList.toggle('show', value === 'issued');
       dateWrap.classList.toggle('show', value === 'planned');
+    }
+  });
+  
+  // ===========================
+  // Beds24アカウント情報のステータス（新規/既存）切替
+  // ===========================
+  function updateBeds24SignupStatus() {
+    const status = document.querySelector('input[name="beds24SignupStatus"]:checked')?.value;
+    const newWrap = document.getElementById('beds24SignupNewWrap');
+    const existingWrap = document.getElementById('beds24SignupExistingWrap');
+    if (!newWrap || !existingWrap) return;
+    
+    newWrap.classList.toggle('show', status === 'new');
+    existingWrap.classList.toggle('show', status === 'existing');
+    
+    // 切替時は反対側の値をクリア
+    if (status === 'new') {
+      // 既存側クリア
+      ['beds24ExistingLoginId', 'beds24ExistingPassword'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
+    } else if (status === 'existing') {
+      // 新規側クリア
+      ['beds24SignupEmail', 'beds24SignupPassword', 'beds24ContractorName', 'beds24ContactName', 'beds24HostPhone', 'beds24ContactEmail'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
+      // 同上チェック解除
+      ['beds24SignupEmailSameAs', 'beds24ContractorNameSameAs', 'beds24ContactNameSameAs', 'beds24ContactEmailSameAs'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.checked = false;
+          const targetId = id.replace('SameAs', '');
+          const target = document.getElementById(targetId);
+          if (target) target.readOnly = false;
+        }
+      });
+    }
+  }
+  
+  // ステータス変更時のイベント
+  document.addEventListener('change', (e) => {
+    if (e.target.matches('input[name="beds24SignupStatus"]')) {
+      updateBeds24SignupStatus();
     }
   });
   
@@ -3299,31 +3391,48 @@ STEP4: 施錠は...（鍵に合わせて記載してください）`
       }
     }
     
-    // Beds24連携OP契約時：Beds24登録情報の必須チェック
+    // Beds24連携OP契約時：Beds24アカウント情報の必須チェック（新規/既存で分岐）
     if (hasBeds24Op) {
-      const signupFields = [
-        'beds24SignupEmail',
-        'beds24SignupPassword',
-        'beds24ContractorName',
-        'beds24ContactName',
-        'beds24HostPhone',
-        'beds24ContactEmail'
-      ];
-      let signupHasError = false;
-      signupFields.forEach(id => {
-        const el = document.getElementById(id);
-        if (!el?.value.trim()) {
-          signupHasError = true;
-        }
-      });
-      // パスワード文字数チェック
-      const pwd = document.getElementById('beds24SignupPassword').value.trim();
-      if (pwd && pwd.length < 8) {
-        signupHasError = true;
-      }
-      if (signupHasError) {
+      const signupStatus = document.querySelector('input[name="beds24SignupStatus"]:checked')?.value;
+      
+      // ステータス未選択
+      if (!signupStatus) {
         document.querySelector('[data-field="beds24Signup"]').classList.add('has-error');
         valid = false;
+      } else if (signupStatus === 'new') {
+        // 新規作成：6フィールドすべて必須
+        const signupFields = [
+          'beds24SignupEmail',
+          'beds24SignupPassword',
+          'beds24ContractorName',
+          'beds24ContactName',
+          'beds24HostPhone',
+          'beds24ContactEmail'
+        ];
+        let signupHasError = false;
+        signupFields.forEach(id => {
+          const el = document.getElementById(id);
+          if (!el?.value.trim()) {
+            signupHasError = true;
+          }
+        });
+        // パスワード文字数チェック
+        const pwd = document.getElementById('beds24SignupPassword').value.trim();
+        if (pwd && pwd.length < 8) {
+          signupHasError = true;
+        }
+        if (signupHasError) {
+          document.querySelector('[data-field="beds24Signup"]').classList.add('has-error');
+          valid = false;
+        }
+      } else if (signupStatus === 'existing') {
+        // 既存アカウント：ログインID/パスワード必須
+        const lid = document.getElementById('beds24ExistingLoginId').value.trim();
+        const pwd = document.getElementById('beds24ExistingPassword').value.trim();
+        if (!lid || !pwd) {
+          document.querySelector('[data-field="beds24Signup"]').classList.add('has-error');
+          valid = false;
+        }
       }
       
       // OTA選択必須
@@ -3557,23 +3666,40 @@ STEP4: 施錠は...（鍵に合わせて記載してください）`
         : '',
       // Beds24連携OP契約時の登録情報
       beds24Signup: {
+        status: radio('beds24SignupStatus'),
+        statusLabel: radio('beds24SignupStatus') === 'new' ? '新規作成（弊社代行）' : radio('beds24SignupStatus') === 'existing' ? '既存アカウントあり' : '',
+        // 新規作成（new）の場合
         email: get('beds24SignupEmail'),
         password: get('beds24SignupPassword'),
         contractorName: get('beds24ContractorName'),
         contactName: get('beds24ContactName'),
         hostPhone: get('beds24HostPhone'),
-        contactEmail: get('beds24ContactEmail')
+        contactEmail: get('beds24ContactEmail'),
+        // 既存（existing）の場合
+        existingLoginId: get('beds24ExistingLoginId'),
+        existingPassword: get('beds24ExistingPassword')
       },
-      beds24SignupText: (get('beds24SignupEmail') || get('beds24SignupPassword'))
-        ? [
+      beds24SignupText: (() => {
+        const status = radio('beds24SignupStatus');
+        if (status === 'new' && (get('beds24SignupEmail') || get('beds24SignupPassword'))) {
+          return [
+            `【新規作成（弊社代行）】`,
             `登録メール: ${get('beds24SignupEmail')}`,
             `パスワード: ${get('beds24SignupPassword')}`,
             `契約者名: ${get('beds24ContractorName')}`,
             `担当者名: ${get('beds24ContactName')}`,
             `ホスト電話番号: ${get('beds24HostPhone')}`,
             `連絡先メール: ${get('beds24ContactEmail')}`
-          ].join('\n')
-        : '',
+          ].join('\n');
+        } else if (status === 'existing' && (get('beds24ExistingLoginId') || get('beds24ExistingPassword'))) {
+          return [
+            `【既存アカウント】`,
+            `ログインID: ${get('beds24ExistingLoginId')}`,
+            `パスワード: ${get('beds24ExistingPassword')}`
+          ].join('\n');
+        }
+        return '';
+      })(),
       // 連携OTA
       otaList: checks('otaList'),
       otaListLabel: checks('otaList').map(v => v === 'airbnb' ? 'Airbnb' : v === 'booking' ? 'Booking.com' : v).join('、'),
@@ -3731,6 +3857,15 @@ STEP4: 施錠は...（鍵に合わせて記載してください）`
       });
     }
     
+    // 2-2. Beds24連携OP契約 + 既存アカウントあり：認証用メール追加（既存アカウントの場合のみ）
+    if (hasBeds24Op && payload.commonSettings.beds24Signup?.status === 'existing') {
+      tasks.push({
+        title: '📧 Beds24認証用メールアドレスの追加',
+        body: 'すでにBeds24アカウントをお持ちとのことですので、弊社がチェックインシステムと連携するため、Beds24アカウントへログインさせていただきます。Beds24の<strong>ログイン認証用メールアドレスに <a href="mailto:customer@bizpato.com">customer@bizpato.com</a> を追加</strong>してください。<br>追加方法：<a href="https://co-reception.com/support-ticket/" target="_blank" rel="noopener">Beds24サポート</a>から「ログイン認証用メールアドレスに customer@bizpato.com を追加してください」とお伝えいただくと対応してもらえます。',
+        plainBody: 'すでにBeds24アカウントをお持ちとのことですので、弊社がチェックインシステムと連携するため、Beds24アカウントへログインさせていただきます。Beds24のログイン認証用メールアドレスに customer@bizpato.com を追加してください。\n追加方法：Beds24サポート (https://co-reception.com/support-ticket/) から「ログイン認証用メールアドレスに customer@bizpato.com を追加してください」とお伝えいただくと対応してもらえます。'
+      });
+    }
+    
     // 3. Beds24「未契約・契約予定」：契約完了の連絡
     if (payload.commonSettings.beds24 === 'planned') {
       tasks.push({
@@ -3796,7 +3931,7 @@ STEP4: 施錠は...（鍵に合わせて記載してください）`
       });
     }
     
-    // 9. OTAリスティング未作成：customer@bizpato.com宛に連絡依頼
+    // 9. OTAリスティング未作成：リスティング作成後アカウント情報の共有依頼
     if (hasBeds24Op && payload.commonSettings.otaDetails) {
       const airbnb = payload.commonSettings.otaDetails.airbnb;
       const booking = payload.commonSettings.otaDetails.booking;
@@ -3805,16 +3940,15 @@ STEP4: 施錠は...（鍵に合わせて記載してください）`
       if (booking?.selected && booking.status === 'not_created') notCreatedOTAs.push('Booking.com');
       
       if (notCreatedOTAs.length > 0) {
-        // Booking.comが含まれる場合は届出番号発行後の旨を追記
         const includesBooking = notCreatedOTAs.includes('Booking.com');
-        let body = `<strong>${notCreatedOTAs.join('・')}</strong>のリスティングが未作成です。リスティング作成についてご相談させていただきますので、<a href="mailto:customer@bizpato.com">customer@bizpato.com</a> までご連絡くださいませ。`;
-        let plainBody = `${notCreatedOTAs.join('・')}のリスティングが未作成です。リスティング作成についてご相談させていただきますので、customer@bizpato.com までご連絡くださいませ。`;
+        let body = `<strong>${notCreatedOTAs.join('・')}</strong>のリスティングが未作成のため、ホスト様にてリスティングをご作成いただく必要がございます。リスティング作成後、アカウント情報（ログインID・パスワード）を <a href="mailto:customer@bizpato.com">customer@bizpato.com</a> までお送りください。`;
+        let plainBody = `${notCreatedOTAs.join('・')}のリスティングが未作成のため、ホスト様にてリスティングをご作成いただく必要がございます。リスティング作成後、アカウント情報（ログインID・パスワード）を customer@bizpato.com までお送りください。`;
         if (includesBooking) {
-          body += `<br><br>※ <strong>Booking.comリスティング作成は届出番号発行後</strong>に可能となります。届出番号取得後にご連絡をお願いいたします。`;
-          plainBody += `\n\n※ Booking.comリスティング作成は届出番号発行後に可能となります。届出番号取得後にご連絡をお願いいたします。`;
+          body += `<br><br>※ <strong>Booking.comリスティング作成は届出番号発行後</strong>にご対応可能となります。`;
+          plainBody += `\n\n※ Booking.comリスティング作成は届出番号発行後にご対応可能となります。`;
         }
         tasks.push({
-          title: '📋 OTAリスティング作成のご相談',
+          title: '📋 OTAリスティング作成・アカウント情報の共有',
           body: body,
           plainBody: plainBody
         });
@@ -3980,6 +4114,16 @@ STEP4: 施錠は...（鍵に合わせて記載してください）`
     const payload = buildPayload();
     
     try {
+      // ホストタスクを生成してpayloadに含める（受付メールにも反映）
+      const hostTasks = buildHostTasks(payload);
+      payload.hostTasks = hostTasks.map(t => ({
+        title: t.title,
+        body: t.plainBody  // プレーンテキスト版を採用
+      }));
+      payload.hostTasksText = hostTasks.length > 0
+        ? hostTasks.map((t, idx) => `${idx + 1}. ${t.title}\n   ${t.plainBody}`).join('\n\n')
+        : '';
+      
       const response = await fetch(N8N_WEBHOOK_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -3991,8 +4135,7 @@ STEP4: 施錠は...（鍵に合わせて記載してください）`
       // 送信成功時はLocalStorageの自動保存データをクリア
       clearFormData();
       
-      // ホストタスクの生成・表示
-      const hostTasks = buildHostTasks(payload);
+      // ホストタスクを画面に表示（生成済みのタスクを使い回し）
       renderHostTasks(hostTasks);
       
       // サブアカウント情報を完了画面に表示
