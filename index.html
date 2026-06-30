@@ -3944,14 +3944,14 @@ STEP4: 施錠は...（鍵に合わせて記載してください）`
       });
     }
     
-    // 5. 保健所立ち会い「予定あり」：完了の連絡
+    // 5. 保健所立ち会い「予定あり」：立ち会い日の事前連絡
     const plannedHealth = payload.properties.filter(p => p.healthInspection === 'planned');
     if (plannedHealth.length > 0) {
       const names = formatPropertyList(plannedHealth);
       tasks.push({
-        title: '🏥 保健所立ち会い完了のご連絡',
-        body: `対象物件(${names})の保健所立ち会いが完了しましたら、その旨を <a href="mailto:customer@bizpato.com">customer@bizpato.com</a> までご連絡ください。`,
-        plainBody: `対象物件 (${names}) の保健所立ち会いが完了しましたら、その旨を customer@bizpato.com までご連絡ください。`
+        title: '🏥 保健所立ち会い日の事前ご連絡',
+        body: `対象物件(${names})の保健所立ち会い日が確定しましたら、立ち会い日を <a href="mailto:customer@bizpato.com">customer@bizpato.com</a> まで事前にご連絡ください。`,
+        plainBody: `対象物件 (${names}) の保健所立ち会い日が確定しましたら、立ち会い日を customer@bizpato.com まで事前にご連絡ください。`
       });
     }
     
